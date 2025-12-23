@@ -1,0 +1,20 @@
+{
+  "home": "Home",
+  "menu": "A la carte menu",
+  "menuBottom": "Menu",
+  "promotions": "Promotions",
+  "orders": "My Orders",
+  "about": "About us",
+  "refund": "Refund Policy",
+  "terms": "Terms and Conditions",
+  "reservation": "Reservation",
+  "feedback": "Feedback form",
+  "cart" : "Cart",
+  "profile" : "Profile",
+  "mode" : "Theme Mode",
+  "editProfile" : "Edit Profile",
+  "payments" : "Payments",
+  "orderHistory" : "Order history",
+  "exit" : "Exit",
+  "exits" : "Are you sure you want to log out?"
+}
