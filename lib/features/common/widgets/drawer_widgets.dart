@@ -199,87 +199,152 @@ class DrawerWidgets extends StatelessWidget {
   }
 
   Widget _buildAnimatedThemeToggle(BuildContext context, bool isDark) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: AnimatedToggleSwitch<bool>.dual(
-              current: isDark,
-              first: false,
-              second: true,
-              spacing: 35.0,
-              height: 40.h,
-              animationDuration: const Duration(milliseconds: 600),
-              animationCurve: Curves.easeInOutCubic,
-              style: ToggleStyle(
-                borderColor: Colors.transparent,
-                borderRadius: BorderRadius.circular(25.r),
-                indicatorColor: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: isDark
-                        ? Colors.black26
-                        : Colors.grey.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              styleBuilder: (value) => ToggleStyle(
-                backgroundColor: value
-                    ? const Color(0xFF1E293B)
-                    : const Color(0xFFE3F2FD),
-              ),
-              iconBuilder: (value) => value
-                  ? Icon(
-                Icons.nightlight_round,
-                color: Colors.amber,
-                size: 20.sp,
-              )
-                  : Icon(Icons.wb_sunny, color: Colors.orange, size: 20.sp),
-              textBuilder: (value) => Text(
-                value ? 'Dark' : 'Light',
-                style: TextStyle(
-                  color: value ? Colors.white : Colors.black87,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              onChanged: (value) {
-                context.read<ThemeBloc>().add(ThemeToggled());
-              },
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
+        final isVerySmall = availableWidth < 300;
+        final isSmall = availableWidth < 400;
+        final isTablet = availableWidth > 600;
+        double switchHeight, switchSpacing, iconSize, textSize, labelSize, emojiSize;
+        if (isTablet) {
+          switchHeight = 50.h;
+          switchSpacing = 45.0;
+          iconSize = 24.sp;
+          textSize = 13.sp;
+          labelSize = 16.sp;
+          emojiSize = 12.sp;
+        } else if (isVerySmall) {
+          switchHeight = 32.h;
+          switchSpacing = 20.0;
+          iconSize = 14.sp;
+          textSize = 8.sp;
+          labelSize = 11.sp;
+          emojiSize = 8.sp;
+        } else if (isSmall) {
+          switchHeight = 36.h;
+          switchSpacing = 28.0;
+          iconSize = 18.sp;
+          textSize = 10.sp;
+          labelSize = 13.sp;
+          emojiSize = 9.sp;
+        } else {
+          switchHeight = 40.h;
+          switchSpacing = 35.0;
+          iconSize = 20.sp;
+          textSize = 11.sp;
+          labelSize = 14.sp;
+          emojiSize = 10.sp;
+        }
+
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: isTablet ? 24.w : 16.w,
+            vertical: isTablet ? 12.h : 8.h,
           ),
-          SizedBox(width: 8.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                context.translate('mode'),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: isDark ? Colors.white : Colors.black87,
+              Flexible(
+                flex: isVerySmall ? 4 : 3,
+                child: AnimatedToggleSwitch<bool>.dual(
+                  current: isDark,
+                  first: false,
+                  second: true,
+                  spacing: switchSpacing,
+                  height: switchHeight,
+                  animationDuration: const Duration(milliseconds: 600),
+                  animationCurve: Curves.easeInOutCubic,
+                  style: ToggleStyle(
+                    borderColor: Colors.transparent,
+                    borderRadius: BorderRadius.circular(
+                      isTablet ? 30.r : 25.r,
+                    ),
+                    indicatorColor: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: isDark
+                            ? Colors.black26
+                            : Colors.grey.withOpacity(0.2),
+                        blurRadius: isTablet ? 12 : 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  styleBuilder: (value) => ToggleStyle(
+                    backgroundColor: value
+                        ? const Color(0xFF1E293B)
+                        : const Color(0xFFE3F2FD),
+                  ),
+                  iconBuilder: (value) => value
+                      ? Icon(
+                    Icons.nightlight_round,
+                    color: Colors.amber,
+                    size: iconSize,
+                  )
+                      : Icon(
+                    Icons.wb_sunny,
+                    color: Colors.orange,
+                    size: iconSize,
+                  ),
+                  textBuilder: (value) => FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      value ? 'Dark' : 'Light',
+                      style: TextStyle(
+                        color: value ? Colors.white : Colors.black87,
+                        fontSize: textSize,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    context.read<ThemeBloc>().add(ThemeToggled());
+                  },
                 ),
               ),
-              Text(
-                isDark ? '🌙 Night' : '☀️ Day',
-                style: TextStyle(
-                  fontSize: 10.sp,
-                  color: isDark ? Colors.white60 : Colors.black54,
+              SizedBox(width: isTablet ? 12.w : (isVerySmall ? 4.w : 8.w)),
+              Flexible(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        context.translate('mode'),
+                        style: TextStyle(
+                          fontSize: labelSize,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (!isVerySmall) ...[
+                      SizedBox(height: 2.h),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          isDark ? '🌙 Night' : '☀️ Day',
+                          style: TextStyle(
+                            fontSize: emojiSize,
+                            color: isDark ? Colors.white60 : Colors.black54,
+                          ),
+                          maxLines: 1,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
-  }
-
-  Widget _drawerItem(
+  }  Widget _drawerItem(
       BuildContext context, {
         required IconData icon,
         required String text,

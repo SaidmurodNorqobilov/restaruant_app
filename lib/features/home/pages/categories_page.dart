@@ -22,15 +22,27 @@ class _CategoriesPageState extends State<CategoriesPage> {
   ];
 
   final List<String> breakfastTitle = [
-    'ovqat', 'ovqat1', 'ovqat2', 'ovqa3', 'ovqat4',
+    'ovqat',
+    'ovqat1',
+    'ovqat2',
+    'ovqa3',
+    'ovqat4',
   ];
 
   final List<String> breakfastText = [
-    'wegfaergraeg', 'erg er aergg', 'oerg ergrgea2', 'ov reaqaer gerga', 'oregaerg vqat4',
+    'wegfaergraeg',
+    'erg er aergg',
+    'oerg ergrgea2',
+    'ov reaqaer gerga',
+    'oregaerg vqat4',
   ];
 
   final List<double> breakfastPrice = [
-    32.00, 23.00, 23.00, 76.00, 100.00,
+    32.00,
+    23.00,
+    23.00,
+    76.00,
+    100.00,
   ];
 
   @override

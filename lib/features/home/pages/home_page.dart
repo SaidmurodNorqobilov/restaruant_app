@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
     'assets/categoryImg/category6.png',
     'assets/categoryImg/category6.png',
     'assets/categoryImg/category6.png',
-    'assets/categoryImg/category6.png',
   ];
 
   final List<String> categoryText = [
@@ -46,7 +45,6 @@ class _HomePageState extends State<HomePage> {
     'Drinks',
     'For Kids',
     'Pasta',
-    'Pizza',
     'Burgers',
   ];
 
@@ -54,18 +52,21 @@ class _HomePageState extends State<HomePage> {
     'https://i.pinimg.com/originals/37/cc/51/37cc518c0d49a2fd03bc93fd151c9ca1.jpg',
     'https://i.pinimg.com/736x/9f/7b/79/9f7b791eb96cffe2766d04204ea1ce50.jpg',
     'https://i.pinimg.com/736x/a6/43/d3/a643d32d686507340fdc4cdd111c14f0.jpg',
+    'https://media.istockphoto.com/id/1371064975/ru/%D1%84%D0%BE%D1%82%D0%BE/%D1%82%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B9-%D0%BF%D0%BE%D0%BB%D0%BD%D1%8B%D0%B9-%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9-%D0%B7%D0%B0%D0%B2%D1%82%D1%80%D0%B0%D0%BA-%D1%8F%D0%B9%D1%86%D0%B0-%D0%B1%D0%BB%D0%B8%D0%BD%D1%8B-%D1%81-%D0%B1%D0%B5%D0%BA%D0%BE%D0%BD%D0%BE%D0%BC-%D0%B8-%D1%82%D0%BE%D1%81%D1%82%D0%B0%D0%BC%D0%B8.jpg?s=612x612&w=0&k=20&c=qY5NnVsCm_FzST2kUeVIt-QhM4eepr14Y32oW2sXXnk=',
   ];
   final List<String> promotionsTitle = [
     'Milk shakes',
     'Artisan Lattes',
     'Special Cake',
+    'ovqat karochi',
   ];
   final List<String> promotionsText = [
     'Banana, chocolate, vanilla, strawberry, caramel/pistachio.',
     'Honey, rose, lavendar, matcha..',
     'Freshly baked delicious cake',
+    'okeni ami',
   ];
-  final List<double> promotionsPrice = [35.00, 30.00, 70.00];
+  final List<double> promotionsPrice = [35.00, 30.00, 70.00, 1000.00];
 
   String currentLang = 'en';
   bool _isSearching = false;
@@ -248,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                height: isTablet ? 180.h : 220.h,
+                height: isTablet ? 200.h : 220.h,
                 child: GridView.builder(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   scrollDirection: Axis.horizontal,

@@ -122,7 +122,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100.r),
                         color: isDark
-                            ? AppColors.black
+                            ? Colors.blueGrey
                             : AppColors.backgroundLightColor,
                       ),
                       child: Row(
