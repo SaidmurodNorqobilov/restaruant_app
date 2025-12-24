@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
     'Banana, chocolate, vanilla, strawberry, caramel/pistachio.',
     'Honey, rose, lavendar, matcha..',
     'Freshly baked delicious cake',
-    'okeni ami',
+    'test uchun',
   ];
   final List<double> promotionsPrice = [35.00, 30.00, 70.00, 1000.00];
 
