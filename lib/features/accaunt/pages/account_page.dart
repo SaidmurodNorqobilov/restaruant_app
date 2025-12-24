@@ -5,9 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
-import 'package:restaurantapp/main.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/icons.dart';
 import '../widgets/profile_item_widgets.dart';
@@ -38,7 +38,7 @@ class _AccountPageState extends State<AccountPage> {
     return Scaffold(
       appBar: AppBarHome(
         title: Text(
-          localization.translate('profile'),
+          context.translate('profile'),
         ),
       ),
       drawer: DrawerWidgets(),
@@ -119,13 +119,13 @@ class _AccountPageState extends State<AccountPage> {
                 children: [
                   ProfileItemWidget(
                     onTap: () {},
-                    text: localization.translate('editProfile'),
+                    text: context.translate('editProfile'),
                     icon: AppIcons.profile,
                     iconBack: AppIcons.arrowRightGreen,
                   ),
                   ProfileItemWidget(
                     onTap: () {},
-                    text: localization.translate('payments'),
+                    text: context.translate('payments'),
                     icon: AppIcons.wallet,
                     iconBack: AppIcons.arrowRightGreen,
                   ),
@@ -133,7 +133,7 @@ class _AccountPageState extends State<AccountPage> {
                     onTap: () {
                       context.push(Routes.order);
                     },
-                    text: localization.translate('orders'),
+                    text: context.translate('orders'),
                     icon: AppIcons.shieldDone,
                     iconBack: AppIcons.arrowRightGreen,
                   ),
@@ -160,7 +160,7 @@ class _AccountPageState extends State<AccountPage> {
                               ),
                               SizedBox(width: 16.w),
                               Text(
-                                localization.translate('refund'),
+                                context.translate('refund'),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 18.sp,
@@ -184,13 +184,13 @@ class _AccountPageState extends State<AccountPage> {
                     onTap: () {
                       context.push(Routes.about);
                     },
-                    text: localization.translate('about'),
+                    text: context.translate('about'),
                     icon: AppIcons.infoSquare,
                     iconBack: AppIcons.arrowRightGreen,
                   ),
                   ProfileItemWidget(
                     onTap: () {},
-                    text: localization.translate('terms'),
+                    text: context.translate('terms'),
                     icon: AppIcons.send,
                   ),
                   ProfileItemWidget(
@@ -212,7 +212,7 @@ class _AccountPageState extends State<AccountPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  localization.translate('exit'),
+                                  context.translate('exit'),
                                   style: TextStyle(
                                     fontSize: 24.sp,
                                     fontWeight: FontWeight.w700,
@@ -220,7 +220,7 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                 ),
                                 Text(
-                                  localization.translate('exits'),
+                                  context.translate('exits'),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 20.sp,

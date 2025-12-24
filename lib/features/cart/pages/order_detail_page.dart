@@ -11,7 +11,7 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
-  final List<String> orderProducts = [
+  List orderProducts = [
     'https://static.toiimg.com/photo/102941656.cms',
     'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
     'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
@@ -19,8 +19,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     'https://static.toiimg.com/photo/102941656.cms',
     'https://static.toiimg.com/photo/102941656.cms',
   ];
-
-  final List<String> orderTitle = [
+  List orderTitle = [
     'Provencal Breakf',
     '2 Provencal Breakf',
     '2 Provencal Breakf',
@@ -35,204 +34,351 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBarWidgets(title: 'Order Details'),
+      appBar: AppBarWidgets(title: 'nimadur'),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 24.w),
           child: Column(
+            spacing: 30.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 20.h),
+              SizedBox(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 20.h,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildInfoItem('Time:', 'Backend Time', isDark),
-                      _buildInfoItem('Order Number:', 'Backend Number', isDark),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Time:',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.borderColor,
+                            ),
+                          ),
+                          Text(
+                            'Backend Time',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order Number : ',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.borderColor,
+                            ),
+                          ),
+                          Text(
+                            'Backend Number',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildInfoItem('Order by:', 'Backend Name', isDark),
-                      _buildInfoItem('Client Phone:', 'Backend data', isDark),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order by : ',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.borderColor,
+                            ),
+                          ),
+                          Text(
+                            'Backend Name',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Client Phone: ',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.borderColor,
+                            ),
+                          ),
+                          Text(
+                            'Backend data',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
-                  _buildInfoItem('Delivery type:', 'Backend Name', isDark),
-                  SizedBox(height: 20.h),
-                  _buildInfoItem('Location:', 'Backend Name', isDark),
-                  SizedBox(height: 20.h),
-                  _buildInfoItem('Total', '\$ Price', isDark, isPrice: true),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Delivery type:',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.borderColor,
+                        ),
+                      ),
+                      Text(
+                        'Backend Name',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark ? AppColors.white : AppColors.textColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Location: ',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.borderColor,
+                        ),
+                      ),
+                      Text(
+                        'Backend Name',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark ? AppColors.white : AppColors.textColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Total',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.borderColor,
+                        ),
+                      ),
+                      Text(
+                        '\$ Price',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.green,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.h),
-                child: const Divider(),
-              ),
-              Text(
-                'Items (${orderProducts.length} items)',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.borderColor,
-                ),
-              ),
-              SizedBox(height: 15.h),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: orderProducts.length,
-                separatorBuilder: (context, index) => SizedBox(height: 10.h),
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Image.network(
-                          orderProducts[index],
-                          width: 100.w,
-                          height: 70.h,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          height: 70.h,
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkAppBar : AppColors.white,
-                            borderRadius: BorderRadius.horizontal(right: Radius.circular(8.r)),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  orderTitle[index],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.sp,
-                                    color: isDark ? AppColors.white : AppColors.textColor,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 8.w),
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      "Qty: 1",
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: isDark ? Colors.white70 : AppColors.textColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      "\$25.00",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14.sp,
-                                        color: AppColors.green,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-              SizedBox(height: 30.h),
+              Divider(),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                spacing: 20.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Delivery status',
+                    'Items ( item Backend )',
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: AppColors.borderColor,
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  Column(
+                    spacing: 5.h,
+                    children: [
+                      ...List.generate(orderProducts.length, (index) {
+                        return Row(
+                          children: [
+                            Image.network(
+                              orderProducts[index],
+                              width: 113.w,
+                              height: 93.h,
+                              fit: BoxFit.cover,
+                            ),
+                            Container(
+                              padding: EdgeInsetsGeometry.symmetric(
+                                horizontal: 10.w,
+                              ),
+                              width: 267.w,
+                              height: 93.h,
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? AppColors.darkAppBar
+                                    : AppColors.white,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                spacing: 5.w,
+                                children: [
+                                  SizedBox(
+                                    width: 152.w,
+                                    child: Text(
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      orderTitle[index],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16.sp,
+                                        color: isDark
+                                            ? AppColors.white
+                                            : AppColors.textColor,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 72.w,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          orderTitle[index],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14.sp,
+                                            color: isDark
+                                                ? AppColors.white
+                                                : AppColors.textColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          orderTitle[index],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 11.sp,
+                                            color: AppColors.green,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+              Column(
+                spacing: 15.h,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Align(
+                    alignment: AlignmentGeometry.centerRight,
+                    child: Text(
+                      'Delivery status',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.borderColor,
+                      ),
+                    ),
+                  ),
                   Container(
-                    width: 200.w,
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    width: 220.w,
+                    padding: EdgeInsetsGeometry.symmetric(horizontal: 10.w),
                     decoration: BoxDecoration(
                       color: AppColors.orange,
-                      borderRadius: BorderRadius.circular(100.r),
+                      borderRadius: BorderRadius.circular(100.r)
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        alignment: Alignment.center,
-                        borderRadius: BorderRadius.circular(15.r),
-                        dropdownColor: AppColors.orange,
-                        value: status,
-                        icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-                        onChanged: (value) {
-                          if (value != null) setState(() => status = value);
-                        },
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'Pending',
-                            child: Text('Pending', style: TextStyle(color: Colors.white)),
+                    child: DropdownButton<String>(
+                      alignment: AlignmentGeometry.center,
+                      borderRadius: BorderRadius.circular(10.r),
+                      dropdownColor: AppColors.orange,
+                      value: status,
+                      underline: SizedBox(),
+                      onChanged: (value) async {
+                        if (value == null) return;
+                        status = value;
+                        setState(() {});
+                      },
+                      items: [
+                        DropdownMenuItem(
+                          value: 'Pending',
+                          child: Text(
+                            'Pending',
+                            style: TextStyle(
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
                           ),
-                          DropdownMenuItem(
-                            value: 'Delivered',
-                            child: Text('Delivered', style: TextStyle(color: Colors.white)),
-                          ),
-                        ],
-                      ),
+                        ),
+                        DropdownMenuItem(
+                          value: 'ru',
+                          child: Text('Delivered/ Picked up',
+                            style: TextStyle(
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 40.h),
+              SizedBox(),
+              SizedBox(),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoItem(String label, String value, bool isDark, {bool isPrice = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.borderColor,
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: isPrice ? FontWeight.w700 : FontWeight.w500,
-            color: isPrice
-                ? AppColors.green
-                : (isDark ? AppColors.white : AppColors.textColor),
-          ),
-        ),
-      ],
     );
   }
 }

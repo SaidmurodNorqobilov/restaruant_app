@@ -20,7 +20,11 @@ class _PromotionsPageState extends State<PromotionsPage> {
     'https://img.wattpad.com/3b0e3d5c09d515350894f151bba1fa4edde27376/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f357a6f78594861553575374562673d3d2d313136303832383238342e313663333466383931643838393266383834363438303538383332392e6a7067?s=fit&w=720&h=720',
     'https://img.wallscloud.net/uploads/thumb/137910883/cocktails-1-63026-1024x576-MM-80.webp',
   ];
-  final List<String> promotionsTitle = ['Milk shakes', 'Artisan Lattes', 'test'];
+  final List<String> promotionsTitle = [
+    'Milk shakes',
+    'Artisan Lattes',
+    'test',
+  ];
   final List<double> promotionsPrice = [85.00, 35.00, 45.00];
   final List<double> promotionsAc = [95.00, 65.00, 65.00];
   final List<int> promotionsDiscount = [5, 7, 9];
@@ -63,11 +67,18 @@ class _PromotionsPageState extends State<PromotionsPage> {
                           height: 105.h,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              Container(width: 130.w, height: 105.h, color: Colors.grey),
+                              Container(
+                                width: 130.w,
+                                height: 105.h,
+                                color: Colors.grey,
+                              ),
                         ),
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15.w,
+                              vertical: 10.h,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +90,9 @@ class _PromotionsPageState extends State<PromotionsPage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 15.sp,
-                                    color: isDark ? AppColors.white : AppColors.textColor,
+                                    color: isDark
+                                        ? AppColors.white
+                                        : AppColors.textColor,
                                   ),
                                 ),
                                 SizedBox(height: 8.h),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +10,9 @@ import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
 import '../../../core/utils/language.dart';
 import '../../../core/utils/colors.dart';
 import '../../../main.dart';
+import '../../common/manager/langBloc/language_bloc.dart';
+import '../../common/manager/langBloc/language_event.dart';
+import '../../common/manager/langBloc/language_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -98,12 +102,14 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 5.w,
-                      vertical: 3.h,
+                      vertical: 1.h,
                     ),
                     key: const ValueKey('SearchField'),
                     height: 40.h,
                     decoration: BoxDecoration(
-                      color: Colors.blueGrey.shade700,
+                      color: isDark
+                          ? Colors.blueGrey.shade700
+                          : AppColors.orangeSearch,
                       border: Border.all(
                         color: Colors.black.withOpacity(.2),
                         width: .5,
@@ -116,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                       autofocus: true,
                       cursorColor: Colors.lightBlue.shade300,
                       style: TextStyle(
-                        color: isDark ? AppColors.white : AppColors.textColor,
+                        color: AppColors.white,
                         fontWeight: FontWeight.w300,
                       ),
                       decoration: InputDecoration(
@@ -154,40 +160,44 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           if (!_isSearching)
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DropdownButton<String>(
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15.sp,
-                    ),
-                    underline: SizedBox(),
-                    iconDisabledColor: Colors.white,
-                    iconEnabledColor: Colors.white,
-                    focusColor: Colors.white,
-                    dropdownColor: isDark
-                        ? AppColors.darkAppBar
-                        : AppColors.primary,
-                    value: currentLang,
-                    onChanged: (value) async {
-                      if (value == null) return;
-                      currentLang = value;
-                      localization = AppLocalization(value);
-                      await localization.load();
-                      setState(() {});
-                    },
-                    items: const [
-                      DropdownMenuItem(value: 'en', child: Text('English')),
-                      DropdownMenuItem(value: 'ru', child: Text('Русский')),
-                      DropdownMenuItem(value: 'uz', child: Text('O\'zbek')),
+            BlocBuilder<LanguageBloc, LanguageState>(
+              builder: (context, langState) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DropdownButton<String>(
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15.sp,
+                        ),
+                        underline: const SizedBox(),
+                        iconDisabledColor: Colors.white,
+                        iconEnabledColor: Colors.white,
+                        focusColor: Colors.white,
+                        dropdownColor: isDark
+                            ? AppColors.darkAppBar
+                            : AppColors.primary,
+                        value: langState.languageCode,
+                        onChanged: (value) {
+                          if (value != null) {
+                            context.read<LanguageBloc>().add(
+                              LanguageChanged(value),
+                            );
+                          }
+                        },
+                        items: const [
+                          DropdownMenuItem(value: 'en', child: Text('English')),
+                          DropdownMenuItem(value: 'ru', child: Text('Русский')),
+                          DropdownMenuItem(value: 'uz', child: Text('O\'zbek')),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           if (!_isSearching)
             Padding(
@@ -287,6 +297,9 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(
                                 fontSize: isTablet ? 11.sp : 12.sp,
                                 fontWeight: FontWeight.w600,
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
                               ),
                             ),
                           ),
@@ -318,15 +331,20 @@ class _HomePageState extends State<HomePage> {
                   itemCount: promotionsImg.length,
                   separatorBuilder: (context, index) => SizedBox(width: 15.w),
                   itemBuilder: (context, index) {
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: isTablet ? 220.w : 200.w,
-                      ),
-                      child: RecipeWidgets(
-                        img: promotionsImg[index],
-                        title: promotionsTitle[index],
-                        text: promotionsText[index],
-                        price: promotionsPrice[index],
+                    return GestureDetector(
+                      onTap: () {
+                        context.push(Routes.promotions, extra: 1);
+                      },
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: isTablet ? 220.w : 200.w,
+                        ),
+                        child: RecipeWidgets(
+                          img: promotionsImg[index],
+                          title: promotionsTitle[index],
+                          text: promotionsText[index],
+                          price: promotionsPrice[index],
+                        ),
                       ),
                     );
                   },

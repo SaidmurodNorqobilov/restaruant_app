@@ -12,7 +12,8 @@ class TextAndTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.text,
-    this.hintText, this.prefixIcon,
+    this.hintText,
+    this.prefixIcon,
   });
 
   @override
@@ -27,11 +28,13 @@ class TextAndTextField extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.sp,
-            color: isDark ? AppColors.white : AppColors.textColor
-
+            color: isDark ? AppColors.white : AppColors.textColor,
           ),
         ),
         TextField(
+          style: TextStyle(
+            color: isDark ? AppColors.white : AppColors.textColor,
+          ),
           controller: controller,
           decoration: InputDecoration(
             hintText: hintText,
@@ -46,7 +49,7 @@ class TextAndTextField extends StatelessWidget {
               minHeight: 43.h,
               minWidth: 348.w,
             ),
-            prefixIcon: prefixIcon ?? null
+            prefixIcon: prefixIcon ?? null,
           ),
         ),
       ],

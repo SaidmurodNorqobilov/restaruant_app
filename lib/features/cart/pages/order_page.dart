@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
-import 'package:restaurantapp/main.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -18,7 +18,7 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBarWidgets(title: localization.translate('orders')),
+      appBar: AppBarWidgets(title: context.translate('orders')),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(

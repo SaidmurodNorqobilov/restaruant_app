@@ -18,19 +18,21 @@ import 'package:restaurantapp/features/home/pages/recipe_details_page.dart';
 import 'package:restaurantapp/features/menu/pages/menu_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/Preferences_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/onboarding_page.dart';
+import 'package:restaurantapp/features/onboarding/pages/splash_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/welcome_page.dart';
 import 'package:restaurantapp/features/home/pages/home_page.dart';
 import '../../features/common/widgets/bottom_navigation_bar_app.dart';
 
 final router = GoRouter(
-  initialLocation: Routes.home,
+  initialLocation: Routes.splash,
   routes: [
     StatefulShellRoute.indexedStack(
-
       builder: (context, state, navigationShell) {
         return Scaffold(
           body: navigationShell,
-          bottomNavigationBar: BottomNavigationBarApp(navigationShell: navigationShell),
+          bottomNavigationBar: BottomNavigationBarApp(
+            navigationShell: navigationShell,
+          ),
         );
       },
       branches: [
@@ -138,15 +140,13 @@ final router = GoRouter(
       path: Routes.orderDetail,
       builder: (context, state) => OrderDetailPage(),
     ),
+    GoRoute(
+      path: Routes.splash,
+      builder: (context, state) => SplashPage(
+      ),
+    ),
   ],
 );
-
-
-
-
-
-
-
 
 // import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';

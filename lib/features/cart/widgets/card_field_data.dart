@@ -7,11 +7,12 @@ import '../../../core/utils/colors.dart';
 import '../../../core/utils/icons.dart';
 
 class CardDateInputFormatter extends TextInputFormatter {
+
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     String text = newValue.text.replaceAll('/', '');
 
     if (text.length > 4) {
@@ -47,7 +48,6 @@ String normalizeExpiryDate(String input) {
   return input;
 }
 
-
 class TextFieldCardData extends StatelessWidget {
   final TextEditingController controller;
   final String text;
@@ -81,6 +81,9 @@ class TextFieldCardData extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
+          style: TextStyle(
+            color: isDark ? AppColors.white : AppColors.textColor,
+          ),
           controller: controller,
           keyboardType: TextInputType.number,
           inputFormatters: [
@@ -94,19 +97,19 @@ class TextFieldCardData extends StatelessWidget {
             errorText: errorText,
             suffixIcon: isValid
                 ? SvgPicture.asset(
-              AppIcons.correct,
-              width: 24.w,
-              height: 24.h,
-              fit: BoxFit.scaleDown,
-            )
+                    AppIcons.correct,
+                    width: 24.w,
+                    height: 24.h,
+                    fit: BoxFit.scaleDown,
+                  )
                 : (errorText != null
-                ? SvgPicture.asset(
-              AppIcons.warningCircle,
-              width: 24.w,
-              height: 24.h,
-              fit: BoxFit.scaleDown,
-            )
-                : null),
+                      ? SvgPicture.asset(
+                          AppIcons.warningCircle,
+                          width: 24.w,
+                          height: 24.h,
+                          fit: BoxFit.scaleDown,
+                        )
+                      : null),
             // enabledBorder: OutlineInputBorder(
             //   borderRadius: BorderRadius.circular(10.r),
             //   borderSide: BorderSide(

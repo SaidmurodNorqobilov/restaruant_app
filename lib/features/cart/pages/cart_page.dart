@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
 import 'package:restaurantapp/features/home/widgets/container_row.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
@@ -88,7 +89,7 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
               ? Padding(
             padding: EdgeInsets.only(right: 15.w),
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
               key: const ValueKey('SearchField'),
               height: 40.h,
               decoration: BoxDecoration(
@@ -118,7 +119,7 @@ class _CartPageState extends State<CartPage> with SingleTickerProviderStateMixin
             ),
           )
               : Text(
-            localization.translate('cart'),
+            context.translate('cart'),
             key: const ValueKey('TitleText'),
             style: TextStyle(
               color: Colors.white,

@@ -5,208 +5,200 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:restaurantapp/core/routing/router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/icons.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
-import 'package:restaurantapp/core/utils/language.dart';
-import 'package:restaurantapp/features/common/manager/theme_bloc.dart';
-import 'package:restaurantapp/features/common/manager/theme_event.dart';
-import 'package:restaurantapp/main.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
+import 'package:restaurantapp/features/common/manager/themeBloc/theme_bloc.dart';
+import 'package:restaurantapp/features/common/manager/themeBloc/theme_event.dart';
+import '../manager/langBloc/language_bloc.dart';
+import '../manager/langBloc/language_event.dart';
+import '../manager/langBloc/language_state.dart';
 
-class DrawerWidgets extends StatefulWidget {
+class DrawerWidgets extends StatelessWidget {
   const DrawerWidgets({super.key});
-
-  @override
-  State<DrawerWidgets> createState() => _DrawerWidgetsState();
-}
-
-class _DrawerWidgetsState extends State<DrawerWidgets> {
-  String currentLang = 'en';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadLanguage();
-  }
-
-  Future<void> _loadLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedLang = prefs.getString('language') ?? 'en';
-    setState(() {
-      currentLang = savedLang;
-    });
-    localization = AppLocalization(savedLang);
-    await localization.load();
-    setState(() {});
-  }
-
-  Future<void> _saveLanguage(String lang) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', lang);
-  }
-
-  Future<void> _saveTheme(bool isDark) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', isDark);
-  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Drawer(
-      surfaceTintColor: AppColors.white,
-      shadowColor: AppColors.white,
-      backgroundColor: isDark ? AppColors.lightText : AppColors.lightDivider,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SvgPicture.asset(
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.white,
-                    BlendMode.srcIn,
-                  ),
-                  AppIcons.menu,
-                  width: 80.w,
-                  height: 80.h,
+
+    return BlocBuilder<LanguageBloc, LanguageState>(
+      builder: (context, langState) {
+        return Drawer(
+          surfaceTintColor: AppColors.white,
+          shadowColor: AppColors.white,
+          backgroundColor: isDark ? AppColors.lightText : AppColors.lightDivider,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
                 ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 16.h),
-                      Text(
-                        'ATS',
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w300,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        'MENU',
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontSize: 28.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    'Language',
-                    style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: isDark ? AppColors.white : AppColors.textColor
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DropdownButton<String>(
-                      dropdownColor: isDark ? AppColors.darkAppBar : AppColors.white,
-                      value: currentLang,
-                      underline: const SizedBox(),
-                      onChanged: (value) async {
-                        if (value == null) return;
-                        currentLang = value;
-                        localization = AppLocalization(value);
-                        await localization.load();
-                        await _saveLanguage(value);
-                        setState(() {});
-                      },
-                      items: const [
-                        DropdownMenuItem(value: 'en', child: Text('English')),
-                        DropdownMenuItem(value: 'ru', child: Text('Русский')),
-                        DropdownMenuItem(value: 'uz', child: Text('O\'zbek')),
-                      ],
+                    SvgPicture.asset(
+                      AppIcons.menu,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.white,
+                        BlendMode.srcIn,
+                      ),
+                      width: 80.w,
+                      height: 80.h,
                     ),
-                    Icon(Icons.language, color: AppColors.primary),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'ATS',
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'MENU',
+                            maxLines: 1,
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 28.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        'Language',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? AppColors.white : AppColors.textColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DropdownButton<String>(
+                          dropdownColor: isDark
+                              ? AppColors.darkAppBar
+                              : AppColors.white,
+                          value: langState.languageCode,
+                          underline: const SizedBox(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              context.read<LanguageBloc>().add(
+                                LanguageChanged(value),
+                              );
+                            }
+                          },
+                          items: const [
+                            DropdownMenuItem(value: 'en', child: Text('English')),
+                            DropdownMenuItem(value: 'ru', child: Text('Русский')),
+                            DropdownMenuItem(value: 'uz', child: Text('O\'zbek')),
+                          ],
+                        ),
+                        Icon(
+                          Icons.language,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 12.h),
+              _drawerItem(
+                context,
+                icon: Icons.home,
+                text: context.translate('home'),
+                onPressed: () => context.pop(),
+                isDark: isDark,
+              ),
+              _drawerItem(
+                context,
+                icon: Icons.restaurant_menu,
+                text: context.translate('menu'),
+                onPressed: () => context.go(Routes.menu),
+                isDark: isDark,
+              ),
+              _drawerItem(
+                context,
+                icon: Icons.local_offer,
+                text: context.translate('promotions'),
+                onPressed: () => context.push(Routes.promotions, extra: 1),
+                isDark: isDark,
+              ),
+              _drawerItem(
+                context,
+                icon: FontAwesomeIcons.receipt,
+                text: context.translate('orders'),
+                onPressed: () => context.push(Routes.order),
+                isDark: isDark,
+              ),
+              const Divider(),
+              _drawerItem(
+                context,
+                icon: FontAwesomeIcons.circleInfo,
+                text: context.translate('about'),
+                onPressed: () => context.push(Routes.about),
+                isDark: isDark,
+              ),
+              _drawerItem(
+                context,
+                icon: Icons.currency_exchange,
+                text: context.translate('refund'),
+                onPressed: () => context.push(Routes.refund),
+                isDark: isDark,
+              ),
+              _drawerItem(
+                context,
+                icon: FontAwesomeIcons.fileContract,
+                text: context.translate('terms'),
+                onPressed: () {},
+                isDark: isDark,
+              ),
+              const Divider(),
+              _drawerItem(
+                context,
+                icon: FontAwesomeIcons.calendarCheck,
+                text: context.translate('reservation'),
+                onPressed: () => context.go(Routes.reservations),
+                isDark: isDark,
+              ),
+              _drawerItem(
+                context,
+                icon: FontAwesomeIcons.commentDots,
+                text: context.translate('feedback'),
+                onPressed: () {},
+                isDark: isDark,
+              ),
+              _buildAnimatedThemeToggle(context, isDark),
+            ],
           ),
-          SizedBox(height: 12.h),
-          _drawerItem(
-            icon: Icons.home,
-            text: localization.translate('home'),
-            onPressed: () => context.pop(),
-          ),
-          _drawerItem(
-            icon: Icons.restaurant_menu,
-            text: localization.translate('menu'),
-            onPressed: () => context.go(Routes.menu),
-          ),
-          _drawerItem(
-            icon: Icons.local_offer,
-            text: localization.translate('promotions'),
-            onPressed: () => context.push(Routes.promotions, extra: 1),
-          ),
-          _drawerItem(
-            icon: FontAwesomeIcons.receipt,
-            text: localization.translate('orders'),
-            onPressed: () => context.push(Routes.order),
-          ),
-          const Divider(),
-          _drawerItem(
-            icon: FontAwesomeIcons.circleInfo,
-            text: localization.translate('about'),
-            onPressed: () => context.push(Routes.about),
-          ),
-          _drawerItem(
-            icon: Icons.currency_exchange,
-            text: localization.translate('refund'),
-            onPressed: () => context.push(Routes.refund),
-          ),
-          _drawerItem(
-            icon: FontAwesomeIcons.fileContract,
-            text: localization.translate('terms'),
-            onPressed: () {},
-          ),
-          const Divider(),
-          _drawerItem(
-            icon: FontAwesomeIcons.calendarCheck,
-            text: localization.translate('reservation'),
-            onPressed: () => context.go(Routes.reservations),
-          ),
-          _drawerItem(
-            icon: FontAwesomeIcons.commentDots,
-            text: localization.translate('feedback'),
-            onPressed: () {},
-          ),
-          _buildAnimatedThemeToggle(isDark),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildAnimatedThemeToggle(bool isDark) {
+  Widget _buildAnimatedThemeToggle(BuildContext context, bool isDark) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
@@ -227,17 +219,25 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
                 indicatorColor: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? Colors.black26 : Colors.grey.withOpacity(0.2),
+                    color: isDark
+                        ? Colors.black26
+                        : Colors.grey.withOpacity(0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
               ),
               styleBuilder: (value) => ToggleStyle(
-                backgroundColor: value ? const Color(0xFF1E293B) : const Color(0xFFE3F2FD),
+                backgroundColor: value
+                    ? const Color(0xFF1E293B)
+                    : const Color(0xFFE3F2FD),
               ),
               iconBuilder: (value) => value
-                  ? Icon(Icons.nightlight_round, color: Colors.amber, size: 20.sp)
+                  ? Icon(
+                Icons.nightlight_round,
+                color: Colors.amber,
+                size: 20.sp,
+              )
                   : Icon(Icons.wb_sunny, color: Colors.orange, size: 20.sp),
               textBuilder: (value) => Text(
                 value ? 'Dark' : 'Light',
@@ -247,9 +247,8 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              onChanged: (value) async {
+              onChanged: (value) {
                 context.read<ThemeBloc>().add(ThemeToggled());
-                await _saveTheme(value);
               },
             ),
           ),
@@ -259,7 +258,7 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                localization.translate('mode'),
+                context.translate('mode'),
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -280,12 +279,13 @@ class _DrawerWidgetsState extends State<DrawerWidgets> {
     );
   }
 
-  Widget _drawerItem({
-    required IconData icon,
-    required String text,
-    required VoidCallback onPressed,
-  }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+  Widget _drawerItem(
+      BuildContext context, {
+        required IconData icon,
+        required String text,
+        required VoidCallback onPressed,
+        required bool isDark,
+      }) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primary),
       title: Text(

@@ -48,6 +48,9 @@ dependencies:
   flutter_snake_navigationbar: ^0.6.1
   appbar_animated: ^0.0.3
   animated_toggle_switch: ^0.8.5
+  provider: ^6.1.5+1
+  dio: ^5.9.0
+  pinput: ^6.0.1
 
 dev_dependencies:
   flutter_test:

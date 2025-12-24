@@ -19,4 +19,5 @@ class Routes {
   static const success = '/success';
   static const order = '/order';
   static const orderDetail = '/orderDetail';
+  static const splash = '/splash';
 }

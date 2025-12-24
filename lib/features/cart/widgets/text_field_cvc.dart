@@ -41,6 +41,7 @@ class TextFieldCardCvc extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
+          style: TextStyle(color: isDark ? AppColors.white : AppColors.textColor),
           controller: controller,
           obscureText: obscureText,
           onChanged: onChanged,

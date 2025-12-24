@@ -4,12 +4,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
-import 'package:restaurantapp/main.dart';
-
 import '../../../core/utils/icons.dart';
-import '../../common/widgets/bottom_navigation_bar_app.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -49,7 +47,7 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       extendBody: true,
       appBar: AppBarHome(
-        title: Text(localization.translate("menuBottom"),),
+        title: Text(context.translate("menuBottom"),),
         actions: [
           GestureDetector(
             onTap: () {},

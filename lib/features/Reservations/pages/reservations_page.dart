@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
 import 'package:restaurantapp/features/common/widgets/secces_page.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
-import 'package:restaurantapp/main.dart';
 
 class ReservationsPage extends StatefulWidget {
   const ReservationsPage({super.key});
@@ -19,7 +19,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController reservationTimeController = TextEditingController();
+  final TextEditingController reservationTimeController =
+      TextEditingController();
   final TextEditingController specialController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
 
@@ -40,7 +41,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 
     return Scaffold(
       appBar: AppBarHome(
-        title: Text(localization.translate('reservation')),
+        title: Text(context.translate('reservation')),
       ),
       drawer: const DrawerWidgets(),
       body: SafeArea(
@@ -58,13 +59,15 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   color: isDark ? AppColors.white : AppColors.textColor,
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(
+                height: 8.h,
+              ),
               Text(
                 'View my reservations',
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.primary, // Ko'zga tashlanishi uchun rang berildi
+                  color: AppColors.primary,
                 ),
               ),
               SizedBox(height: 20.h),
@@ -118,7 +121,9 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       height: 45.h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100.r),
-                        color: isDark ? AppColors.black : AppColors.backgroundLightColor,
+                        color: isDark
+                            ? AppColors.black
+                            : AppColors.backgroundLightColor,
                       ),
                       child: Row(
                         children: [
@@ -128,9 +133,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<int>(
                                 isExpanded: true,
-                                dropdownColor: isDark ? AppColors.darkAppBar : AppColors.white,
+                                dropdownColor: isDark
+                                    ? AppColors.darkAppBar
+                                    : AppColors.white,
                                 value: currentPerson,
-                                onChanged: (value) => setState(() => currentPerson = value!),
+                                onChanged: (value) =>
+                                    setState(() => currentPerson = value!),
                                 items: personList.map((person) {
                                   return DropdownMenuItem<int>(
                                     value: person.value,
@@ -138,7 +146,9 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       person.label,
                                       style: TextStyle(
                                         fontSize: 14.sp,
-                                        color: isDark ? AppColors.white : AppColors.black,
+                                        color: isDark
+                                            ? AppColors.white
+                                            : AppColors.black,
                                       ),
                                     ),
                                   );
@@ -173,10 +183,37 @@ class _ReservationsPageState extends State<ReservationsPage> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2100),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: isDark
+                                      ? const ColorScheme.dark(
+                                          primary: AppColors.primary,
+                                          onPrimary: Colors.white,
+                                          surface: AppColors.darkAppBar,
+                                          onSurface: Colors.white,
+                                        )
+                                      : const ColorScheme.light(
+                                          primary: AppColors.primary,
+                                          onPrimary: Colors.white,
+                                          surface: Colors.white,
+                                          onSurface: AppColors.textColor,
+                                        ),
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: AppColors.primary,
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
+
                           if (pickedDate != null) {
                             setState(() {
-                              dateController.text = "${pickedDate.day.toString().padLeft(2, '0')}/"
+                              dateController.text =
+                                  "${pickedDate.day.toString().padLeft(2, '0')}/"
                                   "${pickedDate.month.toString().padLeft(2, '0')}/"
                                   "${pickedDate.year}";
                             });
@@ -199,7 +236,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       MaterialPageRoute(
                         builder: (context) => SuccessPage(
                           onBackPressed: () => Navigator.pop(context),
-                          message: "Your reservation has been made successfully",
+                          message:
+                              "Your reservation has been made successfully",
                           appbarTitle: 'Reservation',
                         ),
                       ),
@@ -222,6 +260,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
 class PersonOption {
   final int value;
   final String label;
+
   PersonOption(this.value, this.label);
 }
 
