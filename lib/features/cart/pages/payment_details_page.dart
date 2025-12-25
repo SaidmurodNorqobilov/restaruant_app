@@ -68,28 +68,31 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   TextAndTextField(
                     controller: cardNumberController,
                     text: 'Card Number',
-                    hintText: 'E.g 112232*******12',
+                    hintText: 'Cart Number',
                   ),
                   SizedBox(height: 16.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: TextFieldCardData(
-                          controller: cardDataController,
-                          text: "Expiry Date",
-                          hintText: 'MM/YY',
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(left: 10.w),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextFieldCardData(
+                            controller: cardDataController,
+                            text: "Expiry Date",
+                            hintText: 'MM/YY',
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 16.w),
-                      Expanded(
-                        child: TextFieldCardCvc(
-                          controller: cardCvcController,
-                          text: "Security Code",
-                          hintText: 'CVC',
+                        SizedBox(width: 16.w),
+                        Expanded(
+                          child: TextFieldCardCvc(
+                            controller: cardCvcController,
+                            text: "Security Code",
+                            hintText: 'CVC',
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(height: 32.h),
                   TextButtonApp(

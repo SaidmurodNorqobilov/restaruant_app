@@ -16,5 +16,6 @@
   "payments" : "To'lovlar",
   "orderHistory" : "Buyurtma tarixi",
   "exit" : "Chiqish",
-  "exits" : "Haqiqatdan ham tizimdan chiqmoqchimisiz ?"
+  "exits" : "Haqiqatdan ham tizimdan chiqmoqchimisiz ?",
+  "language" : "Til"
 }

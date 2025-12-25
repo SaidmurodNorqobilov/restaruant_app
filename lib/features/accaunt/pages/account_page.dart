@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
-import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/icons.dart';
 import '../widgets/profile_item_widgets.dart';
@@ -36,37 +35,49 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBarHome(
-        title: Text(
-          context.translate('profile'),
-        ),
-      ),
       drawer: DrawerWidgets(),
-      body: SingleChildScrollView(
+      body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 24.w,
-            vertical: 10.h,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10.h),
-              SizedBox(height: 24.h),
-              Column(
-                children: [
-                  Align(
-                    alignment: AlignmentGeometry.center,
-                    child: Stack(
+        slivers: [
+          SliverAppBar(
+            iconTheme: IconThemeData(
+              color: AppColors.white,
+            ),
+            expandedHeight: 200.h,
+            pinned: true,
+            backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
+            title: Text(
+              context.translate('profile'),
+              style: TextStyle(
+                color: AppColors.white,
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color: isDark ? AppColors.darkAppBar : AppColors.primary,
+                padding: EdgeInsets.only(
+                  left: 24.w,
+                  right: 24.w,
+                  top: 100.h,
+                ),
+                child: Row(
+                  spacing: 25.w,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
                       children: [
                         CircleAvatar(
-                          radius: 60.r,
-                          child: Icon(
-                            Icons.person,
-                            size: 60.sp,
-                            color: Colors.grey,
-                          ),
+                          radius: 40.r,
+                          backgroundImage: rasm != null
+                              ? FileImage(rasm!)
+                              : null,
+                          child: rasm == null
+                              ? Icon(
+                                  Icons.person,
+                                  size: 40.sp,
+                                  color: Colors.grey,
+                                )
+                              : null,
                         ),
                         Positioned(
                           bottom: 0,
@@ -74,184 +85,219 @@ class _AccountPageState extends State<AccountPage> {
                           child: GestureDetector(
                             onTap: _rasmTanlash,
                             child: CircleAvatar(
-                              radius: 18.r,
-                              backgroundColor: Colors.green,
+                              radius: 14.r,
+                              backgroundColor: AppColors.white,
                               child: Icon(
                                 Icons.edit,
-                                color: Colors.white,
-                                size: 18,
+                                color: isDark
+                                    ? AppColors.darkAppBar
+                                    : AppColors.primary,
+                                size: 10,
                               ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    "Profile Name",
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.w700,
-                      color:
-                          Theme.of(context).appBarTheme.foregroundColor ??
-                          AppColors.darkAppBar,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "+998970001001",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          Theme.of(context).appBarTheme.foregroundColor ??
-                          AppColors.darkAppBar,
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 12.h),
-              Divider(color: AppColors.darkAppBar, height: 32.h),
-              Column(
-                spacing: 12.h,
-                children: [
-                  ProfileItemWidget(
-                    onTap: () {},
-                    text: context.translate('editProfile'),
-                    icon: AppIcons.profile,
-                    iconBack: AppIcons.arrowRightGreen,
-                  ),
-                  ProfileItemWidget(
-                    onTap: () {},
-                    text: context.translate('payments'),
-                    icon: AppIcons.wallet,
-                    iconBack: AppIcons.arrowRightGreen,
-                  ),
-                  ProfileItemWidget(
-                    onTap: () {
-                      context.push(Routes.order);
-                    },
-                    text: context.translate('orders'),
-                    icon: AppIcons.shieldDone,
-                    iconBack: AppIcons.arrowRightGreen,
-                  ),
-                  SizedBox(
-                    height: 40.h,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(8.r),
-                      onTap: () {
-                        context.push(Routes.refund);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 7.h,
                         children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.currency_exchange,
-                                weight: 24,
-                                color:
-                                    Theme.of(
-                                      context,
-                                    ).appBarTheme.foregroundColor ??
-                                    Colors.black,
-                              ),
-                              SizedBox(width: 16.w),
-                              Text(
-                                context.translate('refund'),
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 18.sp,
-                                  color: Theme.of(
-                                    context,
-                                  ).appBarTheme.foregroundColor,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "Saidmurod Norqobilov",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 24.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.white,
+                            ),
                           ),
-                          SvgPicture.asset(
-                            AppIcons.arrowRightGreen,
-                            width: 20.w,
-                            height: 20.h,
+                          Text(
+                            "+998914527455",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.white,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  ProfileItemWidget(
-                    onTap: () {
-                      context.push(Routes.about);
-                    },
-                    text: context.translate('about'),
-                    icon: AppIcons.infoSquare,
-                    iconBack: AppIcons.arrowRightGreen,
-                  ),
-                  ProfileItemWidget(
-                    onTap: () {},
-                    text: context.translate('terms'),
-                    icon: AppIcons.send,
-                  ),
-                  ProfileItemWidget(
-                    onTap: () {
-                      showModalBottomSheet(
-                        backgroundColor: isDark
-                            ? AppColors.darkAppBar
-                            : AppColors.white,
-                        context: context,
-                        builder: (context) => Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 24.w,
-                            vertical: 35.h,
-                          ),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 290.h,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  context.translate('exit'),
-                                  style: TextStyle(
-                                    fontSize: 24.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.red,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 24.w,
+                vertical: 10.h,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10.h),
+                  Column(
+                    spacing: 12.h,
+                    children: [
+                      ProfileItemWidget(
+                        onTap: () {},
+                        text: context.translate('editProfile'),
+                        icon: AppIcons.profile,
+                        iconBack: AppIcons.arrowRightGreen,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {},
+                        text: context.translate('payments'),
+                        icon: AppIcons.wallet,
+                        iconBack: AppIcons.arrowRightGreen,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {
+                          context.push(Routes.order);
+                        },
+                        text: context.translate('orders'),
+                        icon: AppIcons.shieldDone,
+                        iconBack: AppIcons.arrowRightGreen,
+                      ),
+                      SizedBox(
+                        height: 55.h,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(8.r),
+                          onTap: () {
+                            context.push(Routes.refund);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    size: 21.w,
+                                    Icons.currency_exchange,
+                                    weight: 24.w,
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).appBarTheme.foregroundColor ??
+                                        AppColors.black,
                                   ),
-                                ),
-                                Text(
-                                  context.translate('exits'),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.darkAppBar,
+                                  SizedBox(width: 16.w),
+                                  Text(
+                                    context.translate('refund'),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 18.sp,
+                                      color: Theme.of(
+                                        context,
+                                      ).appBarTheme.foregroundColor,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [],
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                              SvgPicture.asset(
+                                AppIcons.arrowRightGreen,
+                                width: 20.w,
+                                height: 20.h,
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                    textColor: AppColors.red,
-                    iconColorFilter: ColorFilter.mode(
-                      AppColors.red,
-                      BlendMode.srcIn,
-                    ),
-                    text: 'Chiqish',
-                    icon: AppIcons.logout,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {
+                          context.push(Routes.about);
+                        },
+                        text: context.translate('about'),
+                        icon: AppIcons.infoSquare,
+                        iconBack: AppIcons.arrowRightGreen,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {},
+                        text: context.translate('terms'),
+                        icon: AppIcons.send,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {
+                          showModalBottomSheet(
+                            backgroundColor: isDark
+                                ? AppColors.darkAppBar
+                                : AppColors.white,
+                            context: context,
+                            builder: (context) => Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24.w,
+                                vertical: 35.h,
+                              ),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 290.h,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      context.translate('exit'),
+                                      style: TextStyle(
+                                        fontSize: 24.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.red,
+                                      ),
+                                    ),
+                                    Text(
+                                      context.translate('exits'),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.darkAppBar,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        textColor: AppColors.red,
+                        iconColorFilter: ColorFilter.mode(
+                          AppColors.red,
+                          BlendMode.srcIn,
+                        ),
+                        text: 'Chiqish',
+                        icon: AppIcons.logout,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {},
+                        text: context.translate('terms'),
+                        icon: AppIcons.send,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {},
+                        text: context.translate('terms'),
+                        icon: AppIcons.send,
+                      ),
+                      ProfileItemWidget(
+                        onTap: () {},
+                        text: context.translate('terms'),
+                        icon: AppIcons.send,
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

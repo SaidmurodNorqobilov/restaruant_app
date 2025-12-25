@@ -19,7 +19,6 @@ class RecipeDetailsPage extends StatefulWidget {
 }
 
 class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
-  // ScrollController qo'shish kerak
   final ScrollController _scrollController = ScrollController();
 
   List breakfastList = [
@@ -51,6 +50,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   ];
 
   int quantity = 1;
+
   double get totalPrice => breakfastPrice[widget.productId] * quantity;
 
   void increment() {
@@ -80,11 +80,11 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
     return Scaffold(
       body: ScaffoldLayoutBuilder(
         backgroundColorAppBar: ColorBuilder(
-          Colors.transparent, // Scroll qilmagan payt
+          Colors.transparent, // Scroll qilmaganda
           isDark ? AppColors.darkAppBar : AppColors.primary, // Scroll qilganda
         ),
         textColorAppBar: ColorBuilder(
-          Colors.white, // Har doim oq
+          Colors.white,
           Colors.white,
         ),
         appBarBuilder: (context, colorAnimated) {
@@ -123,7 +123,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              // Hero Image
               Stack(
                 children: [
                   Image.network(
@@ -132,7 +131,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                     height: 363.h,
                     fit: BoxFit.cover,
                   ),
-                  // Gradient overlay
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -153,16 +151,12 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                   ),
                 ],
               ),
-
-              // Content
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 24.h),
-
-                    // Title & Price
                     Text(
                       breakfastText[widget.productId],
                       textAlign: TextAlign.center,
@@ -183,12 +177,9 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         ),
                       ),
                     ),
-
                     SizedBox(height: 32.h),
                     Divider(),
                     SizedBox(height: 16.h),
-
-                    // Description
                     Text(
                       'Description',
                       style: TextStyle(
@@ -209,11 +200,9 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         height: 1.5,
                       ),
                     ),
-
                     SizedBox(height: 32.h),
                     Divider(),
                     SizedBox(height: 24.h),
-
                     Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -225,7 +214,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                             onDecrement: decrement,
                           ),
                           SizedBox(height: 24.h),
-
                           TextButtonApp(
                             onPressed: () {
                               _showSuccessBottomSheet(context, isDark);
@@ -237,13 +225,8 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         ],
                       ),
                     ),
-
-
-
                     SizedBox(height: 32.h),
-
                     _buildNavigationButtons(isDark),
-
                     SizedBox(height: 40.h),
                   ],
                 ),
@@ -259,12 +242,9 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Previous Button
         InkWell(
           borderRadius: BorderRadius.circular(30.r),
-          onTap: () {
-            // Previous logic
-          },
+          onTap: () {},
           child: Row(
             children: [
               Container(
@@ -292,8 +272,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             ],
           ),
         ),
-
-        // Next Button
         InkWell(
           borderRadius: BorderRadius.circular(30.r),
           onTap: () {
@@ -379,8 +357,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             SizedBox(height: 24.h),
             InkWell(
               onTap: () {
-                context.pop();
-                context.push(Routes.cart);
+                context.go(Routes.cart);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -391,8 +368,13 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.shopping_cart_outlined, color: AppColors.primary),
-                    SizedBox(width: 12.w),
+                    Icon(
+                      Icons.shopping_cart_outlined,
+                      color: AppColors.primary,
+                    ),
+                    SizedBox(
+                      width: 12.w,
+                    ),
                     Text(
                       'View Cart',
                       style: TextStyle(
@@ -405,7 +387,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 76.h),
           ],
         ),
       ),

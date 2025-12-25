@@ -50,6 +50,18 @@ class TextAndTextField extends StatelessWidget {
               minWidth: 348.w,
             ),
             prefixIcon: prefixIcon ?? null,
+            // enabledBorder: UnderlineInputBorder(
+            //   borderSide: BorderSide(
+            //     color: isDark ? Colors.white54 : Colors.grey,
+            //   ),
+            // ),
+
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.primary,
+                width: 2.0,
+              ),
+            ),
           ),
         ),
       ],

@@ -44,8 +44,7 @@ class AppThemes {
       onSurface: AppColors.textColor,
       onBackground: AppColors.black,
     ),
-    // AppColors.lightBackground, orqa fon uchun
-    AppColors.lightDivider,
+    AppColors.lightDivider, // shu joy orqa fon uchun
     AppColors.lightDivider,
     AppColors.black,
     const AppBarTheme(

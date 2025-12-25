@@ -23,7 +23,7 @@ class ProfileItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40.h,
+      height: 55.h,
       child: InkWell(
         borderRadius: BorderRadius.circular(8.r),
         onTap: onTap,

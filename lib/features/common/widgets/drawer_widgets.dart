@@ -26,8 +26,11 @@ class DrawerWidgets extends StatelessWidget {
       builder: (context, langState) {
         return Drawer(
           surfaceTintColor: AppColors.white,
+
           shadowColor: AppColors.white,
-          backgroundColor: isDark ? AppColors.lightText : AppColors.lightDivider,
+          backgroundColor: isDark
+              ? AppColors.lightText
+              : AppColors.lightDivider,
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -84,7 +87,7 @@ class DrawerWidgets extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        'Language',
+                        context.translate('language'),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -110,9 +113,18 @@ class DrawerWidgets extends StatelessWidget {
                             }
                           },
                           items: const [
-                            DropdownMenuItem(value: 'en', child: Text('English')),
-                            DropdownMenuItem(value: 'ru', child: Text('Русский')),
-                            DropdownMenuItem(value: 'uz', child: Text('O\'zbek')),
+                            DropdownMenuItem(
+                              value: 'en',
+                              child: Text('English'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'ru',
+                              child: Text('Русский'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'uz',
+                              child: Text('O\'zbek'),
+                            ),
                           ],
                         ),
                         Icon(
@@ -205,7 +217,12 @@ class DrawerWidgets extends StatelessWidget {
         final isVerySmall = availableWidth < 300;
         final isSmall = availableWidth < 400;
         final isTablet = availableWidth > 600;
-        double switchHeight, switchSpacing, iconSize, textSize, labelSize, emojiSize;
+        double switchHeight,
+            switchSpacing,
+            iconSize,
+            textSize,
+            labelSize,
+            emojiSize;
         if (isTablet) {
           switchHeight = 50.h;
           switchSpacing = 45.0;
@@ -277,15 +294,15 @@ class DrawerWidgets extends StatelessWidget {
                   ),
                   iconBuilder: (value) => value
                       ? Icon(
-                    Icons.nightlight_round,
-                    color: Colors.amber,
-                    size: iconSize,
-                  )
+                          Icons.nightlight_round,
+                          color: Colors.amber,
+                          size: iconSize,
+                        )
                       : Icon(
-                    Icons.wb_sunny,
-                    color: Colors.orange,
-                    size: iconSize,
-                  ),
+                          Icons.wb_sunny,
+                          color: Colors.orange,
+                          size: iconSize,
+                        ),
                   textBuilder: (value) => FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
@@ -344,13 +361,15 @@ class DrawerWidgets extends StatelessWidget {
         );
       },
     );
-  }  Widget _drawerItem(
-      BuildContext context, {
-        required IconData icon,
-        required String text,
-        required VoidCallback onPressed,
-        required bool isDark,
-      }) {
+  }
+
+  Widget _drawerItem(
+    BuildContext context, {
+    required IconData icon,
+    required String text,
+    required VoidCallback onPressed,
+    required bool isDark,
+  }) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primary),
       title: Text(

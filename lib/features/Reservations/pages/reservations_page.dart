@@ -67,7 +67,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
+                  color: isDark ? AppColors.white : AppColors.textColor,
                 ),
               ),
               SizedBox(height: 20.h),

@@ -16,5 +16,6 @@
   "payments" : "Payments",
   "orderHistory" : "Order history",
   "exit" : "Exit",
-  "exits" : "Are you sure you want to log out?"
+  "exits" : "Are you sure you want to log out?",
+  "language" : "Language"
 }

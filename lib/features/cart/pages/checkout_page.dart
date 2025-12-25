@@ -65,7 +65,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.white : AppColors.textColor,
+                            color: isDark
+                                ? AppColors.white
+                                : AppColors.textColor,
                           ),
                         ),
                         SizedBox(height: 20.h),
@@ -103,7 +105,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               'Total',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.white : AppColors.textColor,
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
                                 fontSize: 16.sp,
                               ),
                             ),
@@ -111,7 +115,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               'AED 153.00',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.white : AppColors.textColor,
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
                                 fontSize: 16.sp,
                               ),
                             ),
@@ -124,13 +130,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           'Select payment mode',
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.white : AppColors.textColor,
+                            color: isDark
+                                ? AppColors.white
+                                : AppColors.textColor,
                             fontSize: 16.sp,
                           ),
                         ),
                         SizedBox(height: 8.h),
                         Column(
-                          children: List.generate(selectPaymentMode.length, (index) {
+                          children: List.generate(selectPaymentMode.length, (
+                            index,
+                          ) {
                             return InkWell(
                               onTap: () {
                                 setState(() {
@@ -155,15 +165,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                       ),
                                       child: selectMode == index
                                           ? Center(
-                                        child: Container(
-                                          width: 10.w,
-                                          height: 10.w,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      )
+                                              child: Container(
+                                                width: 10.w,
+                                                height: 10.w,
+                                                decoration: const BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            )
                                           : null,
                                     ),
                                     SizedBox(width: 12.w),
@@ -174,7 +184,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                         fontWeight: FontWeight.w500,
                                         color: selectMode == index
                                             ? AppColors.primary
-                                            : (isDark ? Colors.white70 : AppColors.textColor),
+                                            : (isDark
+                                                  ? Colors.white70
+                                                  : AppColors.textColor),
                                       ),
                                     ),
                                   ],
@@ -282,21 +294,23 @@ class _CheckoutPageState extends State<CheckoutPage> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.primary : (isDark ? Colors.white70 : AppColors.borderColor),
+                  color: isSelected
+                      ? AppColors.primary
+                      : (isDark ? Colors.white70 : AppColors.borderColor),
                   width: 2.w,
                 ),
               ),
               child: isSelected
                   ? Center(
-                child: Container(
-                  width: 10.w,
-                  height: 10.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isDark ? AppColors.white : AppColors.primary,
-                  ),
-                ),
-              )
+                      child: Container(
+                        width: 10.w,
+                        height: 10.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    )
                   : null,
             ),
             SizedBox(width: 8.w),

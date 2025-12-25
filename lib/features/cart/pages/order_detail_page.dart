@@ -78,7 +78,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Order Number : ',
+                            'Order Number:',
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w400,
@@ -175,7 +175,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Location: ',
+                        'Location:',
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,

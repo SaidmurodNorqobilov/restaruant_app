@@ -41,11 +41,16 @@ class TextFieldCardCvc extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextField(
-          style: TextStyle(color: isDark ? AppColors.white : AppColors.textColor),
+          style: TextStyle(
+            color: isDark ? AppColors.white : AppColors.textColor,
+          ),
           controller: controller,
           obscureText: obscureText,
           onChanged: onChanged,
           decoration: InputDecoration(
+            hintStyle: TextStyle(
+              color: AppColors.borderColor,
+            ),
             constraints: BoxConstraints(maxHeight: 52.h, maxWidth: 165.w),
             hintText: hintText,
             errorText: errorText,
@@ -90,6 +95,13 @@ class TextFieldCardCvc extends StatelessWidget {
             //   borderRadius: BorderRadius.circular(10.r),
             //   borderSide: const BorderSide(color: Colors.red),
             // ),
+
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.primary,
+                width: 2.0,
+              ),
+            ),
           ),
         ),
       ],

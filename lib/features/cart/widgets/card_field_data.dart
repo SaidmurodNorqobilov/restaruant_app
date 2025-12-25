@@ -92,6 +92,7 @@ class TextFieldCardData extends StatelessWidget {
           ],
           onChanged: onChanged,
           decoration: InputDecoration(
+            hintStyle: TextStyle(color: AppColors.borderColor),
             constraints: BoxConstraints(maxHeight: 52.h, maxWidth: 165.w),
             hintText: hintText,
             errorText: errorText,
@@ -134,6 +135,13 @@ class TextFieldCardData extends StatelessWidget {
             //   borderRadius: BorderRadius.circular(10.r),
             //   borderSide: const BorderSide(color: Colors.red),
             // ),
+
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: AppColors.primary,
+                width: 2.0,
+              ),
+            ),
           ),
         ),
       ],

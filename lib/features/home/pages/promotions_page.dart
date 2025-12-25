@@ -62,7 +62,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                     child: Row(
                       children: [
                         Image.network(
-                          promotionsImg[index],
+                          Routes.about,
                           width: 130.w,
                           height: 105.h,
                           fit: BoxFit.cover,

@@ -13,6 +13,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
+  
   List categoryImg = [
     'assets/categoryImg/category1.png',
     'assets/categoryImg/category2.png',
@@ -65,7 +66,9 @@ class _WelcomePageState extends State<WelcomePage> {
                 color: AppColors.black,
               ),
             ),
-            SizedBox(height: 10.h,),
+            SizedBox(
+              height: 10.h,
+            ),
             Column(
               spacing: 10.h,
               children: [

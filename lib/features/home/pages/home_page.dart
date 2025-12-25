@@ -76,7 +76,6 @@ class _HomePageState extends State<HomePage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
-
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
@@ -96,14 +95,14 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           },
-          duration: Duration(milliseconds: 800),
+          duration: Duration(milliseconds: 300),
           child: _isSearching
               ? Padding(
                   padding: EdgeInsets.only(right: 15.w),
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 5.w,
-                      vertical: 1.h,
+                      horizontal: 10.w,
+                      vertical: 2.h,
                     ),
                     key: const ValueKey('SearchField'),
                     height: 40.h,
@@ -111,32 +110,25 @@ class _HomePageState extends State<HomePage> {
                       color: isDark
                           ? Colors.blueGrey.shade700
                           : AppColors.orangeSearch,
-                      border: Border.all(
-                        color: Colors.black.withOpacity(.2),
-                        width: .5,
-                      ),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: TextField(
                       controller: controllerSearch,
-                      onChanged: (text) => debugPrint(text),
                       autofocus: true,
-                      cursorColor: Colors.lightBlue.shade300,
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontWeight: FontWeight.w300,
-                      ),
+                      style: TextStyle(color: Colors.white),
                       decoration: InputDecoration(
-                        hintText: 'Search here...',
-                        hintStyle: TextStyle(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w300,
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(color: AppColors.white),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
                         ),
-                        prefixIcon: Icon(Icons.search, color: AppColors.white),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.close, color: AppColors.white),
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
-                            FocusScope.of(context).unfocus();
                             setState(() {
                               _isSearching = false;
                               controllerSearch.clear();
@@ -144,7 +136,6 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
                       ),
                     ),
                   ),
@@ -231,128 +222,173 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: DrawerWidgets(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 10.h),
-                child: Text(
-                  'Meal categories',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: isTablet ? 20.sp : 18.sp,
-                    color: isDark ? Colors.white : Colors.black,
+      body: RefreshIndicator(
+        color: isDark ? AppColors.darkAppBar : AppColors.primary,
+        onRefresh: () async {},
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 10.h),
+                  child: Text(
+                    'Meal categories',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: isTablet ? 20.sp : 18.sp,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: isTablet ? 200.h : 220.h,
-                child: GridView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: categoryImg.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 15.w,
-                    crossAxisSpacing: 10.h,
-                    childAspectRatio: isTablet ? 0.7 : 1.2,
-                  ),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () => context.push(Routes.categories),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            height: isTablet ? 60.h : 65.w,
-                            width: isTablet ? 60.h : 65.w,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
+                SizedBox(
+                  height: isTablet ? 200.h : 220.h,
+                  child: GridView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: categoryImg.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 15.w,
+                      crossAxisSpacing: 10.h,
+                      childAspectRatio: isTablet ? 0.7 : 1.2,
+                    ),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () => context.push(Routes.categories),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              height: isTablet ? 60.h : 65.w,
+                              width: isTablet ? 60.h : 65.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50.r),
+                                child: Image.asset(
+                                  categoryImg[index],
+                                  fit: BoxFit.cover,
                                 ),
-                              ],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50.r),
-                              child: Image.asset(
-                                categoryImg[index],
-                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                          SizedBox(height: 6.h),
-                          Flexible(
-                            child: Text(
-                              categoryText[index],
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: isTablet ? 11.sp : 12.sp,
-                                fontWeight: FontWeight.w600,
-                                color: isDark
-                                    ? AppColors.white
-                                    : AppColors.textColor,
+                            SizedBox(height: 6.h),
+                            Flexible(
+                              child: Text(
+                                categoryText[index],
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: isTablet ? 11.sp : 12.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark
+                                      ? AppColors.white
+                                      : AppColors.textColor,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 25.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Text(
-                  'Promotions',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: isTablet ? 20.sp : 18.sp,
-                    color: isDark ? Colors.white : Colors.black,
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ),
-              SizedBox(height: 15.h),
-              SizedBox(
-                height: isTablet ? 280.h : 260.h,
-                child: ListView.separated(
+                SizedBox(height: 25.h),
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: promotionsImg.length,
-                  separatorBuilder: (context, index) => SizedBox(width: 15.w),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        context.push(Routes.promotions, extra: 1);
-                      },
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: isTablet ? 220.w : 200.w,
-                        ),
-                        child: RecipeWidgets(
-                          img: promotionsImg[index],
-                          title: promotionsTitle[index],
-                          text: promotionsText[index],
-                          price: promotionsPrice[index],
-                        ),
-                      ),
-                    );
-                  },
+                  child: Text(
+                    'Promotions',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: isTablet ? 20.sp : 18.sp,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(height: 100.h),
-            ],
+                SizedBox(height: 15.h),
+                SizedBox(
+                  height: isTablet ? 280.h : 260.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: promotionsImg.length,
+                    separatorBuilder: (context, index) => SizedBox(width: 15.w),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(Routes.promotions, extra: 1);
+                        },
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: isTablet ? 220.w : 200.w,
+                          ),
+                          child: RecipeWidgets(
+                            img: promotionsImg[index],
+                            title: promotionsTitle[index],
+                            text: promotionsText[index],
+                            price: promotionsPrice[index],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 25.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    'Yana nimadurlar )',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: isTablet ? 20.sp : 18.sp,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15.h),
+                SizedBox(
+                  height: isTablet ? 280.h : 260.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: promotionsImg.length,
+                    separatorBuilder: (context, index) => SizedBox(width: 15.w),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(Routes.promotions, extra: 1);
+                        },
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: isTablet ? 220.w : 200.w,
+                          ),
+                          child: RecipeWidgets(
+                            img: promotionsImg[index],
+                            title: promotionsTitle[index],
+                            text: promotionsText[index],
+                            price: promotionsPrice[index],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(height: 100.h),
+              ],
+            ),
           ),
         ),
       ),

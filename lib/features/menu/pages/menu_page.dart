@@ -17,6 +17,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  final TextEditingController controllerSearch = TextEditingController();
 
   List categoryImg = [
     'assets/categoryImg/category1.png',
@@ -39,28 +40,93 @@ class _MenuPageState extends State<MenuPage> {
     'For Kids',
     'Pasta',
   ];
+  bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       extendBody: true,
-      appBar: AppBarHome(
-        title: Text(context.translate("menuBottom"),),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
+        titleSpacing: _isSearching ? 10.w : 0,
+        title: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: _isSearching
+              ? Padding(
+                  padding: EdgeInsets.only(right: 15.w),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 2.h,
+                    ),
+                    key: const ValueKey('SearchField'),
+                    height: 40.h,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.blueGrey.shade700
+                          : AppColors.orangeSearch,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: TextField(
+                      controller: controllerSearch,
+                      autofocus: true,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(color: AppColors.white),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isSearching = false;
+                              controllerSearch.clear();
+                            });
+                          },
+                        ),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                )
+              : Text(
+                  context.translate("menuBottom"),
+                  key: const ValueKey('titleMode'),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+        ),
         actions: [
-          GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset(
-              AppIcons.search,
-              width: 18.w,
-              height: 18.h,
-              fit: BoxFit.scaleDown,
+          if (!_isSearching)
+            InkWell(
+              borderRadius: BorderRadius.circular(100.r),
+              onTap: () {
+                setState(() {
+                  _isSearching = true;
+                });
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                child: SvgPicture.asset(
+                  AppIcons.search,
+                  colorFilter: ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ),
             ),
-          ),
-          SizedBox(
-            width: 10.w,
-          ),
         ],
       ),
       drawer: DrawerWidgets(),
@@ -99,7 +165,9 @@ class _MenuPageState extends State<MenuPage> {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
-                              color: isDark ? AppColors.white : AppColors.textColor,
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
                             ),
                           ),
                         ],

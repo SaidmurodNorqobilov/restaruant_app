@@ -48,7 +48,7 @@ class OnboardingPage extends StatelessWidget {
               ),
             ],
           ),
-         Spacer(),
+          Spacer(),
           Stack(
             children: [
               Image.asset(
