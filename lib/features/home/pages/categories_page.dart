@@ -57,13 +57,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
     } else if (isTablet) {
       crossAxisCount = 3;
     }
-
     return Scaffold(
       extendBody: true,
       appBar: const AppBarWidgets(title: 'Breakfast'),
       body: GridView.builder(
         padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 120.h),
-        physics: const BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         itemCount: breakfastList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,

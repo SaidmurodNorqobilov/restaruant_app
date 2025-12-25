@@ -13,7 +13,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  
+
   List categoryImg = [
     'assets/categoryImg/category1.png',
     'assets/categoryImg/category2.png',

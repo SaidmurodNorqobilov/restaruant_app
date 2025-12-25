@@ -62,6 +62,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -74,6 +76,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/appLogo/
     - assets/categoryImg/
     - assets/icons/
     - assets/iconsImg/
@@ -112,3 +115,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  adaptive_icon_background: "#FFFFFF" # Orqa fon oq bo'ladi
+  adaptive_icon_foreground: "assets/appLogo/logo.png" # Logotipning o'zi (shaffof fonli)
+  image_path: "assets/appLogo/logo.png" # iOS va eski Androidlar uchun umumiy rasm

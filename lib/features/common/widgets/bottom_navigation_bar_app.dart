@@ -53,7 +53,7 @@ class BottomNavigationBarApp extends StatelessWidget {
             ),
             elevation: 0,
             snakeViewColor: AppColors.primary,
-            selectedItemColor: AppColors.white,
+            selectedItemColor: AppColors.primary,
             unselectedItemColor: AppColors.primary,
             showUnselectedLabels: true,
             showSelectedLabels: true,
