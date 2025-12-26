@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:math' as math;
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
-import '../../../core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/colors.dart';
 
 class SuccessPage extends StatefulWidget {
   final String message;
@@ -32,7 +32,7 @@ class _SuccessPageState extends State<SuccessPage> with TickerProviderStateMixin
     _controllers = List.generate(
       particleCount,
           (index) => AnimationController(
-        duration: Duration(milliseconds: 2000 + (index * 200)),
+        duration: Duration(milliseconds: 1500 + (index * 150)),
         vsync: this,
       )..repeat(reverse: true),
     );
@@ -55,6 +55,8 @@ class _SuccessPageState extends State<SuccessPage> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -66,112 +68,125 @@ class _SuccessPageState extends State<SuccessPage> with TickerProviderStateMixin
           widget.appbarTitle,
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            fontSize: 20.sp,
+            fontSize: isTablet ? 22.sp : 20.sp,
             color: Colors.white,
           ),
         ),
         backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
+        centerTitle: true,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final double stackSize = constraints.maxWidth > 400.w ? 350.w : constraints.maxWidth;
-                    return SizedBox(
-                      width: stackSize,
-                      height: stackSize,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ...List.generate(particleCount, (index) {
-                            return AnimatedBuilder(
-                              animation: _animations[index],
-                              builder: (context, child) {
-                                final angle = (2 * math.pi / particleCount) * index;
-                                // Masofani ekran o'lchamiga nisbatan foizda hisoblaymiz
-                                final distance = (stackSize / 3.5) + (_animations[index].value * 30.w);
-                                final size = 15.w + (_animations[index].value * 10.w);
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final double maxStackSize = isTablet ? 300 : 350.w;
+                      return SizedBox(
+                        width: maxStackSize,
+                        height: maxStackSize,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            ...List.generate(particleCount, (index) {
+                              return AnimatedBuilder(
+                                animation: _animations[index],
+                                builder: (context, child) {
+                                  final angle = (2 * math.pi / particleCount) * index;
+                                  final distance = (maxStackSize / 3.5) + (_animations[index].value * (isTablet ? 40 : 30.w));
+                                  final size = (isTablet ? 12 : 15.w) + (_animations[index].value * 8);
 
-                                return Transform.translate(
-                                  offset: Offset(
-                                    math.cos(angle) * distance,
-                                    math.sin(angle) * distance,
-                                  ),
-                                  child: Container(
-                                    width: size,
-                                    height: size,
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.primary,
-                                      shape: BoxShape.circle,
+                                  return Transform.translate(
+                                    offset: Offset(
+                                      math.cos(angle) * distance,
+                                      math.sin(angle) * distance,
                                     ),
-                                  ),
-                                );
-                              },
-                            );
-                          }),
-                          Container(
-                            width: 140.w,
-                            height: 140.w,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primary,
-                              shape: BoxShape.circle,
+                                    child: Container(
+                                      width: size,
+                                      height: size,
+                                      decoration: const BoxDecoration(
+                                        color: AppColors.primary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }),
+                            Container(
+                              width: isTablet ? 120 : 140.w,
+                              height: isTablet ? 120 : 140.w,
+                              decoration: const BoxDecoration(
+                                color: AppColors.primary,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 20,
+                                    offset: Offset(0, 10),
+                                  )
+                                ],
+                              ),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: isTablet ? 60 : 70.w,
+                              ),
                             ),
-                            child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 70.w,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: 40.h),
-                Text(
-                  widget.message,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18.sp,
-                    color: isDark ? AppColors.white : AppColors.textColor,
-                  ),
-                ),
-                SizedBox(height: 40.h),
-                SizedBox(
-                  width: 272.w,
-                  height: 50.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (widget.onBackPressed != null) {
-                        widget.onBackPressed!();
-                      } else {
-                        context.go(Routes.home);
-                      }
+                          ],
+                        ),
+                      );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25.r),
-                      ),
-                    ),
+                  ),
+                  SizedBox(height: 40.h),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: isTablet ? 500 : double.infinity),
                     child: Text(
-                      'Back to menu',
+                      widget.message,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
+                        fontSize: isTablet ? 18.sp : 18.sp,
+                        color: isDark ? AppColors.white : AppColors.textColor,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 60.h),
+                  SizedBox(
+                    width: isTablet ? 300 : 272.w,
+                    height: isTablet ? 55 : 50.h,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (widget.onBackPressed != null) {
+                          widget.onBackPressed!();
+                        } else {
+                          context.go(Routes.home);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                        ),
+                      ),
+                      child: Text(
+                        'Back to menu',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: isTablet ? 16.sp : 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

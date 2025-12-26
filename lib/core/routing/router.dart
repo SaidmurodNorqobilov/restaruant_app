@@ -151,7 +151,7 @@ final router = GoRouter(
 // import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';
 // import 'package:restaurantapp/core/routing/routes.dart';
-// import 'package:restaurantapp/features/Reservations/pages/reservations_page.dart';
+// import 'package:restaurantapp/features/reservations/pages/reservations_page.dart';
 // import 'package:restaurantapp/features/accaunt/pages/about_page.dart';
 // import 'package:restaurantapp/features/accaunt/pages/account_page.dart';
 // import 'package:restaurantapp/features/accaunt/pages/refund_policy_page.dart';

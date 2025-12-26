@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/icons.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
 import '../../../core/utils/language.dart';
@@ -234,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 10.h),
                   child: Text(
-                    'Meal categories',
+                    context.translate('mealCategories'),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: isTablet ? 20.sp : 18.sp,
@@ -308,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                    'Promotions',
+                    context.translate('promotions') ,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: isTablet ? 20.sp : 18.sp,
@@ -349,7 +350,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                    'Yana nimadurlar )',
+                    context.translate('new') ,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: isTablet ? 20.sp : 18.sp,

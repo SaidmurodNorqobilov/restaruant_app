@@ -37,24 +37,26 @@ If you are approved, then your refund will be processed, and a credit will autom
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(title: 'Refund policy'),
-      body: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsetsGeometry.symmetric(
-            horizontal: 33.w,
-            vertical: 42.h,
-          ),
-          child: Column(
-            children: [
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w300,
-                  color: isDark ? AppColors.white : AppColors.textColor
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsetsGeometry.symmetric(
+              horizontal: 33.w,
+              vertical: 42.h,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w300,
+                    color: isDark ? AppColors.white : AppColors.textColor,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

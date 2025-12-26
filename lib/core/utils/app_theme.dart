@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+
 class AppThemes {
-  static ThemeData _baseTheme(
-      ColorScheme colorScheme,
+  static ThemeData _baseTheme(ColorScheme colorScheme,
       Color scaffoldBg,
       Color bodyColor,
       Color displayColor,
-      AppBarTheme appBarTheme,
-      ) {
+      AppBarTheme appBarTheme,) {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
@@ -30,11 +29,13 @@ class AppThemes {
           backgroundColor: AppColors.backgroundLightColor,
           foregroundColor: Colors.white,
           minimumSize: const Size(48, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
         ),
       ),
     );
   }
+
   static final lightTheme = _baseTheme(
     const ColorScheme.light(
       primary: AppColors.white,

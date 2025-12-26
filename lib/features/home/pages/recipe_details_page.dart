@@ -152,9 +152,14 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.only(
+                  left: 24.w,
+                  right: 24.w,
+                  bottom: MediaQuery.of(context).padding.bottom + 17.h,
+                  top: 0,
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 24.h),
                     Text(

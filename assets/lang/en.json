@@ -17,5 +17,36 @@
   "orderHistory" : "Order history",
   "exit" : "Exit",
   "exits" : "Are you sure you want to log out?",
-  "language" : "Language"
+  "language" : "Language",
+
+  "reserveYourTable": "Reserve your table",
+  "viewMyReservations" : "View my reservations",
+  "name" : "Name",
+  "inputName" : "Enter your name",
+  "email" : "Enter email",
+  "phoneNumber" : "Phone number",
+  "inputNumber" : "Enter phone number",
+  "numberOfGuests" : "Number of guests",
+  "reservationTime" : "Reservation time",
+  "enterTime" : "Enter time",
+  "specialNote" : "Special note",
+  "date" : "Date",
+  "autofillDate" : "Autofill today`s date",
+  "submit" : "Submit",
+
+  "itemsInCart": "Items in cart",
+  "coupon": "Coupon",
+  "enterCouponCode": "Enter coupon code",
+  "applyCoupon": "Apply coupon",
+  "tipWaiter": "Tip the waiter",
+  "pricing": "Pricing",
+  "cartSubtotal": "Cart subtotal",
+  "vat": "VAT",
+  "total": "Total",
+  "discount" : "Discount",
+  "checkout": "Checkout",
+
+  "mealCategories" : "Meal categories",
+  "new" : "New"
 }
+

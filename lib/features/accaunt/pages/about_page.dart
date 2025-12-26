@@ -21,22 +21,27 @@ Founder of eMENU""";
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(title: 'About Us'),
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(
-          horizontal: 33.w,
-          vertical: 42.h,
-        ),
-        child: Column(
-          children: [
-            Text(
-              text,
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 14.sp,
-                color: isDark ? AppColors.white : AppColors.textColor,
-              ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsetsGeometry.symmetric(
+              horizontal: 33.w,
+              vertical: 42.h,
             ),
-          ],
+            child: Column(
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14.sp,
+                    color: isDark ? AppColors.white : AppColors.textColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

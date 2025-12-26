@@ -49,6 +49,7 @@ class _TextButtonAppState extends State<TextButtonApp> {
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
+        padding: EdgeInsetsGeometry.symmetric(horizontal: 4.w),
         alignment: Alignment.center,
         width: (widget.width ?? double.infinity).w,
         height: (widget.height ?? 50).h,
@@ -56,14 +57,20 @@ class _TextButtonAppState extends State<TextButtonApp> {
           color: widget.buttonColor,
           borderRadius: BorderRadius.circular((widget.border ?? 100).r)
         ),
-        child: Text(
-          widget.text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: widget.textColor,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            widget.text,
+            maxLines: 1,
+            textDirection: TextDirection.ltr,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: widget.textColor,
+            ),
           ),
-        ),
+        )
+
       ),
     );
   }

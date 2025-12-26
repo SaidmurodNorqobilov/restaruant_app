@@ -33,97 +33,99 @@ class _AddressPageState extends State<AddressPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(title: 'Address'),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 35.h),
-                  Text(
-                    'Enter your delivery address',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16.sp,
-                      color: isDark ? AppColors.white : AppColors.textColor,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 35.h),
+                    Text(
+                      'Enter your delivery address',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16.sp,
+                        color: isDark ? AppColors.white : AppColors.textColor,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 24.h,
-                      horizontal: 16.w,
+                    SizedBox(height: 20.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 24.h,
+                        horizontal: 16.w,
+                      ),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkAppBar : AppColors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          TextAndTextField(
+                            controller: addressController,
+                            text: 'Address',
+                            hintText: 'Enter street address',
+                          ),
+                          SizedBox(height: 16.h),
+                          TextAndTextField(
+                            controller: buildingController,
+                            text: 'Building Name',
+                            hintText: 'Enter building name',
+                          ),
+                          SizedBox(height: 16.h),
+                          TextAndTextField(
+                            controller: houseController,
+                            text: 'House Number',
+                            hintText: 'Enter villa/apartment number',
+                          ),
+                        ],
+                      ),
                     ),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkAppBar : AppColors.white,
-                      borderRadius: BorderRadius.circular(12.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        TextAndTextField(
-                          controller: addressController,
-                          text: 'Address',
-                          hintText: 'Enter street address',
-                        ),
-                        SizedBox(height: 16.h),
-                        TextAndTextField(
-                          controller: buildingController,
-                          text: 'Building Name',
-                          hintText: 'Enter building name',
-                        ),
-                        SizedBox(height: 16.h),
-                        TextAndTextField(
-                          controller: houseController,
-                          text: 'House Number',
-                          hintText: 'Enter villa/apartment number',
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 120.h),
-                ],
+                    SizedBox(height: 120.h),
+                  ],
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: AlignmentGeometry.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkAppBar : AppColors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 10.r,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
-              ),
-              child: TextButtonApp(
-                onPressed: () {
-                  context.push(Routes.payment);
-                },
-                width: 403,
-                height: 50,
-                text: "Proceed to payment",
-                textColor: AppColors.white,
-                buttonColor: AppColors.primary,
+            Align(
+              alignment: AlignmentGeometry.bottomCenter,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkAppBar : AppColors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 10.r,
+                      offset: const Offset(0, -2),
+                    ),
+                  ],
+                ),
+                child: TextButtonApp(
+                  onPressed: () {
+                    context.push(Routes.payment);
+                  },
+                  width: 403,
+                  height: 50,
+                  text: "Proceed to payment",
+                  textColor: AppColors.white,
+                  buttonColor: AppColors.primary,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

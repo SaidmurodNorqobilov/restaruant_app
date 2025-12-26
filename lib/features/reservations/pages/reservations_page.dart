@@ -52,7 +52,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Reserve your table',
+                context.translate('reserveYourTable'),
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
@@ -63,7 +63,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 height: 8.h,
               ),
               Text(
-                'View my reservations',
+                context.translate('viewMyReservations'),
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
@@ -90,24 +90,24 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   children: [
                     TextAndTextField(
                       controller: nameController,
-                      text: 'Name',
-                      hintText: 'Enter your name',
+                      text: context.translate('name'),
+                      hintText: context.translate('inputName'),
                     ),
                     SizedBox(height: 15.h),
                     TextAndTextField(
                       controller: emailController,
                       text: 'Email',
-                      hintText: 'Enter email',
+                      hintText: context.translate('email'),
                     ),
                     SizedBox(height: 15.h),
                     TextAndTextField(
                       controller: phoneNumberController,
-                      text: 'Phone Number',
-                      hintText: 'Enter phone number',
+                      text: context.translate('phoneNumber'),
+                      hintText: context.translate('inputNumber'),
                     ),
                     SizedBox(height: 15.h),
                     Text(
-                      'Number of guests',
+                      context.translate('numberOfGuests'),
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.sp,
@@ -127,7 +127,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.person_outline, size: 20),
+                          const Icon(Icons.person_outline, size: 20, color: AppColors.white,),
                           SizedBox(width: 8.w),
                           Expanded(
                             child: DropdownButtonHideUnderline(
@@ -135,7 +135,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                 isExpanded: true,
                                 dropdownColor: isDark
                                     ? AppColors.darkAppBar
-                                    : AppColors.white,
+                                    : AppColors.primary,
                                 value: currentPerson,
                                 onChanged: (value) =>
                                     setState(() => currentPerson = value!),
@@ -146,9 +146,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       person.label,
                                       style: TextStyle(
                                         fontSize: 14.sp,
-                                        color: isDark
-                                            ? AppColors.white
-                                            : AppColors.black,
+                                        color: AppColors.white,
                                       ),
                                     ),
                                   );
@@ -162,20 +160,20 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     SizedBox(height: 15.h),
                     TextAndTextField(
                       controller: reservationTimeController,
-                      text: 'Reservation time',
-                      hintText: 'Enter time',
+                      text: context.translate('reservationTime'),
+                      hintText: context.translate('enterTime'),
                     ),
                     SizedBox(height: 15.h),
                     TextAndTextField(
                       controller: specialController,
-                      text: 'Special note',
-                      hintText: 'Special note',
+                      text: context.translate('specialNote'),
+                      hintText: context.translate('specialNote'),
                     ),
                     SizedBox(height: 15.h),
                     TextAndTextField(
                       controller: dateController,
-                      text: 'Date',
-                      hintText: 'Select date',
+                      text: context.translate('date'),
+                      hintText: context.translate('autofillDate'),
                       prefixIcon: InkWell(
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
@@ -243,7 +241,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       ),
                     );
                   },
-                  text: 'Submit',
+                  text: context.translate('submit'),
                   textColor: AppColors.white,
                   buttonColor: AppColors.primary,
                 ),
