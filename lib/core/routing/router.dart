@@ -6,6 +6,8 @@ import 'package:restaurantapp/features/accaunt/pages/about_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/account_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/refund_policy_page.dart';
 import 'package:restaurantapp/features/auth/pages/login_page.dart';
+import 'package:restaurantapp/features/auth/pages/otp_send_page.dart';
+import 'package:restaurantapp/features/auth/pages/profile_sign_page.dart';
 import 'package:restaurantapp/features/cart/pages/address_page.dart';
 import 'package:restaurantapp/features/cart/pages/cart_page.dart';
 import 'package:restaurantapp/features/cart/pages/checkout_page.dart';
@@ -24,7 +26,7 @@ import 'package:restaurantapp/features/home/pages/home_page.dart';
 import '../../features/common/widgets/bottom_navigation_bar_app.dart';
 
 final router = GoRouter(
-  initialLocation: Routes.splash,
+  initialLocation: Routes.home,
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -142,8 +144,15 @@ final router = GoRouter(
     ),
     GoRoute(
       path: Routes.splash,
-      builder: (context, state) => SplashPage(
-      ),
+      builder: (context, state) => SplashPage(),
+    ),
+    GoRoute(
+      path: Routes.otpSms,
+      builder: (context, state) => OtpSendPage(),
+    ),
+    GoRoute(
+      path: Routes.profileSign,
+      builder: (context, state) => ProfileSignPage(),
     ),
   ],
 );

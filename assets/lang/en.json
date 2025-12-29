@@ -47,6 +47,9 @@
   "checkout": "Checkout",
 
   "mealCategories" : "Meal categories",
-  "new" : "New"
+  "new" : "New",
+
+  "yes" : "Yes",
+  "no" : "No"
 }
 

@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
+import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 import '../../../core/utils/colors.dart';
 import '../../../core/utils/icons.dart';
 import '../widgets/profile_item_widgets.dart';
@@ -271,13 +272,36 @@ class _AccountPageState extends State<AccountPage> {
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontWeight: FontWeight.w700,
-                                        color: AppColors.darkAppBar,
+                                        color: isDark
+                                            ? AppColors.white
+                                            : AppColors.textColor,
                                       ),
                                     ),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
-                                      children: [],
+                                      children: [
+                                        TextButtonApp(
+                                          onPressed: () {
+                                            context.pop();
+                                          },
+                                          text: context.translate('no'),
+                                          textColor: AppColors.textColor,
+                                          buttonColor: AppColors.borderColor,
+                                          width: 184,
+                                          height: 58,
+                                        ),
+                                        TextButtonApp(
+                                          onPressed: () {
+                                            context.go(Routes.login);
+                                          },
+                                          text: context.translate('yes'),
+                                          textColor: AppColors.white,
+                                          buttonColor: AppColors.primary,
+                                          width: 184,
+                                          height: 58,
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),

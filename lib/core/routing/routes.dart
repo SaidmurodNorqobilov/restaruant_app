@@ -20,4 +20,6 @@ class Routes {
   static const order = '/order';
   static const orderDetail = '/orderDetail';
   static const splash = '/splash';
+  static const otpSms = '/otpSms';
+  static const profileSign = '/profileSign';
 }

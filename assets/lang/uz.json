@@ -47,5 +47,8 @@
   "checkout" : "To‘lovga o‘tish",
 
   "mealCategories" : "Ovqatlanish toifalari",
-  "new" : "Yangi"
+  "new" : "Yangi",
+
+  "yes" : "Ha",
+  "no" : "Yo'q"
 }
