@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
+import '../../../core/utils/onboarding_service.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -13,8 +14,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-
-  List categoryImg = [
+  final List<String> categoryImg = [
     'assets/categoryImg/category1.png',
     'assets/categoryImg/category2.png',
     'assets/categoryImg/category3.png',
@@ -25,77 +25,82 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundLightColor,
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 38.w, vertical: 20.h),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40.h,
-            ),
-            Expanded(
-              child: GridView.builder(
-                itemCount: categoryImg.length,
-                itemBuilder: (context, index) {
-                  return Image.asset(
-                    categoryImg[index],
-                    fit: BoxFit.cover,
-                  );
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: Column(
+            children: [
+              SizedBox(height: 20.h),
+              Expanded(
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: categoryImg.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16.h,
+                    crossAxisSpacing: 16.w,
+                    childAspectRatio: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: Image.asset(
+                        categoryImg[index],
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 30.h),
+              Text(
+                'Xush kelibsiz',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25.sp,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.white : AppColors.black,
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Text(
+                'Eng mazali taomlar bir joyda — buyurtma bering va lazzatdan bahramand bo\'ling.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w400,
+                  color: isDark ? AppColors.white.withOpacity(0.8) : AppColors.black.withOpacity(0.7),
+                ),
+              ),
+              SizedBox(height: 30.h),
+              TextButtonApp(
+                height: 50,
+                onPressed: () {
+                  context.go(Routes.preferences);
                 },
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                ),
+                text: 'Ro\'yxatdan o\'tish',
+                textColor: AppColors.white,
+                buttonColor: AppColors.primary,
               ),
-            ),
-            Text(
-              'Welcome',
-              style: TextStyle(
-                fontSize: 25.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-            Text(
-              'Find the best recipes that the world can provide you also with every step that you can learn to increase your cooking skills.',
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black,
-              ),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Column(
-              spacing: 10.h,
-              children: [
-                TextButtonApp(
-                  height: 50,
-                  onPressed: () {
-                    context.go(Routes.preferences);
-                  },
-                  text: 'I’m New',
-                  textColor: AppColors.white,
-                  buttonColor: AppColors.primary,
-                ),
-                TextButtonApp(
-                  height: 50,
-                  onPressed: () {
+              SizedBox(height: 12.h),
+              TextButtonApp(
+                height: 50,
+                onPressed: () async {
+                  await OnboardingService.setOnboardingSeen();
+                  if (mounted) {
                     context.go(Routes.home);
-                  },
-                  text: 'I’ve been here',
-                  textColor: AppColors.white,
-                  buttonColor: AppColors.primary,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 40.h,
-            ),
-          ],
+                  }
+                },
+                text: 'Keyinroq',
+                textColor: AppColors.white,
+                buttonColor: AppColors.primary,
+              ),
+              SizedBox(height: 30.h),
+            ],
+          ),
         ),
       ),
     );

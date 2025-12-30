@@ -15,112 +15,141 @@ class PreferencesPage extends StatefulWidget {
 class _PreferencesPageState extends State<PreferencesPage> {
   int selectInd = 0;
 
-  List text = [
+  final List<String> titleText = [
     'Casual Diner',
     'Food Lover',
     'Gourmet',
     'Fine Dining',
   ];
 
-  List textBody = [
-    'Simple and affordable meals for everyday dining. Perfect for quick and tasty food.',
-    'Enjoys discovering new flavors and popular restaurants around the city.',
-    'Prefers high-quality ingredients, unique menus, and chef-crafted dishes.',
-    'Luxury dining experience with premium service and world-class cuisine.',
+  final List<String> bodyText = [
+    'Har kungi oddiy va hamyonbop taomlar. Tez va mazali ovqatlar uchun ideal.',
+    'Yangi taʼmlar va shahardagi mashhur restoranlarni kashf etishni yoqtiradi.',
+    'Yuqori sifatli mahsulotlar, noyob menyu va oshpazlar tayyorlagan taomlar.',
+    'Premium xizmat, hashamatli muhit va jahon darajasidagi taomlar.',
   ];
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundLightColor,
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 36.w, vertical: 50.h),
+      body: SafeArea(
         child: Column(
-          spacing: 20.h,
           children: [
-            SizedBox(),
-            Text(
-              'What type of restaurants do you prefer?',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20.sp,
-                color: isDark ? AppColors.white : AppColors.textColor,
-              ),
-            ),
-            Text(
-              'Select your preference to get better restaurant recommendations.',
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w400,
-                color: isDark ? AppColors.white : AppColors.textColor,
-              ),
-            ),
-            Column(
-              spacing: 20.h,
-              children: [
-                ...List.generate(text.length, (index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectInd = index;
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsetsGeometry.symmetric(
-                        horizontal: 15.w,
-                        vertical: 10.h,
-                      ),
-                      width: 356.w,
-                      height: 116.h,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: selectInd == index
-                              ? AppColors.primary
-                              : AppColors.black,
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20.h),
+                      Text(
+                        'Didingizga mos restoranlarni tanlang',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20.sp,
+                          color: isDark
+                              ? AppColors.white
+                              : AppColors.textColor,
                         ),
-                        borderRadius: BorderRadius.circular(17.r),
                       ),
-                      child: Column(
-                        children: [
-                          Text(
-                            text[index],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.sp,
-                              color: isDark
-                                  ? AppColors.white
-                                  : AppColors.textColor,
+                      SizedBox(height: 12.h),
+                      Text(
+                        'Yaxshiroq restoran tavsiyalarini olish uchun o‘zingizga mos variantni tanlang.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w400,
+                          color: isDark
+                              ? AppColors.white.withOpacity(0.8)
+                              : AppColors.textColor.withOpacity(0.7),
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                      ...List.generate(titleText.length, (index) {
+                        final isSelected = selectInd == index;
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 16.h),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectInd = index;
+                              });
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 16.h,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(17.r),
+                                border: Border.all(
+                                  width: 2,
+                                  color: isSelected
+                                      ? AppColors.primary
+                                      : isDark
+                                      ? AppColors.white.withOpacity(0.3)
+                                      : AppColors.black.withOpacity(0.2),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    titleText[index],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16.sp,
+                                      color: isDark
+                                          ? AppColors.white
+                                          : AppColors.textColor,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    bodyText[index],
+                                    style: TextStyle(
+                                      fontSize: 13.sp,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.4,
+                                      color: isDark
+                                          ? AppColors.white.withOpacity(0.8)
+                                          : AppColors.textColor.withOpacity(0.7),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          Text(
-                            textBody[index],
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                              color: isDark
-                                  ? AppColors.white
-                                  : AppColors.textColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-              ],
+                        );
+                      }),
+
+                      SizedBox(height: 20.h),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            SizedBox(
-              height: 40.h,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: TextButtonApp(
+                width: 403,
+                height: 50,
+                onPressed: () {
+                  context.go(Routes.login);
+                },
+                text: 'Davom etish',
+                textColor: AppColors.white,
+                buttonColor: AppColors.primary,
+              ),
             ),
-            TextButtonApp(
-              onPressed: () {
-                context.go(Routes.login);
-              },
-              text: 'Continue',
-              textColor: AppColors.white,
-              buttonColor: AppColors.primary,
-            ),
+
+            SizedBox(height: 20.h),
           ],
         ),
       ),

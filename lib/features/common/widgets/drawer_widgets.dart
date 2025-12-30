@@ -141,7 +141,7 @@ class DrawerWidgets extends StatelessWidget {
                 context,
                 icon: Icons.home,
                 text: context.translate('home'),
-                onPressed: () => context.pop(),
+                onPressed: () => context.go(Routes.home),
                 isDark: isDark,
               ),
               _drawerItem(

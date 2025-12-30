@@ -22,10 +22,9 @@ class CustomDropDownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return DropdownButtonFormField<String>(
       value: value,
-      dropdownColor: isDark ? Colors.grey[850] : Colors.white,
+      dropdownColor: isDark ? Colors.grey[150] : Colors.white,
       style: TextStyle(
         color: Colors.black,
         fontSize: 16.sp,

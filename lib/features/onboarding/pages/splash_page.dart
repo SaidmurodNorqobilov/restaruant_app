@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/icons.dart';
+import '../../../core/utils/onboarding_service.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -28,7 +29,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _logoController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -44,83 +44,74 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       vsync: this,
     );
 
-    _logoScaleAnimation =
-        Tween<double>(
-          begin: 0.5,
-          end: 1.0,
-        ).animate(
-          CurvedAnimation(
-            parent: _logoController,
-            curve: Curves.elasticOut,
-          ),
-        );
+    _logoScaleAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _logoController,
+        curve: Curves.elasticOut,
+      ),
+    );
 
-    _logoOpacityAnimation =
-        Tween<double>(
-          begin: 0.0,
-          end: 1.0,
-        ).animate(
-          CurvedAnimation(
-            parent: _logoController,
-            curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
-          ),
-        );
+    _logoOpacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _logoController,
+        curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      ),
+    );
 
-    // Text animations
-    _textOpacityAnimation =
-        Tween<double>(
-          begin: 0.0,
-          end: 1.0,
-        ).animate(
-          CurvedAnimation(
-            parent: _textController,
-            curve: Curves.easeIn,
-          ),
-        );
+    _textOpacityAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _textController,
+        curve: Curves.easeIn,
+      ),
+    );
 
-    _textSlideAnimation =
-        Tween<Offset>(
-          begin: const Offset(0, 0.5),
-          end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: _textController,
-            curve: Curves.easeOutCubic,
-          ),
-        );
+    _textSlideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _textController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
 
-    // Background gradient animation
-    _backgroundAnimation =
-        Tween<double>(
-          begin: 0.0,
-          end: 1.0,
-        ).animate(
-          CurvedAnimation(
-            parent: _backgroundController,
-            curve: Curves.easeInOut,
-          ),
-        );
+    _backgroundAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _backgroundController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
-    // Start animations
     _startAnimations();
   }
 
   Future<void> _startAnimations() async {
-    // Background animation
     _backgroundController.forward();
-
-    // Logo animation
     await Future.delayed(const Duration(milliseconds: 300));
     _logoController.forward();
-
-    // Text animation
     await Future.delayed(const Duration(milliseconds: 600));
     _textController.forward();
-
-    // Navigate to home after 3 seconds total
     await Future.delayed(const Duration(milliseconds: 2000));
+
     if (mounted) {
-      context.go(Routes.home);
+      final hasSeenOnboarding = await OnboardingService.hasSeenOnboarding();
+      if (hasSeenOnboarding) {
+        context.go(Routes.home);
+      } else {
+        context.go(Routes.onboarding);
+      }
     }
   }
 
@@ -157,15 +148,11 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             ),
             child: Stack(
               children: [
-                // Animated circles background
                 _buildAnimatedCircles(),
-
-                // Main content
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo animation
                       AnimatedBuilder(
                         animation: _logoController,
                         builder: (context, child) {
@@ -226,10 +213,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                           );
                         },
                       ),
-
                       SizedBox(height: 40.h),
-
-                      // Text animation
                       AnimatedBuilder(
                         animation: _textController,
                         builder: (context, child) {
@@ -259,11 +243,10 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                                     ),
                                   ),
                                   SizedBox(height: 20.h),
-                                  // Loading indicator
                                   SizedBox(
                                     width: 40.w,
                                     height: 40.h,
-                                    child: CircularProgressIndicator(
+                                    child: const CircularProgressIndicator(
                                       color: AppColors.white,
                                       strokeWidth: 2,
                                     ),
@@ -288,7 +271,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   Widget _buildAnimatedCircles() {
     return Stack(
       children: [
-        // Circle 1
         Positioned(
           top: -100.h,
           right: -100.w,
@@ -309,8 +291,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             },
           ),
         ),
-
-        // Circle 2
         Positioned(
           bottom: -150.h,
           left: -150.w,
@@ -331,8 +311,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             },
           ),
         ),
-
-        // Circle 3
         Positioned(
           top: 200.h,
           left: -50.w,

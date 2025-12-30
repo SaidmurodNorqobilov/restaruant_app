@@ -23,6 +23,7 @@ class PhoneTextWidget extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return TextFormField(
+      cursorColor: AppColors.textColor,
       controller: controller,
       keyboardType: TextInputType.phone,
       style: TextStyle(

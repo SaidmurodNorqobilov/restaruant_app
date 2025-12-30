@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
 
 class OtpSendPage extends StatefulWidget {
   const OtpSendPage({super.key});
@@ -67,36 +68,21 @@ class _OtpSendPageState extends State<OtpSendPage> {
         color: Colors.white,
       ),
     );
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF1E1E1E)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Kodni kiriting',
-          style: TextStyle(
-            color: Color(0xFF1E1E1E),
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      appBar: AppBarWidgets(title: 'Kodni Kiriting'),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             children: [
               const SizedBox(height: 80),
-              const Text(
+              Text(
                 'Sms kodini kiriting',
                 style: TextStyle(
                   fontSize: 16,
-                  color: AppColors.textColor,
+                  color: isDark ? AppColors.white :  AppColors.textColor,
                   fontWeight: FontWeight.w400,
                 ),
               ),

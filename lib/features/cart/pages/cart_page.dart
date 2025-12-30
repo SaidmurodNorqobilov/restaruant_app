@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -335,7 +337,217 @@ class _CartPageState extends State<CartPage>
               SizedBox(
                 width: double.infinity,
                 child: TextButtonApp(
-                  onPressed: () => context.push(Routes.checkout),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          height: isTablet ? MediaQuery.of(context).size.height * 0.65 : MediaQuery.of(context).size.height * 0.55,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? [
+                                      AppColors.black.withOpacity(0.9),
+                                      AppColors.black.withOpacity(0.8),
+                                    ]
+                                  : [
+                                      AppColors.white.withOpacity(0.9),
+                                      AppColors.white.withOpacity(0.8),
+                                    ],
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.r),
+                              topRight: Radius.circular(30.r),
+                            ),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.2),
+                              width: 1.5.w,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.w,
+                              vertical: 30.h,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 50.w,
+                                  height: 5.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                ),
+                                SizedBox(height: 35.h),
+                                Container(
+                                  width: 100.w,
+                                  height: 100.h,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        AppColors.primary.withOpacity(0.2),
+                                        AppColors.primary.withOpacity(0.05),
+                                      ],
+                                    ),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.primary.withOpacity(0.3),
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.primary.withOpacity(
+                                          0.2,
+                                        ),
+                                        blurRadius: 20,
+                                        spreadRadius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    Icons.person_outline_rounded,
+                                    size: 50.sp,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                SizedBox(height: 30.h),
+                                ShaderMask(
+                                  shaderCallback: (bounds) => LinearGradient(
+                                    colors: [
+                                      AppColors.primary,
+                                      AppColors.primary.withOpacity(0.7),
+                                    ],
+                                  ).createShader(bounds),
+                                  child: Text(
+                                    'Ro\'yxatdan o\'ting',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 26.sp,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  'Buyurtma berishdan oldin tizimga kirishingiz yoki ro\'yxatdan o\'tishingiz kerak',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color:
+                                        Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? AppColors.white.withOpacity(0.8)
+                                        : AppColors.black.withOpacity(0.7),
+                                    height: 1.6,
+                                  ),
+                                ),
+                                SizedBox(height: 45.h),
+                                Container(
+                                  width: double.infinity,
+                                  height: 55.h,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppColors.primary,
+                                        AppColors.primary.withOpacity(0.8),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.primary.withOpacity(
+                                          0.3,
+                                        ),
+                                        blurRadius: 15,
+                                        offset: const Offset(0, 5),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(15.r),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        context.push(Routes.login);
+                                      },
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.login_rounded,
+                                              color: AppColors.white,
+                                              size: 22.sp,
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            Text(
+                                              'Kirish',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 14.h),
+                                Container(
+                                  width: double.infinity,
+                                  height: 55.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    border: Border.all(
+                                      color: AppColors.primary.withOpacity(0.3),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(15.r),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          'Bekor qilish',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                   text: context.translate('checkout'),
                   buttonColor: AppColors.primary,
                   textColor: Colors.white,

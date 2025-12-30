@@ -19,32 +19,10 @@ class ProfileSignPage extends StatefulWidget {
 }
 
 class _ProfileSignPageState extends State<ProfileSignPage> {
-
-
   final ismController = TextEditingController();
   final familiyaController = TextEditingController();
   String? tanlanganViloyat;
   File? rasm;
-
-  // String get phoneNumber {
-  //   try {
-  //     final value = widget.extra['phoneNumber'] ??
-  //         widget.extra['phone_number'] ??
-  //         '';
-  //     return value is String ? value : '';
-  //   } catch (e) {
-  //     return '';
-  //   }
-  // }
-
-  // bool get isNewUser {
-  //   try {
-  //     final value = widget.extra['isNewUser'] ?? true;
-  //     return value is bool ? value : true;
-  //   } catch (e) {
-  //     return true;
-  //   }
-  // }
 
   final viloyatlar = {
     'Toshkent': 1,
@@ -72,6 +50,35 @@ class _ProfileSignPageState extends State<ProfileSignPage> {
     }
   }
 
+  bool _validateForm() {
+    if (ismController.text.trim().isEmpty) {
+      _showError('Ismingizni kiriting');
+      return false;
+    }
+    if (familiyaController.text.trim().isEmpty) {
+      _showError('Familyangizni kiriting');
+      return false;
+    }
+    if (tanlanganViloyat == null) {
+      _showError('Viloyatingizni tanlang');
+      return false;
+    }
+    return true;
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     ismController.dispose();
@@ -79,116 +86,116 @@ class _ProfileSignPageState extends State<ProfileSignPage> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 48.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 24.h,
-          children: [
-            ProfileAvatarWidget(
-              imageFile: rasm,
-              onTap: _rasmTanlash,
-            ),
-            CustomTextFeldWidget(
-              controller: ismController,
-              hintText: "Ismingiz",
-            ),
-            CustomTextFeldWidget(
-              controller: familiyaController,
-              hintText: "Familyangiz",
-            ),
-            CustomDropDownWidget(
-              value: tanlanganViloyat,
-              hintText: "Viloyatingiz",
-              items: viloyatlar.keys
-                  .map((v) => DropdownMenuItem(
-                value: v,
-                child: Text(v),
-              ))
-                  .toList(),
-              onChanged: (yangi) => setState(() => tanlanganViloyat = yangi),
-            ),
-            const Spacer(),
-            // BlocBuilder<AuthBloc, AuthState>(
-            //   builder: (context, state) {
-            //     final isLoading = state is AuthLoading;
-            //     return TextButtonPopular(
-            //       onPressed: () {
-            //         if (isLoading) return;
-            //
-            //         if (ismController.text.isEmpty ||
-            //             familiyaController.text.isEmpty ||
-            //             tanlanganViloyat == null) {
-            //           ScaffoldMessenger.of(context).showSnackBar(
-            //             const SnackBar(
-            //               content: Text('Barcha maydonlarni to\'ldiring'),
-            //             ),
-            //           );
-            //           return;
-            //         }
-            //
-            //         if (phoneNumber.isEmpty) {
-            //           ScaffoldMessenger.of(context).showSnackBar(
-            //             const SnackBar(
-            //               content: Text(
-            //                   'Telefon raqam topilmadi. Qaytadan kiriting.'),
-            //               backgroundColor: Colors.orange,
-            //             ),
-            //           );
-            //           return;
-            //         }
-            //
-            //         final regionId = viloyatlar[tanlanganViloyat];
-            //
-            //         context.read<AuthBloc>().add(
-            //           UpdateProfileEvent(
-            //             firstName: ismController.text.trim(),
-            //             lastName: familiyaController.text.trim(),
-            //             region: regionId.toString(),
-            //             profileImage: rasm,
-            //             phoneNumber: phoneNumber,
-            //             isNewUser: isNewUser,
-            //           ),
-            //         );
-            //       },
-            //       title: isLoading ? 'Saqlanmoqda...' : 'Saqlash',
-            //     );
-            //   },
-            // ),
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.push(
-                    Routes.home,
-                  );
-                  // if (pinController.text.length == 4) {
-                  //   debugPrint('Tasdiqlash: ${pinController.text}');
-                  // }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Tasdiqlash',
+      backgroundColor: isDark ? AppColors.black : AppColors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: isDark ? AppColors.white : AppColors.black,
+          ),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20.h),
+                Text(
+                  'Profilingizni to\'ldiring',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? AppColors.white : AppColors.black,
                   ),
                 ),
-              ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Ma\'lumotlaringizni kiriting',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: isDark
+                        ? AppColors.white.withOpacity(0.7)
+                        : AppColors.black.withOpacity(0.6),
+                  ),
+                ),
+                SizedBox(height: 40.h),
+
+                ProfileAvatarWidget(
+                  imageFile: rasm,
+                  onTap: _rasmTanlash,
+                ),
+                SizedBox(height: 40.h),
+                CustomTextFeldWidget(
+                  controller: ismController,
+                  hintText: "Ismingiz",
+                ),
+                SizedBox(height: 16.h),
+
+                CustomTextFeldWidget(
+                  controller: familiyaController,
+                  hintText: "Familyangiz",
+                ),
+                SizedBox(height: 16.h),
+
+                CustomDropDownWidget(
+
+                  value: tanlanganViloyat,
+                  hintText: "Viloyatingiz",
+                  items: viloyatlar.keys
+                      .map((v) => DropdownMenuItem(
+                    value: v,
+                    child: Text(v),
+                  ))
+                      .toList(),
+                  onChanged: (yangi) => setState(() => tanlanganViloyat = yangi),
+                ),
+                SizedBox(height: 60.h),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 52.h,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_validateForm()) {
+                        context.go(Routes.home);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      elevation: 0,
+                      shadowColor: AppColors.primary.withOpacity(0.3),
+                    ),
+                    child: Text(
+                      'Saqlash',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

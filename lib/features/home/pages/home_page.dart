@@ -233,7 +233,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 10.h),
+                  padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
                   child: Text(
                     context.translate('mealCategories'),
                     style: TextStyle(
@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(
-                  height: isTablet ? 200.h : 220.h,
+                  height: isTablet ? 230.h : 250.h,
                   child: GridView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     scrollDirection: Axis.horizontal,
@@ -263,8 +263,8 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              height: isTablet ? 60.h : 65.w,
-                              width: isTablet ? 60.h : 65.w,
+                              height: isTablet ? 70.h : 75.w,
+                              width: isTablet ? 70.h : 75.w,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 boxShadow: [

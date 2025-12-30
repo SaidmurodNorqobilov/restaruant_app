@@ -22,19 +22,15 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   void _register(BuildContext context) {
-    // Formani validatsiya qilish
     setState(() {
       _hasError = !(_formKey.currentState?.validate() ?? false);
     });
 
-    // Agar xato bo'lsa, to'xtatish
     if (_hasError) return;
 
-    // Telefon raqamni olish va formatlash
     final rawPhone = phoneController.text.trim();
     final phone = PhoneValidatsiyaWidget.formatPhone(rawPhone);
 
-    // Qo'shimcha tekshiruv
     if (!PhoneValidatsiyaWidget.isValidUzbekPhone(phone)) {
       setState(() {
         _hasError = true;
@@ -47,8 +43,6 @@ class _LoginPageState extends State<LoginPage> {
       );
       return;
     }
-
-    // Hammasi to'g'ri bo'lsa, OTP sahifasiga o'tish
     context.push(Routes.otpSms);
   }
 
@@ -60,6 +54,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -77,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textColor,
+                    color: isDark ? AppColors.white : AppColors.textColor,
                   ),
                 ),
                 SizedBox(
