@@ -123,7 +123,7 @@ class DrawerWidgets extends StatelessWidget {
                             ),
                             DropdownMenuItem(
                               value: 'uz',
-                              child: Text('O\'zbek'),
+                              child: Text("O'zbek"),
                             ),
                           ],
                         ),
@@ -362,7 +362,7 @@ class DrawerWidgets extends StatelessWidget {
       },
     );
   }
-
+  
   Widget _drawerItem(
     BuildContext context, {
     required IconData icon,

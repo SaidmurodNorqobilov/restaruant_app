@@ -97,79 +97,101 @@ class _CartPageState extends State<CartPage>
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
         titleSpacing: 0,
-        title: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
-          child: _isSearching
-              ? Padding(
-                  padding: EdgeInsets.only(right: 15.w),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 2.h,
-                    ),
-                    key: const ValueKey('SearchField'),
-                    height: 40.h,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.blueGrey.shade700
-                          : AppColors.orangeSearch,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: TextField(
-                      controller: controllerSearch,
-                      autofocus: true,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        hintStyle: TextStyle(color: AppColors.white),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isSearching = false;
-                              controllerSearch.clear();
-                            });
-                          },
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                )
-              : Text(
-                  context.translate('cart'),
+        title: Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            AnimatedSlide(
+              offset: _isSearching ? const Offset(-1.2, 0) : Offset.zero,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeInOutCubic,
+              child: AnimatedOpacity(
+                opacity: _isSearching ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 200),
+                child: Text(
+                  context.translate("cart"),
                   key: const ValueKey('TitleText'),
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: isLandscape ? 18.sp : 20.sp,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-        ),
-        actions: [
-          if (!_isSearching)
-            IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              onPressed: () => setState(() => _isSearching = true),
-              icon: SvgPicture.asset(
-                AppIcons.search,
-                width: 18.w,
-                height: 18.h,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
+              ),
+            ),
+            AnimatedSlide(
+              offset: _isSearching ? Offset.zero : const Offset(1.2, 0),
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeInOutCubic,
+              child: AnimatedOpacity(
+                opacity: _isSearching ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 250),
+                child: Container(
+                  key: const ValueKey('SearchField'),
+                  height: 40.h,
+                  margin: EdgeInsets.only(right: 15.w),
+                  decoration: BoxDecoration(
+                    color:
+                    isDark ? Colors.blueGrey.shade700 : AppColors.orangeSearch,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: const Icon(Icons.search, color: Colors.white),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: controllerSearch,
+                          autofocus: true,
+                          style: const TextStyle(color: Colors.white),
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                            hintText: 'Search...',
+                            hintStyle:
+                            TextStyle(color: AppColors.white.withOpacity(0.7)),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+          ],
+        ),
+        actions: [
+          InkWell(
+            borderRadius: BorderRadius.circular(100.r),
+            onTap: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) {
+                  controllerSearch.clear();
+                }
+              });
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              child: AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                firstChild: SvgPicture.asset(
+                  AppIcons.search,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
+                secondChild: const Icon(Icons.close, color: Colors.white),
+                crossFadeState:
+                _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              ),
+            ),
+          ),
         ],
       ),
+
       drawer: const DrawerWidgets(),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -568,7 +590,7 @@ class _CartPageState extends State<CartPage>
     return Column(
       children: [
         _priceRow(
-          context.translate('Cart subtotal'),
+          context.translate('cartSubtotal'),
           'AED ${subtotal.toStringAsFixed(2)}',
           isDark,
         ),
@@ -725,6 +747,7 @@ class _CartPageState extends State<CartPage>
             ),
             SizedBox(height: 24.h),
             DropdownButtonFormField<String>(
+              dropdownColor: isDark ? AppColors.darkAppBar : Colors.white,
               value: selectedTable,
               decoration: InputDecoration(
                 labelText: 'Select Table',
@@ -733,7 +756,8 @@ class _CartPageState extends State<CartPage>
                 ),
               ),
               items: tableList
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .map((e) => DropdownMenuItem(
+                  value: e, child: Text(e)))
                   .toList(),
               onChanged: (val) => setState(() => selectedTable = val!),
             ),

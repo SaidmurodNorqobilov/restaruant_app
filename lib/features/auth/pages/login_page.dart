@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
+
           padding: EdgeInsets.symmetric(
             horizontal: 24.w,
           ),

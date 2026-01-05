@@ -8,9 +8,7 @@ import 'package:restaurantapp/core/utils/icons.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
-import '../../../core/utils/language.dart';
 import '../../../core/utils/colors.dart';
-import '../../../main.dart';
 import '../../common/manager/langBloc/language_bloc.dart';
 import '../../common/manager/langBloc/language_event.dart';
 import '../../common/manager/langBloc/language_state.dart';
@@ -83,80 +81,78 @@ class _HomePageState extends State<HomePage> {
         iconTheme: IconThemeData(color: AppColors.white),
         backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
         titleSpacing: 0,
-        title: AnimatedSwitcher(
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.1, 0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            );
-          },
-          duration: Duration(milliseconds: 300),
-          child: _isSearching
-              ? Padding(
-                  padding: EdgeInsets.only(right: 15.w),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 2.h,
-                    ),
-                    key: const ValueKey('SearchField'),
-                    height: 40.h,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? Colors.blueGrey.shade700
-                          : AppColors.orangeSearch,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: TextField(
-                      controller: controllerSearch,
-                      autofocus: true,
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        hintStyle: TextStyle(color: AppColors.white),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.white,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isSearching = false;
-                              controllerSearch.clear();
-                            });
-                          },
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                )
-              : Text(
-                  'ATS',
-                  key: const ValueKey('TitleText'),
+        title: Stack(
+          alignment: Alignment.centerLeft,
+          children: [
+            AnimatedSlide(
+              offset: _isSearching ? const Offset(-1.2, 0) : Offset.zero,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeInOutCubic,
+              child: AnimatedOpacity(
+                opacity: _isSearching ? 0.0 : 1.0,
+                duration: const Duration(milliseconds: 200),
+                child: Text(
+                  "ATS",
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+              ),
+            ),
+            AnimatedSlide(
+              offset: _isSearching ? Offset.zero : const Offset(1.2, 0),
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeInOutCubic,
+              child: AnimatedOpacity(
+                opacity: _isSearching ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 250),
+                child: Container(
+                  key: const ValueKey('SearchField'),
+                  height: 40.h,
+                  margin: EdgeInsets.only(right: 15.w),
+                  decoration: BoxDecoration(
+                    color:
+                    isDark ? Colors.blueGrey.shade700 : AppColors.orangeSearch,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: const Icon(Icons.search, color: Colors.white),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: controllerSearch,
+                          autofocus: true,
+                          style: const TextStyle(color: Colors.white),
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                            hintText: 'Search...',
+                            hintStyle:
+                            TextStyle(color: AppColors.white.withOpacity(0.7)),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         actions: [
           if (!_isSearching)
             BlocBuilder<LanguageBloc, LanguageState>(
               builder: (context, langState) {
                 return Padding(
-                  padding: const EdgeInsets.only(left: 10),
+                  padding: EdgeInsets.only(left: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -170,9 +166,8 @@ class _HomePageState extends State<HomePage> {
                         iconDisabledColor: Colors.white,
                         iconEnabledColor: Colors.white,
                         focusColor: Colors.white,
-                        dropdownColor: isDark
-                            ? AppColors.darkAppBar
-                            : AppColors.primary,
+                        dropdownColor:
+                        isDark ? AppColors.darkAppBar : AppColors.primary,
                         value: langState.languageCode,
                         onChanged: (value) {
                           if (value != null) {
@@ -200,26 +195,30 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
             ),
-
-          if (!_isSearching)
-            InkWell(
-              borderRadius: BorderRadius.circular(100.r),
-              onTap: () {
-                setState(() {
-                  _isSearching = true;
-                });
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-                child: SvgPicture.asset(
+          InkWell(
+            borderRadius: BorderRadius.circular(100.r),
+            onTap: () {
+              setState(() {
+                _isSearching = !_isSearching;
+                if (!_isSearching) {
+                  controllerSearch.clear();
+                }
+              });
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              child: AnimatedCrossFade(
+                duration: const Duration(milliseconds: 300),
+                firstChild: SvgPicture.asset(
                   AppIcons.search,
-                  colorFilter: ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
-                  ),
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 ),
+                secondChild: const Icon(Icons.close, color: Colors.white),
+                crossFadeState:
+                _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
               ),
             ),
+          ),
         ],
       ),
       drawer: DrawerWidgets(),
@@ -309,7 +308,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                    context.translate('promotions') ,
+                    context.translate('promotions'),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: isTablet ? 20.sp : 18.sp,
@@ -350,7 +349,7 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                    context.translate('new') ,
+                    context.translate('new'),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: isTablet ? 20.sp : 18.sp,

@@ -36,7 +36,7 @@ class _WelcomePageState extends State<WelcomePage> {
               SizedBox(height: 20.h),
               Expanded(
                 child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics:  BouncingScrollPhysics(),
                   itemCount: categoryImg.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,

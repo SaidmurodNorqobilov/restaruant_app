@@ -79,11 +79,15 @@ class UserService {
   }
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.remove(_firstNameKey);
+    await prefs.remove(_lastNameKey);
+    await prefs.remove(_regionKey);
+    await prefs.remove(_phoneKey);
+    await prefs.remove(_imagePathKey);
+    await prefs.setBool(_isLoggedInKey, false);
 
     userDataChanged.value++;
   }
-
   static Future<String> getFullName() async {
     final userData = await getUserData();
     final firstName = userData['firstName'] ?? '';
