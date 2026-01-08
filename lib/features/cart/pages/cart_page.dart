@@ -27,30 +27,48 @@ class _CartPageState extends State<CartPage>
   final TextEditingController controllerSearch = TextEditingController();
   late AnimationController _animationController;
 
-  final List<String> cartAddProducts = const [
+  final List<String> cartAddProducts = [
     'https://static.toiimg.com/photo/102941656.cms',
     'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
     'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
     'https://i.pinimg.com/originals/32/07/8e/32078e4d3c1e9edb4d76dba9a419f71f.jpg',
     'https://static.toiimg.com/photo/102941656.cms',
+    'https://static.toiimg.com/photo/102941656.cms',
+    'https://static.toiimg.com/photo/102941656.cms',
+    'https://static.toiimg.com/photo/102941656.cms',
   ];
 
-  final List<String> cartAddTitle = const [
+  final List<String> cartAddTitle = [
     'Provencal Breakf',
     '2 Provencal Breakf',
     '2 Provencal Breakf',
     '3 Provencal Breakf',
     '4 Provencal Breakf',
+    '5 Provencal Breakf',
+    '6 Provencal Breakf',
+    '7 nimadirlar yana yana yana',
   ];
 
-  final List<double> cartAddPrice = const [20.0, 70.0, 50.0, 23.0, 45.0];
+  final List<double> cartAddPrice = [
+    20.0,
+    70.0,
+    50.0,
+    23.0,
+    45.0,
+    30.0,
+    40.0,
+    50.0,
+  ];
   List<int> quantities = [];
-  final List<String> tableList = const [
+  final List<String> tableList = [
     'Table 1',
     'Table 2',
     'Table 3',
     'Table 4',
     'Table 5',
+    'Table 6',
+    'Table 7',
+    'Table 8',
   ];
 
   String selectedTable = 'Table 1';
@@ -61,6 +79,9 @@ class _CartPageState extends State<CartPage>
   void initState() {
     super.initState();
     quantities = List.generate(cartAddProducts.length, (index) => 1);
+    tipController.addListener(() {
+      if (mounted) setState(() {});
+    });
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -69,16 +90,20 @@ class _CartPageState extends State<CartPage>
 
   @override
   void dispose() {
+    tipController.removeListener(() {});
+    tipController.dispose();
     _animationController.dispose();
     controllerPromo.dispose();
-    tipController.dispose();
     controllerSearch.dispose();
     super.dispose();
   }
 
   double calculateSubtotal() {
     double total = 0;
-    for (int i = 0; i < cartAddPrice.length; i++) {
+    final length = cartAddPrice.length < quantities.length
+        ? cartAddPrice.length
+        : quantities.length;
+    for (int i = 0; i < length; i++) {
       total += cartAddPrice[i] * quantities[i];
     }
     return total;
@@ -130,8 +155,9 @@ class _CartPageState extends State<CartPage>
                   height: 40.h,
                   margin: EdgeInsets.only(right: 15.w),
                   decoration: BoxDecoration(
-                    color:
-                    isDark ? Colors.blueGrey.shade700 : AppColors.orangeSearch,
+                    color: isDark
+                        ? Colors.blueGrey.shade700
+                        : AppColors.orangeSearch,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Row(
@@ -149,8 +175,9 @@ class _CartPageState extends State<CartPage>
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             hintText: 'Search...',
-                            hintStyle:
-                            TextStyle(color: AppColors.white.withOpacity(0.7)),
+                            hintStyle: TextStyle(
+                              color: AppColors.white.withOpacity(0.7),
+                            ),
                             border: InputBorder.none,
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
@@ -168,12 +195,14 @@ class _CartPageState extends State<CartPage>
           InkWell(
             borderRadius: BorderRadius.circular(100.r),
             onTap: () {
-              setState(() {
-                _isSearching = !_isSearching;
-                if (!_isSearching) {
-                  controllerSearch.clear();
-                }
-              });
+              if (mounted) {
+                setState(() {
+                  _isSearching = !_isSearching;
+                  if (!_isSearching) {
+                    controllerSearch.clear();
+                  }
+                });
+              }
             },
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
@@ -181,17 +210,20 @@ class _CartPageState extends State<CartPage>
                 duration: const Duration(milliseconds: 300),
                 firstChild: SvgPicture.asset(
                   AppIcons.search,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                    Colors.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
                 secondChild: const Icon(Icons.close, color: Colors.white),
-                crossFadeState:
-                _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                crossFadeState: _isSearching
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
               ),
             ),
           ),
         ],
       ),
-
       drawer: const DrawerWidgets(),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -257,8 +289,12 @@ class _CartPageState extends State<CartPage>
     bool isDark,
     bool isTablet,
   ) {
+    if (index < 0 || index >= cartAddProducts.length) {
+      return const SizedBox.shrink();
+    }
+
     return Container(
-      height: isLandscape ? 75.h : 85.h,
+      height: isLandscape ? 72.h : 82.h,
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkAppBar : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
@@ -272,12 +308,23 @@ class _CartPageState extends State<CartPage>
             borderRadius: BorderRadius.horizontal(left: Radius.circular(12.r)),
             child: Image.network(
               cartAddProducts[index],
-              width: (isLandscape ? 70.0 : 85.0).w,
+              width: (isTablet ? 50.0 : 85.0).w,
               height: double.infinity,
               fit: BoxFit.cover,
               cacheWidth: 250,
-              errorBuilder: (_, __, ___) =>
-                  Container(width: 85.w, color: Colors.grey[200]),
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  width: (isTablet ? 50.0 : 85.0).w,
+                  color: Colors.grey[200],
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              },
+              errorBuilder: (_, __, ___) => Container(
+                width: (isTablet ? 50.0 : 85.0).w,
+                color: Colors.grey[200],
+                child: const Icon(Icons.error_outline),
+              ),
             ),
           ),
           Expanded(
@@ -287,23 +334,27 @@ class _CartPageState extends State<CartPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    cartAddTitle[index],
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                      color: isDark ? AppColors.white : AppColors.textColor,
+                  SizedBox(
+                    width: isTablet ? 55.w : 150.w,
+                    child: Text(
+                      index < cartAddTitle.length ? cartAddTitle[index] : 'not found',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: isTablet
+                            ? FontWeight.w500
+                            : FontWeight.w600,
+                        fontSize: isTablet ? 7.sp : 14.sp,
+                        color: isDark ? AppColors.white : AppColors.textColor,
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 4.h,
-                  ),
+                  SizedBox(height: 4.h),
                   Text(
-                    "AED ${cartAddPrice[index].toStringAsFixed(2)}",
+                    index < cartAddPrice.length
+                        ? "AED ${cartAddPrice[index].toStringAsFixed(2)}"
+                        : "AED 0.00",
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
                       color: AppColors.primary,
                     ),
                   ),
@@ -311,14 +362,29 @@ class _CartPageState extends State<CartPage>
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(right: 8.w),
-            child: CounterRow(
-              count: quantities[index],
-              onIncrement: () => setState(() => quantities[index]++),
-              onDecrement: () => setState(() {
-                if (quantities[index] > 1) quantities[index]--;
-              }),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(right: isTablet ? 8.w : 20.w, left: 18.w),
+              child:
+                  index <
+                      quantities
+                          .length
+                  ? CounterRow(
+                      count: quantities[index],
+                      onIncrement: () {
+                        if (mounted) {
+                          setState(() => quantities[index]++);
+                        }
+                      },
+                      onDecrement: () {
+                        if (mounted) {
+                          setState(() {
+                            if (quantities[index] > 1) quantities[index]--;
+                          });
+                        }
+                      },
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
         ],
@@ -347,235 +413,233 @@ class _CartPageState extends State<CartPage>
           top: false,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!isLandscape) ...[
-                _buildCouponSection(isDark, isTablet),
-                SizedBox(height: 12.h),
-                _buildTipButton(isDark, isTablet),
-                SizedBox(height: 12.h),
-              ],
-              _buildPricingSection(isDark, isTablet, isLandscape),
-              SizedBox(height: 16.h),
-              SizedBox(
-                width: double.infinity,
-                child: TextButtonApp(
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          height: isTablet ? MediaQuery.of(context).size.height * 0.65 : MediaQuery.of(context).size.height * 0.55,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors:
-                                  Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? [
-                                      AppColors.black.withOpacity(0.9),
-                                      AppColors.black.withOpacity(0.8),
-                                    ]
-                                  : [
-                                      AppColors.white.withOpacity(0.9),
-                                      AppColors.white.withOpacity(0.8),
-                                    ],
+            children: isLandscape || isTablet
+                ? [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            _buildCouponSection(isDark, isTablet),
+                            SizedBox(height: 12.h),
+                            _buildTipButton(isDark, isTablet),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildPricingSection(isDark, isTablet, isLandscape),
+                    SizedBox(height: 16.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButtonApp(
+                        onPressed: () =>
+                            _showAuthBottomSheet(context, isDark, isTablet),
+                        text: context.translate('checkout'),
+                        buttonColor: AppColors.primary,
+                        textColor: Colors.white,
+                      ),
+                    ),
+                  ]
+                : [
+                    _buildCouponSection(isDark, isTablet),
+                    SizedBox(height: 12.h),
+                    _buildTipButton(isDark, isTablet),
+                    SizedBox(height: 12.h),
+                    _buildPricingSection(isDark, isTablet, isLandscape),
+                    SizedBox(height: 16.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButtonApp(
+                        onPressed: () =>
+                            _showAuthBottomSheet(context, isDark, isTablet),
+                        text: context.translate('checkout'),
+                        buttonColor: AppColors.primary,
+                        textColor: Colors.white,
+                      ),
+                    ),
+                  ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showAuthBottomSheet(BuildContext context, bool isDark, bool isTablet) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.w,
+              vertical: 20.h,
+            ),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkAppBar : AppColors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30.r),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 50.w,
+                  height: 5.h,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                Container(
+                  width: 80.w,
+                  height: 80.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.3),
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.2),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.person_outline_rounded,
+                    size: 50.sp,
+                    color: AppColors.primary,
+                  ),
+                ),
+                SizedBox(height: 30.h),
+                ShaderMask(
+                  shaderCallback: (bounds) => LinearGradient(
+                    colors: [
+                      AppColors.primary,
+                      AppColors.primary.withOpacity(0.7),
+                    ],
+                  ).createShader(bounds),
+                  child: Text(
+                    context.translate('register'),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 26.sp,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  context.translate('auth_required_before_order'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.white.withOpacity(0.8)
+                        : AppColors.black.withOpacity(0.7),
+                    height: 1.6,
+                  ),
+                ),
+                SizedBox(height: 45.h),
+                Container(
+                  width: double.infinity,
+                  height: 55.h,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary,
+                        AppColors.primary.withOpacity(0.8),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(15.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(15.r),
+                      onTap: () {
+                        Navigator.pop(context);
+                        context.push(Routes.login);
+                      },
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.login_rounded,
+                              color: AppColors.white,
+                              size: 22.sp,
                             ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30.r),
-                              topRight: Radius.circular(30.r),
+                            SizedBox(width: 10.w),
+                            Text(
+                              context.translate('enter'),
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.white,
+                              ),
                             ),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.2),
-                              width: 1.5.w,
-                            ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 24.w,
-                              vertical: 30.h,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 50.w,
-                                  height: 5.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-                                ),
-                                SizedBox(height: 35.h),
-                                Container(
-                                  width: 100.w,
-                                  height: 100.h,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        AppColors.primary.withOpacity(0.2),
-                                        AppColors.primary.withOpacity(0.05),
-                                      ],
-                                    ),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: AppColors.primary.withOpacity(0.3),
-                                      width: 2,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.primary.withOpacity(
-                                          0.2,
-                                        ),
-                                        blurRadius: 20,
-                                        spreadRadius: 5,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    Icons.person_outline_rounded,
-                                    size: 50.sp,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                                SizedBox(height: 30.h),
-                                ShaderMask(
-                                  shaderCallback: (bounds) => LinearGradient(
-                                    colors: [
-                                      AppColors.primary,
-                                      AppColors.primary.withOpacity(0.7),
-                                    ],
-                                  ).createShader(bounds),
-                                  child: Text(
-                                    'Ro\'yxatdan o\'ting',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.w800,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 16.h),
-                                Text(
-                                  'Buyurtma berishdan oldin tizimga kirishingiz yoki ro\'yxatdan o\'tishingiz kerak',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                        Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? AppColors.white.withOpacity(0.8)
-                                        : AppColors.black.withOpacity(0.7),
-                                    height: 1.6,
-                                  ),
-                                ),
-                                SizedBox(height: 45.h),
-                                Container(
-                                  width: double.infinity,
-                                  height: 55.h,
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.primary,
-                                        AppColors.primary.withOpacity(0.8),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(15.r),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.primary.withOpacity(
-                                          0.3,
-                                        ),
-                                        blurRadius: 15,
-                                        offset: const Offset(0, 5),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(15.r),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        context.push(Routes.login);
-                                      },
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.login_rounded,
-                                              color: AppColors.white,
-                                              size: 22.sp,
-                                            ),
-                                            SizedBox(width: 10.w),
-                                            Text(
-                                              'Kirish',
-                                              style: TextStyle(
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 14.h),
-                                Container(
-                                  width: double.infinity,
-                                  height: 55.h,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(15.r),
-                                    border: Border.all(
-                                      color: AppColors.primary.withOpacity(0.3),
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(15.r),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Center(
-                                        child: Text(
-                                          'Bekor qilish',
-                                          style: TextStyle(
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 14.h),
+                Container(
+                  width: double.infinity,
+                  height: 55.h,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15.r),
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(15.r),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Center(
+                        child: Text(
+                          context.translate('cancel'),
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
                           ),
                         ),
                       ),
-                    );
-                  },
-                  text: context.translate('checkout'),
-                  buttonColor: AppColors.primary,
-                  textColor: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -585,7 +649,8 @@ class _CartPageState extends State<CartPage>
   Widget _buildPricingSection(bool isDark, bool isTablet, bool isLandscape) {
     double subtotal = calculateSubtotal();
     double vat = subtotal * 0.05;
-    double total = subtotal + vat - (isCouponApplied ? 10.0 : 0.0);
+    double tip = double.tryParse(tipController.text) ?? 0.0;
+    double total = subtotal + vat + tip - (isCouponApplied ? 10.0 : 0.0);
 
     return Column(
       children: [
@@ -599,6 +664,12 @@ class _CartPageState extends State<CartPage>
           'AED ${vat.toStringAsFixed(2)}',
           isDark,
         ),
+        if (tip > 0)
+          _priceRow(
+            context.translate('tip'),
+            'AED ${tip.toStringAsFixed(2)}',
+            isDark,
+          ),
         if (isCouponApplied)
           _priceRow(
             context.translate('discount'),
@@ -649,10 +720,10 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildCouponSection(bool isDark, bool isTablet) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
+    if (isTablet) {
+      return Column(
+        children: [
+          TextField(
             controller: controllerPromo,
             decoration: InputDecoration(
               hintText: context.translate('enterCouponCode'),
@@ -668,17 +739,56 @@ class _CartPageState extends State<CartPage>
               ),
             ),
           ),
-        ),
-        SizedBox(width: 10.w),
-        TextButtonApp(
-          textColor: AppColors.white,
-          width: 100,
-          onPressed: () => setState(() => isCouponApplied = true),
-          text: context.translate('applyCoupon'),
-          buttonColor: AppColors.primary,
-        ),
-      ],
-    );
+          SizedBox(height: 10.h),
+          SizedBox(
+            width: double.infinity,
+            child: TextButtonApp(
+              textColor: AppColors.white,
+              onPressed: () {
+                if (mounted) setState(() => isCouponApplied = true);
+              },
+              text: context.translate('applyCoupon'),
+              buttonColor: AppColors.primary,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controllerPromo,
+              decoration: InputDecoration(
+                hintText: context.translate('enterCouponCode'),
+                filled: true,
+                fillColor: isDark ? Colors.white10 : Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 12.h,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 10.w,
+          ),
+          TextButtonApp(
+            textColor: AppColors.white,
+            width: 100,
+            onPressed: () {
+              if (mounted) setState(() => isCouponApplied = true);
+            },
+            text: context.translate('applyCoupon'),
+            buttonColor: AppColors.primary,
+          ),
+        ],
+      );
+    }
   }
 
   Widget _buildTipButton(bool isDark, bool isTablet) {
@@ -756,10 +866,13 @@ class _CartPageState extends State<CartPage>
                 ),
               ),
               items: tableList
-                  .map((e) => DropdownMenuItem(
-                  value: e, child: Text(e)))
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                   .toList(),
-              onChanged: (val) => setState(() => selectedTable = val!),
+              onChanged: (val) {
+                if (mounted && val != null) {
+                  setState(() => selectedTable = val);
+                }
+              },
             ),
             SizedBox(height: 16.h),
             TextAndTextField(
@@ -771,7 +884,10 @@ class _CartPageState extends State<CartPage>
             SizedBox(
               width: double.infinity,
               child: TextButtonApp(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  if (mounted) setState(() {});
+                  Navigator.pop(context);
+                },
                 text: context.translate('applyCoupon'),
                 buttonColor: AppColors.primary,
                 textColor: AppColors.white,

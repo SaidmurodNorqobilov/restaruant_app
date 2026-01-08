@@ -22,4 +22,5 @@ class Routes {
   static const splash = '/splash';
   static const otpSms = '/otpSms';
   static const profileSign = '/profileSign';
+  static const editProfile = '/editProfile';
 }

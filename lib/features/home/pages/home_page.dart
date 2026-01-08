@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/icons.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
+import 'package:restaurantapp/features/accaunt/managers/user_profile_bloc.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
 import '../../../core/utils/colors.dart';
@@ -224,7 +225,9 @@ class _HomePageState extends State<HomePage> {
       drawer: DrawerWidgets(),
       body: RefreshIndicator(
         color: isDark ? AppColors.darkAppBar : AppColors.primary,
-        onRefresh: () async {},
+        onRefresh: () async {
+          GetUserProfile();
+        },
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

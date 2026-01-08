@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
@@ -7,6 +10,8 @@ import 'package:restaurantapp/features/common/widgets/secces_page.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
+
+import '../../../core/routing/routes.dart';
 
 class ReservationsPage extends StatefulWidget {
   const ReservationsPage({super.key});
@@ -38,7 +43,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    final isTablet = MediaQuery.of(context).size.width > 600;
     return Scaffold(
       appBar: AppBarHome(
         title: Text(context.translate('reservation')),
@@ -229,18 +234,227 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   width: 272,
                   height: 50,
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SuccessPage(
-                          onBackPressed: () => Navigator.pop(context),
-                          message:
-                              "Your reservation has been made successfully",
-                          appbarTitle: 'Reservation',
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Container(
+                          height: isTablet ? MediaQuery.of(context).size.height * 0.65 : MediaQuery.of(context).size.height * 0.55,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors:
+                              Theme.of(context).brightness ==
+                                  Brightness.dark
+                                  ? [
+                                AppColors.black.withOpacity(0.9),
+                                AppColors.black.withOpacity(0.8),
+                              ]
+                                  : [
+                                AppColors.white.withOpacity(0.9),
+                                AppColors.white.withOpacity(0.8),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.r),
+                              topRight: Radius.circular(30.r),
+                            ),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.2),
+                              width: 1.5.w,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24.w,
+                              vertical: 30.h,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 50.w,
+                                  height: 5.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                ),
+                                SizedBox(height: 35.h),
+                                Container(
+                                  width: 100.w,
+                                  height: 100.h,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        AppColors.primary.withOpacity(0.2),
+                                        AppColors.primary.withOpacity(0.05),
+                                      ],
+                                    ),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.primary.withOpacity(0.3),
+                                      width: 2,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.primary.withOpacity(
+                                          0.2,
+                                        ),
+                                        blurRadius: 20,
+                                        spreadRadius: 5,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    Icons.person_outline_rounded,
+                                    size: 50.sp,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                SizedBox(height: 30.h),
+                                ShaderMask(
+                                  shaderCallback: (bounds) => LinearGradient(
+                                    colors: [
+                                      AppColors.primary,
+                                      AppColors.primary.withOpacity(0.7),
+                                    ],
+                                  ).createShader(bounds),
+                                  child: Text(
+                                    'Ro\'yxatdan o\'ting',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 26.sp,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 16.h),
+                                Text(
+                                  'Buyurtma berishdan oldin tizimga kirishingiz yoki ro\'yxatdan o\'tishingiz kerak',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                        ? AppColors.white.withOpacity(0.8)
+                                        : AppColors.black.withOpacity(0.7),
+                                    height: 1.6,
+                                  ),
+                                ),
+                                SizedBox(height: 45.h),
+                                Container(
+                                  width: double.infinity,
+                                  height: 55.h,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppColors.primary,
+                                        AppColors.primary.withOpacity(0.8),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.primary.withOpacity(
+                                          0.3,
+                                        ),
+                                        blurRadius: 15,
+                                        offset: const Offset(0, 5),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(15.r),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        context.push(Routes.login);
+                                      },
+                                      child: Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.login_rounded,
+                                              color: AppColors.white,
+                                              size: 22.sp,
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            Text(
+                                              'Kirish',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 14.h),
+                                Container(
+                                  width: double.infinity,
+                                  height: 55.h,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(15.r),
+                                    border: Border.all(
+                                      color: AppColors.primary.withOpacity(0.3),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(15.r),
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Center(
+                                        child: Text(
+                                          'Bekor qilish',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     );
                   },
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => SuccessPage(
+                    //       onBackPressed: () => Navigator.pop(context),
+                    //       message:
+                    //           "Your reservation has been made successfully",
+                    //       appbarTitle: 'Reservation',
+                    //     ),
+                    //   ),
+                    // );
                   text: context.translate('submit'),
                   textColor: AppColors.white,
                   buttonColor: AppColors.primary,

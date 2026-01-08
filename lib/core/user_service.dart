@@ -74,7 +74,6 @@ class UserService {
     if (lastName != null) await prefs.setString(_lastNameKey, lastName);
     if (region != null) await prefs.setString(_regionKey, region);
     if (imagePath != null) await prefs.setString(_imagePathKey, imagePath);
-
     userDataChanged.value++;
   }
   static Future<void> logout() async {
@@ -85,6 +84,7 @@ class UserService {
     await prefs.remove(_phoneKey);
     await prefs.remove(_imagePathKey);
     await prefs.setBool(_isLoggedInKey, false);
+    await prefs.clear();
 
     userDataChanged.value++;
   }

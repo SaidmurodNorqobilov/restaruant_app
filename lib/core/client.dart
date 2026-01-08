@@ -9,7 +9,7 @@ class AuthInterceptor extends Interceptor {
       RequestInterceptorHandler handler,
       ) async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("token");
+    final token = prefs.getString("access_token");
     if (token != null && token.isNotEmpty) {
       options.headers["Authorization"] = "Bearer $token";
     }
@@ -19,20 +19,21 @@ class AuthInterceptor extends Interceptor {
 
 class ApiClient {
   final Dio _dio;
-
+  Dio get dio => _dio;
   ApiClient()
       : _dio = Dio(
     BaseOptions(
-      baseUrl: "http://192.168.0.63:8888/api/v1",
+      baseUrl: "https://atsrestaurant.pythonanywhere.com",
       validateStatus: (status) => true,
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 20),
     ),
-  ){
+  ) {
     _dio.interceptors.add(AuthInterceptor());
     _dio.interceptors.add(
       LogInterceptor(
         request: true,
+        requestHeader: true,
         requestBody: true,
         responseBody: true,
         error: true,
@@ -67,7 +68,14 @@ class ApiClient {
         if (response.data is String) {
           errorMessage = response.data as String;
         } else if (response.data is Map<String, dynamic>) {
-          errorMessage = response.data!['message'] ?? response.data.toString();
+          if (response.data!.containsKey('detail')) {
+            errorMessage = response.data!['detail'];
+          } else if (response.data!.containsKey('error')) {
+            errorMessage = response.data!['error'];
+          } else {
+            errorMessage =
+                response.data!['message'] ?? response.data.toString();
+          }
         }
 
         return Result.error(
@@ -77,7 +85,22 @@ class ApiClient {
     } on DioException catch (e) {
       return Result.error(Exception(e.message ?? e.toString()));
     } catch (e) {
-      return Result.error(Exception("Kutilmagan konvertatsiya xatosi: ${e.toString()}"));
+      return Result.error(Exception("Kutilmagan xato: ${e.toString()}"));
+    }
+  }
+
+  Future<Result<T>> put<T>(String path, {Map<String, dynamic>? data}) async {
+    try {
+      final response = await _dio.put(path, data: data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return Result.ok(response.data as T);
+      } else {
+        return Result.error(
+          Exception("Xatolik: ${response.statusCode} - ${response.data}"),
+        );
+      }
+    } catch (e) {
+      return Result.error(Exception(e.toString()));
     }
   }
 
@@ -95,11 +118,29 @@ class ApiClient {
     }
   }
 
+  Future<Result<T>> patchWithFormData<T>(String path, {required FormData data}) async {
+    try {
+      final response = await _dio.patch(path, data: data);
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        return Result.error(
+          Exception("Xatolik: ${response.statusCode} - ${response.data}"),
+        );
+      }
+      return Result.ok(response.data as T);
+    } catch (e) {
+      return Result.error(Exception(e.toString()));
+    }
+  }
+
+
   Future<Result<T>> delete<T>(String path, {Map<String, dynamic>? data}) async {
     try {
       final response = await _dio.delete(path, data: data);
 
       if (response.statusCode == 200 || response.statusCode == 204) {
+        if (response.statusCode == 204 || response.data == null) {
+          return Result.ok(null as T);
+        }
         return Result.ok(response.data as T);
       } else {
         return Result.error(

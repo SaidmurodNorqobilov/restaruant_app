@@ -17,6 +17,7 @@ class CounterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.width > 600;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -24,8 +25,8 @@ class CounterRow extends StatelessWidget {
         GestureDetector(
           onTap: onDecrement,
           child: Container(
-            width: 38.w,
-            height: 38.h,
+            width: isTablet ? 18.w : 38.w,
+            height: isTablet ? 28.h : 38.h,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.borderColor),
               borderRadius: BorderRadius.circular(3.r),
@@ -33,21 +34,25 @@ class CounterRow extends StatelessWidget {
             child: const Icon(Icons.remove, size: 16),
           ),
         ),
-        SizedBox(width: 8.w),
-        Text(
-          "$count",
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-            color: isDark ? AppColors.white : AppColors.black,
+        SizedBox(width: isTablet ? 3.w : 5.w),
+        Expanded(
+          child: Center(
+            child: Text(
+              "$count",
+              style: TextStyle(
+                fontSize: isTablet ? 10.sp : 16.sp,
+                fontWeight: isTablet ? FontWeight.w400 : FontWeight.w500,
+                color: isDark ? AppColors.white : AppColors.black,
+              ),
+            ),
           ),
         ),
-        SizedBox(width: 8.w),
+        SizedBox(width: isTablet ? 3.w : 5.w),
         GestureDetector(
           onTap: onIncrement,
           child: Container(
-            width: 38.w,
-            height: 38.h,
+            width: isTablet ? 18.w : 38.w,
+            height: isTablet ? 28.h : 38.h,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.borderColor),
               borderRadius: BorderRadius.circular(3.r),

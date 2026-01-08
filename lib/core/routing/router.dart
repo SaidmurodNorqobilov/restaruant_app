@@ -4,6 +4,7 @@ import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/features/Reservations/pages/reservations_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/about_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/account_page.dart';
+import 'package:restaurantapp/features/accaunt/pages/edit_profile_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/refund_policy_page.dart';
 import 'package:restaurantapp/features/auth/pages/login_page.dart';
 import 'package:restaurantapp/features/auth/pages/otp_send_page.dart';
@@ -50,13 +51,15 @@ final router = GoRouter(
     ),
     GoRoute(
       path: Routes.otpSms,
-      builder: (context, state) => const OtpSendPage(),
+      builder: (context, state) {
+        final sessionId = state.extra as String? ?? '';
+        return OtpSendPage(sessionId: sessionId);
+      },
     ),
     GoRoute(
       path: Routes.profileSign,
       builder: (context, state) => const ProfileSignPage(),
     ),
-
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return Scaffold(
@@ -155,5 +158,9 @@ final router = GoRouter(
       path: Routes.orderDetail,
       builder: (context, state) => const OrderDetailPage(),
     ),
+    GoRoute(
+      path: Routes.editProfile,
+      builder: (context, state) => EditProfilePage(),
+    )
   ],
 );

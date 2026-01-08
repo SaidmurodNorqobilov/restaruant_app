@@ -16,6 +16,8 @@
   "payments" : "To'lovlar",
   "orderHistory" : "Buyurtma tarixi",
   "exit" : "Chiqish",
+  "enter" : "Kirish",
+  "cancel" : "Bekor qilish",
   "exits" : "Haqiqatdan ham tizimdan chiqmoqchimisiz ?",
   "language" : "Til",
 
@@ -50,5 +52,8 @@
   "new" : "Yangi",
 
   "yes" : "Ha",
-  "no" : "Yo'q"
+  "no" : "Yo'q",
+
+  "register" : "Ro\\'yxatdan o\\'ting",
+  "auth_required_before_order" : "Buyurtma berishdan oldin tizimga kirishingiz yoki ro\\'yxatdan o\\'tishingiz kerak"
 }

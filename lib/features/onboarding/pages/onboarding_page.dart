@@ -14,6 +14,7 @@ class OnboardingPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       backgroundColor: AppColors.primary,
       body: Column(
@@ -24,20 +25,20 @@ class OnboardingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Get inspired',
+                  'Ilhom oling',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20.sp,
-                    color: AppColors.textColor,
+                    color: AppColors.white,
                   ),
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  'Get inspired with our daily recipe recommendations.',
+                  'Har kuni siz uchun tanlangan eng mazali taomlar bilan ilhom oling.',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 13.sp,
-                    color: AppColors.textColor,
+                    color: AppColors.white.withOpacity(0.9),
                   ),
                 ),
               ],
@@ -46,7 +47,6 @@ class OnboardingPage extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                // Image
                 Positioned.fill(
                   child: Image.asset(
                     'assets/onboardingImg/onboarding1.png',
@@ -54,19 +54,17 @@ class OnboardingPage extends StatelessWidget {
                     alignment: Alignment.topCenter,
                   ),
                 ),
-
-                // Gradient overlay on top of image
                 Positioned(
                   top: 0,
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: 200.h,
+                    height: 220.h,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
                           AppColors.primary,
-                          AppColors.primary.withOpacity(0.7),
+                          AppColors.primary.withOpacity(0.75),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -76,7 +74,7 @@ class OnboardingPage extends StatelessWidget {
                   ),
                 ),
 
-                // Button at bottom
+                /// Button
                 Positioned(
                   bottom: 40.h,
                   left: 0,
@@ -88,7 +86,7 @@ class OnboardingPage extends StatelessWidget {
                       },
                       width: 207,
                       height: 45,
-                      text: 'Continue',
+                      text: 'Davom etish',
                       textColor: AppColors.white,
                       buttonColor: AppColors.primary,
                     ),

@@ -16,6 +16,8 @@
   "payments" : "Payments",
   "orderHistory" : "Order history",
   "exit" : "Exit",
+  "enter" : "Enter",
+  "cancel" : "Cancel",
   "exits" : "Are you sure you want to log out?",
   "language" : "Language",
 
@@ -50,6 +52,9 @@
   "new" : "New",
 
   "yes" : "Yes",
-  "no" : "No"
+  "no" : "No",
+
+  "register" : "Register",
+  "auth_required_before_order" : "You need to log in or register before placing an order"
 }
 
