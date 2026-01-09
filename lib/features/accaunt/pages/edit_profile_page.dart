@@ -203,7 +203,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             SizedBox(height: 24.h),
                             Text(
-                              'Mahsulotlar yuklanmoqda...',
+                              'Profile Ma\'lumotlar yuklanmoqda...',
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w500,

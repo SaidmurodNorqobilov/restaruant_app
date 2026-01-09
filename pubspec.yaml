@@ -123,5 +123,5 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   adaptive_icon_background: "#FFFFFF" # Orqa fon oq bo'ladi
-  adaptive_icon_foreground: "assets/appLogo/logo.png" # Logotipning o'zi (shaffof fonli)
+  adaptive_icon_foreground: "assets/appLogo/appLogo.png" # Logotipning o'zi (shaffof fonli)
   image_path: "assets/appLogo/logo.png" # iOS va eski Androidlar uchun umumiy rasm

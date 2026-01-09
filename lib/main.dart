@@ -58,14 +58,14 @@ void main() async {
                 ),
           ),
         ],
-        child: const RestaurantApp(),
+        child: const IzgaraApp(),
       ),
     ),
   );
 }
 
-class RestaurantApp extends StatelessWidget {
-  const RestaurantApp({super.key});
+class IzgaraApp extends StatelessWidget {
+  const IzgaraApp({super.key});
 
   @override
   Widget build(BuildContext context) {

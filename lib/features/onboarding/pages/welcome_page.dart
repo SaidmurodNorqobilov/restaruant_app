@@ -15,12 +15,12 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
   final List<String> categoryImg = [
-    'assets/categoryImg/category1.png',
-    'assets/categoryImg/category2.png',
-    'assets/categoryImg/category3.png',
-    'assets/categoryImg/category4.png',
-    'assets/categoryImg/category5.png',
-    'assets/categoryImg/category6.png',
+    'https://media.istockphoto.com/id/1371064975/ru/%D1%84%D0%BE%D1%82%D0%BE/%D1%82%D1%80%D0%B0%D0%B4%D0%B8%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B9-%D0%BF%D0%BE%D0%BB%D0%BD%D1%8B%D0%B9-%D0%B0%D0%BC%D0%B5%D1%80%D0%B8%D0%BA%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9-%D0%B7%D0%B0%D0%B2%D1%82%D1%80%D0%B0%D0%BA-%D1%8F%D0%B9%D1%86%D0%B0-%D0%B1%D0%BB%D0%B8%D0%BD%D1%8B-%D1%81-%D0%B1%D0%B5%D0%BA%D0%BE%D0%BD%D0%BE%D0%BC-%D0%B8-%D1%82%D0%BE%D1%81%D1%82%D0%B0%D0%BC%D0%B8.jpg?s=170667a&w=0&k=20&c=ky_smVgMoW2g8v5ncgYONDeaJ2La-eMc39qvssLOBFg=',
+    'https://www.shutterstock.com/image-photo/traditional-full-american-breakfast-eggs-600nw-2120331371.jpg',
+    'https://d2yoo3qu6vrk5d.cloudfront.net/pulzo-lite/images-resized/PP3893296-h-o.jpg', // Vergul qo'shildi
+    'https://i.pinimg.com/originals/a2/f8/98/a2f898641514481941eff885dd2dd5d8.webp',
+    'https://www.morningadvertiser.co.uk/resizer/v2/POXGRG2TBFA6FN6JZLG64TWEEQ.jpg?auth=4635af297ddec44de8535360ea3ba256ce3e1937682e9501493fa7bad57405bb&smart=true', // Vergul qo'shildi
+    'https://i.pinimg.com/736x/2d/d6/86/2dd68674f14b27b1fdb12a5bf842b0e5.jpg',
   ];
 
   @override
@@ -36,7 +36,7 @@ class _WelcomePageState extends State<WelcomePage> {
               SizedBox(height: 20.h),
               Expanded(
                 child: GridView.builder(
-                  physics:  BouncingScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   itemCount: categoryImg.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -46,8 +46,10 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   itemBuilder: (context, index) {
                     return ClipRRect(
-                      borderRadius: BorderRadius.circular(12.r),
-                      child: Image.asset(
+                      borderRadius: BorderRadius.circular(
+                        12.r,
+                      ),
+                      child: Image.network(
                         categoryImg[index],
                         fit: BoxFit.cover,
                       ),
@@ -72,7 +74,9 @@ class _WelcomePageState extends State<WelcomePage> {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w400,
-                  color: isDark ? AppColors.white.withOpacity(0.8) : AppColors.black.withOpacity(0.7),
+                  color: isDark
+                      ? AppColors.white.withOpacity(0.8)
+                      : AppColors.black.withOpacity(0.7),
                 ),
               ),
               SizedBox(height: 30.h),

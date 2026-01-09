@@ -119,7 +119,7 @@ class _ProfileSignPageState extends State<ProfileSignPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.black : AppColors.white,
+      backgroundColor:  AppColors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

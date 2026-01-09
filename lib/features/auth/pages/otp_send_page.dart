@@ -192,7 +192,7 @@ class _OtpSendPageState extends State<OtpSendPage> {
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
-                            state.errorMessage ?? 'Xatolik yuz berdi',
+                            'Xatolik yuz berdi',
                           ),
                         ),
                       ],

@@ -32,7 +32,8 @@ class CustomDropDownWidget extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: isDark ? Colors.grey[400] : Colors.grey[600],
+          color: AppColors.textColor,
+          fontWeight: FontWeight.w500
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16.r),
