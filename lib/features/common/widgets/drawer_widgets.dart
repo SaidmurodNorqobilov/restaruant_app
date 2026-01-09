@@ -21,12 +21,10 @@ class DrawerWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return BlocBuilder<LanguageBloc, LanguageState>(
       builder: (context, langState) {
         return Drawer(
           surfaceTintColor: AppColors.white,
-
           shadowColor: AppColors.white,
           backgroundColor: isDark
               ? AppColors.lightText
@@ -38,44 +36,49 @@ class DrawerWidgets extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
                   children: [
-                    SvgPicture.asset(
-                      AppIcons.menu,
-                      colorFilter: const ColorFilter.mode(
-                        AppColors.white,
-                        BlendMode.srcIn,
-                      ),
-                      width: 80.w,
-                      height: 80.h,
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'ATS',
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w300,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                    SizedBox(height: 25.h,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.menu,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.white,
+                            BlendMode.srcIn,
                           ),
-                          Text(
-                            'MENU',
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: AppColors.white,
-                              fontSize: 28.sp,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                          width: 80.w,
+                          height: 80.h,
+                        ),
+                        SizedBox(width: 25.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'IZGARA',
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'CAFE',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 28.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

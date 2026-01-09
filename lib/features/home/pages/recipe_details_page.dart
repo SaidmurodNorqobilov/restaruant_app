@@ -102,7 +102,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
               Stack(
                 children: [
                   Image.network(
-                    fullImgUrl, // Real rasm
+                    fullImgUrl,
                     width: double.infinity,
                     height: 363.h,
                     fit: BoxFit.cover,

@@ -30,33 +30,19 @@ class _CartPageState extends State<CartPage>
   final List<String> cartAddProducts = [
     'https://static.toiimg.com/photo/102941656.cms',
     'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
-    'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
     'https://i.pinimg.com/originals/32/07/8e/32078e4d3c1e9edb4d76dba9a419f71f.jpg',
-    'https://static.toiimg.com/photo/102941656.cms',
-    'https://static.toiimg.com/photo/102941656.cms',
-    'https://static.toiimg.com/photo/102941656.cms',
-    'https://static.toiimg.com/photo/102941656.cms',
   ];
 
   final List<String> cartAddTitle = [
     'Provencal Breakf',
     '2 Provencal Breakf',
     '2 Provencal Breakf',
-    '3 Provencal Breakf',
-    '4 Provencal Breakf',
-    '5 Provencal Breakf',
-    '6 Provencal Breakf',
-    '7 nimadirlar yana yana yana',
+
   ];
 
   final List<double> cartAddPrice = [
     20.0,
     70.0,
-    50.0,
-    23.0,
-    45.0,
-    30.0,
-    40.0,
     50.0,
   ];
   List<int> quantities = [];

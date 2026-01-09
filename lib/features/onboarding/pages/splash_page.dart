@@ -240,7 +240,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             child: Column(
               children: [
                 Text(
-                  'ATS',
+                  'IZGARA',
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 32.sp,
@@ -250,7 +250,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                 ),
                 SizedBox(height: 8.h),
                 Text(
-                  'MENU',
+                  'CAFE',
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 48.sp,

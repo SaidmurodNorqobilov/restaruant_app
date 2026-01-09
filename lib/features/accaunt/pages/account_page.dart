@@ -111,11 +111,50 @@ class _AccountPageState extends State<AccountPage> {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
       builder: (context, state) {
         if (state.status == Status.loading) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primary,
-              ),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 80.w,
+                  height: 80.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 60.w,
+                        height: 60.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 3,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primary,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.restaurant_menu,
+                        size: 28.sp,
+                        color: AppColors.primary,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Text(
+                  'Ma\'lumotlar yuklanmoqda...',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                    color: isDark
+                        ? AppColors.white.withOpacity(0.7)
+                        : AppColors.black.withOpacity(0.6),
+                  ),
+                ),
+              ],
             ),
           );
         }

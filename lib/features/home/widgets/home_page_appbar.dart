@@ -45,7 +45,7 @@ class _HomePageAppbarState extends State<HomePageAppbar> {
               opacity: _isSearching ? 0.0 : 1.0,
               duration: const Duration(milliseconds: 200),
               child: Text(
-                "ATS",
+                "IZGARA",
                 style: TextStyle(
                   color: AppColors.white,
                   fontSize: 24.sp,
