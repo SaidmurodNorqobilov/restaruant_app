@@ -107,7 +107,6 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return BlocBuilder<UserProfileBloc, UserProfileState>(
       builder: (context, state) {
         if (state.status == Status.loading) {

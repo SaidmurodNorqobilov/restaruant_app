@@ -338,8 +338,8 @@ class _CartPageState extends State<CartPage>
                   SizedBox(height: 4.h),
                   Text(
                     index < cartAddPrice.length
-                        ? "AED ${cartAddPrice[index].toStringAsFixed(2)}"
-                        : "AED 0.00",
+                        ? "SO'M ${cartAddPrice[index].toStringAsFixed(2)}"
+                        : "SO'M 0.00",
                     style: const TextStyle(
                       color: AppColors.primary,
                     ),
@@ -419,8 +419,10 @@ class _CartPageState extends State<CartPage>
                     SizedBox(
                       width: double.infinity,
                       child: TextButtonApp(
-                        onPressed: () =>
-                            _showAuthBottomSheet(context, isDark, isTablet),
+                        onPressed: () {
+                          context.push(Routes.checkout);
+                          // _showAuthBottomSheet(context, isDark, isTablet);
+                        },
                         text: context.translate('checkout'),
                         buttonColor: AppColors.primary,
                         textColor: Colors.white,
@@ -437,8 +439,10 @@ class _CartPageState extends State<CartPage>
                     SizedBox(
                       width: double.infinity,
                       child: TextButtonApp(
-                        onPressed: () =>
-                            _showAuthBottomSheet(context, isDark, isTablet),
+                        onPressed: () {
+                          context.push(Routes.checkout);
+                          // _showAuthBottomSheet(context, isDark, isTablet);
+                        },
                         text: context.translate('checkout'),
                         buttonColor: AppColors.primary,
                         textColor: Colors.white,
@@ -642,31 +646,31 @@ class _CartPageState extends State<CartPage>
       children: [
         _priceRow(
           context.translate('cartSubtotal'),
-          'AED ${subtotal.toStringAsFixed(2)}',
+          'SO\'M ${subtotal.toStringAsFixed(2)}',
           isDark,
         ),
         _priceRow(
           "${context.translate('vat')} (5%)",
-          'AED ${vat.toStringAsFixed(2)}',
+          'SO\'M ${vat.toStringAsFixed(2)}',
           isDark,
         ),
         if (tip > 0)
           _priceRow(
             context.translate('tip'),
-            'AED ${tip.toStringAsFixed(2)}',
+            'SO\'M ${tip.toStringAsFixed(2)}',
             isDark,
           ),
         if (isCouponApplied)
           _priceRow(
             context.translate('discount'),
-            '-AED 10.00',
+            '-SO\'M 10.00',
             isDark,
             color: Colors.green,
           ),
         const Divider(),
         _priceRow(
           context.translate('total'),
-          'AED ${total.toStringAsFixed(2)}',
+          'SO\'M ${total.toStringAsFixed(2)}',
           isDark,
           isBold: true,
         ),
@@ -846,7 +850,7 @@ class _CartPageState extends State<CartPage>
               dropdownColor: isDark ? AppColors.darkAppBar : Colors.white,
               value: selectedTable,
               decoration: InputDecoration(
-                labelText: 'Select Table',
+                labelText: context.translate('selectTable'),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -864,7 +868,7 @@ class _CartPageState extends State<CartPage>
             TextAndTextField(
               controller: tipController,
               text: context.translate('Pricing'),
-              hintText: 'AED 10.00',
+              hintText: 'SO\'M 10.00',
             ),
             SizedBox(height: 24.h),
             SizedBox(

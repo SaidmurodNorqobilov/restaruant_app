@@ -157,7 +157,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                     SizedBox(height: 12.h),
                     Center(
                       child: Text(
-                        "AED ${totalPrice.toStringAsFixed(2)}",
+                        "${totalPrice.toStringAsFixed(2)} SO'M",
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 24.sp,

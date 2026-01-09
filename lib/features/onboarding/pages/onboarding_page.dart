@@ -73,10 +73,8 @@ class OnboardingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                /// Button
                 Positioned(
-                  bottom: 40.h,
+                  bottom: MediaQuery.of(context).padding.bottom + 27.h,
                   left: 0,
                   right: 0,
                   child: Center(

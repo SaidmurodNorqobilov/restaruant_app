@@ -98,7 +98,7 @@ class RecipeWidgets extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        "SO'M ${price.toStringAsFixed(2)}",
+                        "${price.toStringAsFixed(2)} SO'M",
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: isTablet ? 11.sp : 14.sp,

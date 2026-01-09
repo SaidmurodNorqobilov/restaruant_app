@@ -40,7 +40,7 @@
   "coupon" : "Kupon",
   "enterCouponCode" : "Kupon kodini kiriting",
   "applyCoupon" : "Kuponni qo'llash",
-  "tipWaiter" : "Maslahatchi ofitsiant",
+  "tipWaiter" : "Ofitsiant uchun",
   "Pricing" : "Narxlash",
   "Cart subtotal" : "Savatcha summasi",
   "vat" : "Qiymat solig'i",
@@ -58,5 +58,6 @@
   "auth_required_before_order" : "Buyurtma berishdan oldin tizimga kirishingiz yoki ro\\'yxatdan o\\'tishingiz kerak",
   "dataEdit" : "Ma\\'lumotlaringizni tahrirlang",
 
-  "save" : "Saqlash"
+  "save" : "Saqlash",
+  "selectTable" : "Jadvalni tanlang"
 }

@@ -42,7 +42,7 @@ class ProfileRepository {
         return Result.error(Exception(errorMessage));
       }
     } catch (e) {
-      return Result.error(Exception(e.toString()));
+      return Result.error(Exception('Xatolik'));
     }
   }
 

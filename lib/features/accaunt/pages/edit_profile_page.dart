@@ -125,7 +125,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         .brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.black : AppColors.white,
+      backgroundColor: isDark ? AppColors.darkAppBar : AppColors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -137,235 +137,239 @@ class _EditProfilePageState extends State<EditProfilePage> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-            child: BlocConsumer<ProfileCubit, ProfileState>(
-              listener: (context, profileState) {
-                if (profileState.status == Status.success) {
-                  context.read<UserProfileBloc>().add(GetUserProfile());
-                  context.go(Routes.home);
-                } else if (profileState.status == Status.error) {
-                  _showError(profileState.errorMessage ?? 'Xatolik yuz berdi');
-                }
-              },
-              builder: (context, profileState) {
-                return BlocBuilder<UserProfileBloc, UserProfileState>(
-                  builder: (context, userState) {
-                    if (!_isInitialized && userState.user != null) {
-                      _isInitialized = true;
-                      ismController.text = userState.user!.firstName;
-                      familiyaController.text = userState.user!.lastName;
-                      final region = userState.user!.address;
-                      tanlanganViloyat = viloyatlar.containsKey(region)
-                          ? region
-                          : null;
-                      phoneNumberController.text = userState.user!.phone;
-
-                      if (userState.user!.image != null &&
-                          userState.user!.image!.isNotEmpty) {
-                        networkImageUrl = userState.user!.image;
-                      }
+      body: Builder(
+        builder: (context) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                child: BlocConsumer<ProfileCubit, ProfileState>(
+                  listener: (context, profileState) {
+                    if (profileState.status == Status.success) {
+                      context.read<UserProfileBloc>().add(GetUserProfile());
+                      context.go(Routes.home);
+                    } else if (profileState.status == Status.error) {
+                      _showError(profileState.errorMessage ?? 'Xatolik yuz berdi');
                     }
-                    if (userState.status == Status.loading) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 80.w,
-                              height: 80.w,
-                              decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 60.w,
-                                    height: 60.w,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 3,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primary,
+                  },
+                  builder: (context, profileState) {
+                    return BlocBuilder<UserProfileBloc, UserProfileState>(
+                      builder: (context, userState) {
+                        if (!_isInitialized && userState.user != null) {
+                          _isInitialized = true;
+                          ismController.text = userState.user!.firstName;
+                          familiyaController.text = userState.user!.lastName;
+                          final region = userState.user!.address;
+                          tanlanganViloyat = viloyatlar.containsKey(region)
+                              ? region
+                              : null;
+                          phoneNumberController.text = userState.user!.phone;
+
+                          if (userState.user!.image != null &&
+                              userState.user!.image!.isNotEmpty) {
+                            networkImageUrl = userState.user!.image;
+                          }
+                        }
+                        if (userState.status == Status.loading) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 80.w,
+                                  height: 80.w,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 60.w,
+                                        height: 60.w,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 3,
+                                          valueColor: AlwaysStoppedAnimation<Color>(
+                                            AppColors.primary,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      Icon(
+                                        Icons.restaurant_menu,
+                                        size: 28.sp,
+                                        color: AppColors.primary,
+                                      ),
+                                    ],
                                   ),
-                                  Icon(
-                                    Icons.restaurant_menu,
-                                    size: 28.sp,
-                                    color: AppColors.primary,
+                                ),
+                                SizedBox(height: 24.h),
+                                Text(
+                                  'Profile Ma\'lumotlar yuklanmoqda...',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark
+                                        ? AppColors.white.withOpacity(0.7)
+                                        : AppColors.black.withOpacity(0.6),
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 20.h),
+                            Text(
+                              context.translate("editProfile"),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 24.sp,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.white : AppColors.black,
                               ),
                             ),
-                            SizedBox(height: 24.h),
+                            SizedBox(height: 8.h),
                             Text(
-                              'Profile Ma\'lumotlar yuklanmoqda...',
+                              context.translate('dataEdit'),
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
                                 color: isDark
                                     ? AppColors.white.withOpacity(0.7)
                                     : AppColors.black.withOpacity(0.6),
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    }
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 20.h),
-                        Text(
-                          context.translate("editProfile"),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.white : AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          context.translate('dataEdit'),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: isDark
-                                ? AppColors.white.withOpacity(0.7)
-                                : AppColors.black.withOpacity(0.6),
-                          ),
-                        ),
-                        SizedBox(height: 40.h),
-                        GestureDetector(
-                          onTap: _rasmTanlash,
-                          child: Stack(
-                            children: [
-                              Container(
-                                width: 120.w,
-                                height: 120.w,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.grey[300],
-                                  border: Border.all(
-                                    color: AppColors.primary.withOpacity(0.3),
-                                    width: 2,
-                                  ),
-                                ),
-                                child: ClipOval(
-                                  child: rasm != null
-                                      ? Image.file(rasm!, fit: BoxFit.cover)
-                                      : networkImageUrl != null
-                                      ? Image.network(
-                                    networkImageUrl!,
-                                    fit: BoxFit.cover,
-                                  )
-                                      : Icon(
-                                    Icons.person,
-                                    size: 50.sp,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  padding: EdgeInsets.all(8.w),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: isDark
-                                          ? AppColors.black
-                                          : AppColors.white,
-                                      width: 2,
+                            SizedBox(height: 40.h),
+                            GestureDetector(
+                              onTap: _rasmTanlash,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 120.w,
+                                    height: 120.w,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey[300],
+                                      border: Border.all(
+                                        color: AppColors.primary.withOpacity(0.3),
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: ClipOval(
+                                      child: rasm != null
+                                          ? Image.file(rasm!, fit: BoxFit.cover)
+                                          : networkImageUrl != null
+                                          ? Image.network(
+                                        networkImageUrl!,
+                                        fit: BoxFit.cover,
+                                      )
+                                          : Icon(
+                                        Icons.person,
+                                        size: 50.sp,
+                                        color: Colors.grey[600],
+                                      ),
                                     ),
                                   ),
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: 16.sp,
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.all(8.w),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: isDark
+                                              ? AppColors.black
+                                              : AppColors.white,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        size: 16.sp,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 40.h),
+                            CustomTextFeldWidget(
+                              controller: ismController,
+                              hintText: "Ismingiz",
+                            ),
+                            SizedBox(height: 16.h),
+                            CustomTextFeldWidget(
+                              controller: familiyaController,
+                              hintText: "Familyangiz",
+                            ),
+                            SizedBox(height: 16.h),
+                            CustomTextFeldWidget(
+                              controller: phoneNumberController,
+                              hintText: "Telefon raqamingiz",
+                            ),
+                            SizedBox(height: 16.h),
+                            CustomDropDownWidget(
+                              value: tanlanganViloyat,
+                              hintText: "Viloyatingiz",
+                              items: viloyatlar.entries
+                                  .map(
+                                    (entry) =>
+                                    DropdownMenuItem(
+                                      value: entry.key,
+                                      child: Text(entry.value),
+                                    ),
+                              )
+                                  .toList(),
+                              onChanged: (yangi) =>
+                                  setState(() => tanlanganViloyat = yangi),
+                            ),
+                            SizedBox(height: 60.h),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 52.h,
+                              child: ElevatedButton(
+                                onPressed: profileState.status == Status.loading
+                                    ? null
+                                    : () => _saveProfile(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: profileState.status == Status.loading
+                                    ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                                    : Text(
+                                  context.translate('save'),
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 40.h),
-                        CustomTextFeldWidget(
-                          controller: ismController,
-                          hintText: "Ismingiz",
-                        ),
-                        SizedBox(height: 16.h),
-                        CustomTextFeldWidget(
-                          controller: familiyaController,
-                          hintText: "Familyangiz",
-                        ),
-                        SizedBox(height: 16.h),
-                        CustomTextFeldWidget(
-                          controller: phoneNumberController,
-                          hintText: "Telefon raqamingiz",
-                        ),
-                        SizedBox(height: 16.h),
-                        CustomDropDownWidget(
-                          value: tanlanganViloyat,
-                          hintText: "Viloyatingiz",
-                          items: viloyatlar.entries
-                              .map(
-                                (entry) =>
-                                DropdownMenuItem(
-                                  value: entry.key,
-                                  child: Text(entry.value),
-                                ),
-                          )
-                              .toList(),
-                          onChanged: (yangi) =>
-                              setState(() => tanlanganViloyat = yangi),
-                        ),
-                        SizedBox(height: 60.h),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52.h,
-                          child: ElevatedButton(
-                            onPressed: profileState.status == Status.loading
-                                ? null
-                                : () => _saveProfile(context),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              elevation: 0,
                             ),
-                            child: profileState.status == Status.loading
-                                ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                                : Text(
-                              context.translate('save'),
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 20.h),
-                      ],
+                            SizedBox(height: 20.h),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }
