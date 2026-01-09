@@ -97,14 +97,12 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-
   Future<void> _logout() async {
     await UserService.logout();
     if (mounted) {
       context.go(Routes.login);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +199,9 @@ class _AccountPageState extends State<AccountPage> {
                 ),
                 expandedHeight: 220.h,
                 pinned: true,
-                backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
+                backgroundColor: isDark
+                    ? AppColors.darkAppBar
+                    : AppColors.primary,
                 title: Text(
                   context.translate('profile'),
                   style: const TextStyle(
@@ -222,7 +222,9 @@ class _AccountPageState extends State<AccountPage> {
                         Stack(
                           children: [
                             GestureDetector(
-                              onLongPress: user.image != null ? () => _rasmniKattalashtirish(user.image) : null,
+                              onLongPress: user.image != null
+                                  ? () => _rasmniKattalashtirish(user.image)
+                                  : null,
                               child: Container(
                                 width: 80.w,
                                 height: 80.w,
@@ -236,15 +238,19 @@ class _AccountPageState extends State<AccountPage> {
                                 child: CircleAvatar(
                                   radius: 40.r,
                                   backgroundColor: Colors.grey[300],
-                                  backgroundImage: (user.image != null && user.image!.isNotEmpty)
+                                  backgroundImage:
+                                      (user.image != null &&
+                                          user.image!.isNotEmpty)
                                       ? NetworkImage(user.image!)
                                       : null,
-                                  child: (user.image == null || user.image!.isEmpty)
+                                  child:
+                                      (user.image == null ||
+                                          user.image!.isEmpty)
                                       ? Icon(
-                                    Icons.person,
-                                    size: 40.sp,
-                                    color: Colors.white,
-                                  )
+                                          Icons.person,
+                                          size: 40.sp,
+                                          color: Colors.white,
+                                        )
                                       : null,
                                 ),
                               ),
@@ -270,7 +276,9 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                   child: Icon(
                                     Icons.edit,
-                                    color: isDark ? AppColors.darkAppBar : AppColors.primary,
+                                    color: isDark
+                                        ? AppColors.darkAppBar
+                                        : AppColors.primary,
                                     size: 16.sp,
                                   ),
                                 ),
@@ -285,7 +293,9 @@ class _AccountPageState extends State<AccountPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                fullName.isNotEmpty ? fullName : 'Foydalanuvchi',
+                                fullName.isNotEmpty
+                                    ? fullName
+                                    : 'Foydalanuvchi',
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -382,7 +392,9 @@ class _AccountPageState extends State<AccountPage> {
                             builder: (context) => Container(
                               height: MediaQuery.of(context).size.height * 0.4,
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.darkAppBar : AppColors.white,
+                                color: isDark
+                                    ? AppColors.darkAppBar
+                                    : AppColors.white,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(25.r),
                                   topRight: Radius.circular(25.r),
@@ -400,7 +412,9 @@ class _AccountPageState extends State<AccountPage> {
                                       height: 4.h,
                                       decoration: BoxDecoration(
                                         color: Colors.grey.withOpacity(0.3),
-                                        borderRadius: BorderRadius.circular(10.r),
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(height: 30.h),
@@ -424,7 +438,9 @@ class _AccountPageState extends State<AccountPage> {
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontWeight: FontWeight.w700,
-                                        color: isDark ? AppColors.white : AppColors.textColor,
+                                        color: isDark
+                                            ? AppColors.white
+                                            : AppColors.textColor,
                                       ),
                                     ),
                                     SizedBox(height: 40.h),

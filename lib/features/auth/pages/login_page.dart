@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-                        hintText: '91 234 45 67',
+                        hintText: 'XX XXX XX XX',
                         hintStyle: TextStyle(
                           color: Colors.grey.shade500,
                           fontWeight: FontWeight.w500,

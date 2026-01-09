@@ -55,6 +55,9 @@
   "no" : "No",
 
   "register" : "Register",
-  "auth_required_before_order" : "You need to log in or register before placing an order"
+  "auth_required_before_order" : "You need to log in or register before placing an order",
+  "dataEdit" : "Edit data",
+
+  "save" : "Save"
 }
 

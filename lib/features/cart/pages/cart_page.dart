@@ -170,7 +170,7 @@ class _CartPageState extends State<CartPage>
                       Expanded(
                         child: TextField(
                           controller: controllerSearch,
-                          autofocus: true,
+                          autofocus: _isSearching,
                           style: const TextStyle(color: Colors.white),
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(

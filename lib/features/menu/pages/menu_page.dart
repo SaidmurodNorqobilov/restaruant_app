@@ -1,13 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurantapp/core/client.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
+import 'package:restaurantapp/core/utils/status.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
-import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
+import 'package:restaurantapp/features/home/managers/categoriesBloc/categories_bloc.dart';
+import 'package:restaurantapp/features/home/managers/categoriesBloc/categories_state.dart';
 import '../../../core/utils/icons.dart';
+import '../../../data/repositories/category_repositories.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -18,37 +24,34 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   final TextEditingController controllerSearch = TextEditingController();
-
-  List categoryImg = [
-    'assets/categoryImg/category1.png',
-    'assets/categoryImg/category2.png',
-    'assets/categoryImg/category3.png',
-    'assets/categoryImg/category4.png',
-    'assets/categoryImg/category5.png',
-    'assets/categoryImg/category6.png',
-    'assets/categoryImg/category6.png',
-    'assets/categoryImg/category6.png',
-  ];
-
-  List categoryText = [
-    'Breakfast',
-    'Appetizers',
-    'Soups/salad',
-    'Main Course',
-    'Desserts',
-    'Drinks',
-    'For Kids',
-    'Pasta',
-  ];
+  final String baseUrl = "https://atsrestaurant.pythonanywhere.com";
   bool _isSearching = false;
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    controllerSearch.addListener(() {
+      setState(() {
+        _searchQuery = controllerSearch.text.toLowerCase();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    controllerSearch.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       extendBody: true,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
         titleSpacing: 0,
         title: Stack(
@@ -63,7 +66,6 @@ class _MenuPageState extends State<MenuPage> {
                 duration: const Duration(milliseconds: 200),
                 child: Text(
                   context.translate("menuBottom"),
-                  key: const ValueKey('TitleText'),
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20.sp,
@@ -80,16 +82,15 @@ class _MenuPageState extends State<MenuPage> {
                 opacity: _isSearching ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 250),
                 child: Container(
-                  key: const ValueKey('SearchField'),
                   height: 40.h,
                   margin: EdgeInsets.only(right: 15.w),
                   decoration: BoxDecoration(
-                    color:
-                    isDark ? Colors.blueGrey.shade700 : AppColors.orangeSearch,
+                    color: isDark
+                        ? Colors.blueGrey.shade700
+                        : AppColors.orangeSearch,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -98,19 +99,32 @@ class _MenuPageState extends State<MenuPage> {
                       Expanded(
                         child: TextField(
                           controller: controllerSearch,
-                          autofocus: true,
+                          autofocus: _isSearching,
                           style: const TextStyle(color: Colors.white),
-                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
-                            hintText: 'Search...',
-                            hintStyle:
-                            TextStyle(color: AppColors.white.withOpacity(0.7)),
+                            hintText: 'Qidirish...',
+                            hintStyle: TextStyle(
+                              color: AppColors.white.withOpacity(0.7),
+                            ),
                             border: InputBorder.none,
                             isDense: true,
-                            contentPadding: EdgeInsets.zero,
                           ),
                         ),
                       ),
+                      if (_searchQuery.isNotEmpty)
+                        InkWell(
+                          onTap: () {
+                            controllerSearch.clear();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            child: Icon(
+                              Icons.clear,
+                              color: Colors.white.withOpacity(0.7),
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -130,74 +144,323 @@ class _MenuPageState extends State<MenuPage> {
               });
             },
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: AnimatedCrossFade(
                 duration: const Duration(milliseconds: 300),
-                firstChild: SvgPicture.asset(
-                  AppIcons.search,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                firstChild: SizedBox(
+                  height: 40.h,
+                  child: SvgPicture.asset(
+                    AppIcons.search,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
-                secondChild: const Icon(Icons.close, color: Colors.white),
-                crossFadeState:
-                _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                secondChild: SizedBox(
+                  height: 40.h,
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                  ),
+                ),
+                crossFadeState: _isSearching
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
               ),
             ),
           ),
         ],
       ),
-      drawer: DrawerWidgets(),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsetsGeometry.symmetric(
-            horizontal: 19.w,
-            vertical: 10.h,
-          ),
-          child: Column(
-            spacing: 10.h,
-            children: [
-              ...List.generate(categoryText.length, (index) {
-                return Column(
+      drawer: const DrawerWidgets(),
+      body: BlocProvider(
+        create: (context) => CategoriesBLoc(
+          categoryRepository: CategoryRepository(client: ApiClient()),
+        )..add(CategoriesLoading()),
+        child: BlocBuilder<CategoriesBLoc, CategoriesState>(
+          builder: (context, state) {
+            if (state.status == Status.loading && state.categories.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onTap: () {
-                        context.push(Routes.categories);
-                      },
-                      child: Row(
-                        spacing: 18.w,
+                    Container(
+                      width: 80.w,
+                      height: 80.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadiusGeometry.circular(
-                              15.r,
-                            ),
-                            child: Image.asset(
-                              categoryImg[index],
-                              width: 80.w,
-                              height: 80.h,
+                          SizedBox(
+                            width: 60.w,
+                            height: 60.w,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primary,
+                              ),
                             ),
                           ),
-                          Text(
-                            categoryText[index],
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: isDark
-                                  ? AppColors.white
-                                  : AppColors.textColor,
-                            ),
+                          Icon(
+                            Icons.restaurant_menu,
+                            size: 28.sp,
+                            color: AppColors.primary,
                           ),
                         ],
                       ),
                     ),
-                    Divider(
-                      color: AppColors.black,
+                    SizedBox(height: 24.h),
+                    Text(
+                      'Mahsulotlar yuklanmoqda...',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: isDark
+                            ? AppColors.white.withOpacity(0.7)
+                            : AppColors.black.withOpacity(0.6),
+                      ),
                     ),
                   ],
-                );
-              }),
-            ],
-          ),
+                ),
+              );
+            }
+
+            if (state.status == Status.error && state.categories.isEmpty) {
+              return Center(
+                child: Text(context.translate("Xatolik Yuz berdi")),
+              );
+            }
+
+            final filteredCategories = _searchQuery.isEmpty
+                ? state.categories
+                : state.categories.where((category) {
+                    return category.name.toLowerCase().contains(_searchQuery);
+                  }).toList();
+
+            return RefreshIndicator(
+              backgroundColor: isDark
+                  ? AppColors.darkAppBar
+                  : AppColors.primary,
+              onRefresh: () async {
+                context.read<CategoriesBLoc>().add(CategoriesLoading());
+              },
+              child: filteredCategories.isEmpty
+                  ? _buildEmptySearchResult(isDark)
+                  : ListView.separated(
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 19.w,
+                        vertical: 15.h,
+                      ),
+                      itemCount: filteredCategories.length,
+                      separatorBuilder: (context, index) => Divider(
+                        color: isDark ? Colors.white24 : Colors.black12,
+                        height: 25.h,
+                      ),
+                      itemBuilder: (context, index) {
+                        final category = filteredCategories[index];
+                        return _buildCategoryItem(
+                          context,
+                          category,
+                          isDark,
+                        );
+                      },
+                    ),
+            );
+          },
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptySearchResult(bool isDark) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search_off_rounded,
+            size: 80.sp,
+            color: isDark
+                ? Colors.white.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.5),
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            'Hech narsa topilmadi',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: isDark
+                  ? AppColors.white.withOpacity(0.7)
+                  : AppColors.black.withOpacity(0.6),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Boshqa nom bilan qidirib ko\'ring',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: isDark
+                  ? AppColors.white.withOpacity(0.5)
+                  : AppColors.black.withOpacity(0.4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryItem(
+    BuildContext context,
+    dynamic category,
+    bool isDark,
+  ) {
+    final categoryName = category.name;
+    final lowerCaseName = categoryName.toLowerCase();
+    final queryLower = _searchQuery.toLowerCase();
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(10.r),
+      onTap: () => context.push(Routes.categories, extra: category.id),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.h),
+        child: Row(
+          children: [
+            Hero(
+              tag: 'category_${category.id}',
+              child: Container(
+                height: 85.w,
+                width: 85.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15.r),
+                  child: CachedNetworkImage(
+                    imageUrl: "$baseUrl${category.image}",
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: isDark
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade200,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      color: isDark
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade300,
+                      child: Icon(
+                        Icons.fastfood,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 18.w),
+            Expanded(
+              child:
+                  _searchQuery.isNotEmpty && lowerCaseName.contains(queryLower)
+                  ? _buildHighlightedText(
+                      categoryName,
+                      _searchQuery,
+                      isDark,
+                    )
+                  : Text(
+                      categoryName,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.white : AppColors.textColor,
+                      ),
+                    ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16.sp,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHighlightedText(String text, String query, bool isDark) {
+    if (query.isEmpty) {
+      return Text(
+        text,
+        style: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+          color: isDark ? AppColors.white : AppColors.textColor,
+        ),
+      );
+    }
+
+    final lowerText = text.toLowerCase();
+    final lowerQuery = query.toLowerCase();
+    final index = lowerText.indexOf(lowerQuery);
+
+    if (index == -1) {
+      return Text(
+        text,
+        style: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+          color: isDark ? AppColors.white : AppColors.textColor,
+        ),
+      );
+    }
+
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: text.substring(0, index),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: isDark ? AppColors.white : AppColors.textColor,
+            ),
+          ),
+          TextSpan(
+            text: text.substring(index, index + query.length),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
+              backgroundColor: AppColors.primary.withOpacity(0.1),
+            ),
+          ),
+          TextSpan(
+            text: text.substring(index + query.length),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: isDark ? AppColors.white : AppColors.textColor,
+            ),
+          ),
+        ],
       ),
     );
   }

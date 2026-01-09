@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:appbar_animated/appbar_animated.dart'; // Import qiling
+import 'package:appbar_animated/appbar_animated.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/features/home/widgets/container_row.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 import '../../../core/utils/icons.dart';
+import '../../../data/models/category_model.dart';
 
 class RecipeDetailsPage extends StatefulWidget {
-  final int productId;
+  final ProductModel product;
 
-  const RecipeDetailsPage({super.key, required this.productId});
+  const RecipeDetailsPage({super.key, required this.product});
 
   @override
   State<RecipeDetailsPage> createState() => _RecipeDetailsPageState();
@@ -20,38 +21,10 @@ class RecipeDetailsPage extends StatefulWidget {
 
 class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   final ScrollController _scrollController = ScrollController();
-
-  List breakfastList = [
-    'https://i.pinimg.com/736x/2d/64/85/2d6485a63c2af38bee13e5ca13bf42b6.jpg',
-    'https://i.pinimg.com/736x/29/cc/61/29cc6154b06aaf45a1276cf460b714a7.jpg',
-    'https://www.foodandwine.com/thmb/eN9iNzrq2SrcDOnkR5CJm2dr2A4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/full-english-breakfast-FT-Recipe0225-0bab8edfd24a44b087a3548254dbb409.jpeg',
-    'https://i.pinimg.com/736x/56/4a/1d/564a1d27337ce2fff4b15ee2098eceaa.jpg',
-    'https://i.pinimg.com/736x/22/4f/f1/224ff168322e1f318852ed49b0937d14.jpg',
-  ];
-
-  List breakfastTitle = ['ovqat', 'ovqat1', 'ovqat2', 'ovqa3', 'ovqat4'];
-  List breakfastText = [
-    'wegfaergraeg',
-    'erg er aergg',
-    'oerg ergrgea2',
-    'ov reaqaer gerga',
-    'oregaerg vqat4',
-  ];
-
-  List<double> breakfastPrice = [32.00, 23.00, 23.00, 76.00, 100.00];
-
-  List breakfastReview = [
-    """Viennoiseries, assorted breadbasket served with jam and butter, and eggs your way. Choice of freshly squeezed juice or hot beverage.
-(D, G, N)""",
-    """ 2 222 adbasdib vdsdv sivbsdipvb aspivbpsduivb sd va sdvv sdvi adsivh sdiv as v sv""",
-    """ 3333  ads33ds fsd fsdaf ds fds fafd fsadf dsfsdfsd""",
-    """ 44 444sdafsdfsdfsdfsdf""",
-    """ 555555dsfasdfa sdf j j jjdsfdsfadsf""",
-  ];
-
+  final String imageUrlBase = "https://atsrestaurant.pythonanywhere.com";
   int quantity = 1;
 
-  double get totalPrice => breakfastPrice[widget.productId] * quantity;
+  double get totalPrice => widget.product.finalPrice * quantity;
 
   void increment() {
     setState(() {
@@ -77,16 +50,17 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    final String fullImgUrl = widget.product.image.startsWith('http')
+        ? widget.product.image
+        : "$imageUrlBase${widget.product.image}";
+
     return Scaffold(
       body: ScaffoldLayoutBuilder(
         backgroundColorAppBar: ColorBuilder(
-          Colors.transparent, // Scroll qilmaganda
-          isDark ? AppColors.darkAppBar : AppColors.primary, // Scroll qilganda
+          Colors.transparent,
+          isDark ? AppColors.darkAppBar : AppColors.primary,
         ),
-        textColorAppBar: ColorBuilder(
-          Colors.white,
-          Colors.white,
-        ),
+        textColorAppBar: const ColorBuilder(Colors.white, Colors.white),
         appBarBuilder: (context, colorAnimated) {
           return AppBar(
             backgroundColor: colorAnimated.background,
@@ -97,7 +71,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 width: 38.w,
                 height: 38.h,
                 fit: BoxFit.scaleDown,
-                colorFilter: ColorFilter.mode(
+                colorFilter: const ColorFilter.mode(
                   Colors.white,
                   BlendMode.srcIn,
                 ),
@@ -105,10 +79,12 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
               onPressed: () => context.pop(),
             ),
             title: AnimatedOpacity(
-              opacity: colorAnimated == Colors.transparent ? 0.0 : 1.0,
-              duration: Duration(milliseconds: 200),
+              opacity: colorAnimated.background == Colors.transparent
+                  ? 0.0
+                  : 1.0,
+              duration: const Duration(milliseconds: 200),
               child: Text(
-                breakfastTitle[widget.productId],
+                widget.product.name,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 20.sp,
@@ -120,16 +96,24 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         },
         child: SingleChildScrollView(
           controller: _scrollController,
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               Stack(
                 children: [
                   Image.network(
-                    breakfastList[widget.productId],
+                    fullImgUrl, // Real rasm
                     width: double.infinity,
                     height: 363.h,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      height: 363.h,
+                      color: Colors.grey,
+                      child: const Icon(
+                        Icons.broken_image,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -156,14 +140,13 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                   left: 24.w,
                   right: 24.w,
                   bottom: MediaQuery.of(context).padding.bottom + 17.h,
-                  top: 0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 24.h),
                     Text(
-                      breakfastText[widget.productId],
+                      widget.product.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 20.sp,
@@ -183,7 +166,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 32.h),
-                    Divider(),
+                    const Divider(),
                     SizedBox(height: 16.h),
                     Text(
                       'Description',
@@ -195,7 +178,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      breakfastReview[widget.productId],
+                      widget.product.description,
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w400,
@@ -206,12 +189,10 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       ),
                     ),
                     SizedBox(height: 32.h),
-                    Divider(),
+                    const Divider(),
                     SizedBox(height: 24.h),
                     Center(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           CounterRow(
                             count: quantity,
@@ -242,14 +223,13 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       ),
     );
   }
-
   Widget _buildNavigationButtons(bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         InkWell(
           borderRadius: BorderRadius.circular(30.r),
-          onTap: () {},
+          onTap: () => context.pop(),
           child: Row(
             children: [
               Container(
@@ -266,44 +246,33 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 ),
               ),
               SizedBox(width: 8.w),
-              Text(
+              const Text(
                 'Previous',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.sp,
-                  color: AppColors.borderColor,
-                ),
+                style: TextStyle(color: AppColors.borderColor),
               ),
             ],
           ),
         ),
         InkWell(
           borderRadius: BorderRadius.circular(30.r),
-          onTap: () {
-            context.go(Routes.cart);
-          },
+          onTap: () => context.go(Routes.cart),
           child: Row(
             children: [
-              Text(
+              const Text(
                 'Next meal',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.sp,
-                  color: AppColors.primary,
-                ),
+                style: TextStyle(color: AppColors.primary),
               ),
               SizedBox(width: 8.w),
               Container(
                 width: 50.w,
                 height: 50.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.arrow_forward_rounded,
                   color: Colors.white,
-                  size: 24.w,
                 ),
               ),
             ],
@@ -324,7 +293,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -333,66 +301,54 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        breakfastTitle[widget.productId],
+                        widget.product.name,
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.white : AppColors.textColor,
                         ),
                       ),
-                      SizedBox(height: 4.h),
                       Text(
                         'Successfully added to cart',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
                           color: AppColors.green,
                         ),
                       ),
                     ],
                   ),
                 ),
-                Icon(
-                  Icons.check_circle,
-                  color: AppColors.green,
-                  size: 48.w,
-                ),
+                Icon(Icons.check_circle, color: AppColors.green, size: 48.w),
               ],
             ),
             SizedBox(height: 24.h),
             InkWell(
-              onTap: () {
-                context.go(Routes.cart);
-              },
+              onTap: () => context.go(Routes.cart),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.primary, width: 2),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.shopping_cart_outlined,
                       color: AppColors.primary,
                     ),
-                    SizedBox(
-                      width: 12.w,
-                    ),
+                    SizedBox(width: 12),
                     Text(
                       'View Cart',
                       style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
                         color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 76.h),
+            SizedBox(height: 50.h),
           ],
         ),
       ),

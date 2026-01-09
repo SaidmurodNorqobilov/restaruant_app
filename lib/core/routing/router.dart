@@ -24,6 +24,7 @@ import 'package:restaurantapp/features/onboarding/pages/onboarding_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/splash_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/welcome_page.dart';
 import 'package:restaurantapp/features/home/pages/home_page.dart';
+import '../../data/models/category_model.dart';
 import '../../features/common/widgets/bottom_navigation_bar_app.dart';
 
 final router = GoRouter(
@@ -114,7 +115,12 @@ final router = GoRouter(
     ),
     GoRoute(
       path: Routes.categories,
-      builder: (context, state) => const CategoriesPage(),
+      builder: (context, state) {
+        final categoryId = state.extra as int? ?? 0;
+        return CategoriesPage(
+          categoryId: categoryId,
+        );
+      },
     ),
     GoRoute(
       path: Routes.promotions,
@@ -126,8 +132,11 @@ final router = GoRouter(
     GoRoute(
       path: Routes.recipeDetails,
       builder: (context, state) {
-        final id = state.extra as int? ?? 0;
-        return RecipeDetailsPage(productId: id);
+        final product = state.extra as ProductModel;
+
+        return RecipeDetailsPage(
+          product: product,
+        );
       },
     ),
     GoRoute(
@@ -161,6 +170,6 @@ final router = GoRouter(
     GoRoute(
       path: Routes.editProfile,
       builder: (context, state) => EditProfilePage(),
-    )
+    ),
   ],
 );

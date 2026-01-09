@@ -33,25 +33,29 @@ void main() async {
         RepositoryProvider(
           create: (context) => ProfileRepository(client: apiClient),
         ),
-        RepositoryProvider(create: (context) => UserProfileRepository(client: apiClient),)
+        RepositoryProvider(
+          create: (context) => UserProfileRepository(client: apiClient),)
       ],
       child: MultiBlocProvider(
         providers: [
           ...AppDependencies.providers,
           BlocProvider(
-            create: (context) => AuthCubit(
-              authRepository: context.read<AuthRepository>(),
-            ),
+            create: (context) =>
+                AuthCubit(
+                  authRepository: context.read<AuthRepository>(),
+                ),
           ),
           BlocProvider(
-            create: (context) => ProfileCubit(
-              profileRepository: context.read<ProfileRepository>(),
-            ),
+            create: (context) =>
+                ProfileCubit(
+                  profileRepository: context.read<ProfileRepository>(),
+                ),
           ),
           BlocProvider<UserProfileBloc>(
-            create: (context) => UserProfileBloc(
-              repository: context.read<UserProfileRepository>(),
-            ),
+            create: (context) =>
+                UserProfileBloc(
+                  repository: context.read<UserProfileRepository>(),
+                ),
           ),
         ],
         child: const RestaurantApp(),
@@ -77,7 +81,6 @@ class RestaurantApp extends StatelessWidget {
                 darkTheme: AppThemes.darkTheme,
                 themeMode: themeState.themeMode,
                 routerConfig: router,
-                key: ValueKey(langState.languageCode),
               );
             },
           );

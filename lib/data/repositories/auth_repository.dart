@@ -17,13 +17,13 @@ class AuthRepository {
     );
 
     return response.fold(
-          (error) {
+      (error) {
         if (error.toString().contains("allaqachon mavjud")) {
           return _sendPhoneForLogin(phone);
         }
         return Result.error(error);
       },
-          (data) {
+      (data) {
         final sessionId = data['session_id'] as String?;
         if (sessionId != null) {
           return Result.ok(sessionId);
@@ -42,8 +42,8 @@ class AuthRepository {
     );
 
     return response.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) => Result.error(error),
+      (data) {
         final sessionId = data['session_id'] as String?;
         if (sessionId != null) {
           return Result.ok(sessionId);
@@ -55,9 +55,9 @@ class AuthRepository {
   }
 
   Future<Result<Map<String, dynamic>>> verifyCode(
-      String sessionId,
-      String code,
-      ) async {
+    String sessionId,
+    String code,
+  ) async {
     final response = await _client.post(
       '/accounts/verification/',
       data: {
@@ -67,8 +67,8 @@ class AuthRepository {
     );
 
     return response.fold(
-          (error) => Result.error(error),
-          (data) async {
+      (error) => Result.error(error),
+      (data) async {
         final accessToken = data['access_token'] as String?;
         final refreshToken = data['refresh_token'] as String?;
 

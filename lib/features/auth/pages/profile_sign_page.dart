@@ -138,9 +138,10 @@ class _ProfileSignPageState extends State<ProfileSignPage> {
             child: BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
                 if (state.status == Status.success) {
+                  context.read<UserProfileBloc>().add(GetUserProfile());
                   context.go(Routes.home);
                 } else if (state.status == Status.error) {
-                  _showError(state.errorMessage ?? 'Xatolik yuz berdi');
+                  _showError( 'Xatolik yuz berdi');
                 }
               },
               builder: (context, state) {

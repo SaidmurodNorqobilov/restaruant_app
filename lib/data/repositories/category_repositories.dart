@@ -1,63 +1,87 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/client.dart';
 import '../../core/utils/result.dart';
-import '../models/categoriy_model.dart';
+import '../models/category_model.dart';
 
-class ProductRepository {
+class CategoryRepository {
   final ApiClient _client;
 
-  ProductRepository({required ApiClient client}) : _client = client;
+  CategoryRepository({required ApiClient client}) : _client = client;
 
-  Future<Result<List<CategoriesModel>>> getProducts({
-    int? categoryId,
-    String? title,
-    double? minPrice,
-    double? maxPrice,
-    int? orderBy,
-    int? sizeId,
-  }) async {
-    final Map<String, dynamic> queryParams = {};
-
-    if (categoryId != null && categoryId != 0) {
-      queryParams['CategoryId'] = categoryId.toString();
-    }
-
-    if (title != null && title.isNotEmpty) {
-      queryParams['Title'] = title;
-    }
-
-    if (minPrice != null) {
-      queryParams['MinPrice'] = minPrice.toInt().toString();
-    }
-
-    if (maxPrice != null) {
-      queryParams['MaxPrice'] = maxPrice.toInt().toString();
-    }
-
-     if (orderBy != null) {
-      queryParams['OrderBy'] = orderBy.toString();
-    }
-
-    if (sizeId != null) {
-      queryParams['SizeId'] = sizeId.toString();
-    }
+  Future<Result<List<CategoryModel>>> getCategories() async {
+    final prefs = await SharedPreferences.getInstance();
 
     final result = await _client.get<List<dynamic>>(
-      '/products/list',
-      queryParams: queryParams.isNotEmpty ? queryParams : null,
+      '/products/get_all_category/',
     );
 
     return result.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) {
+        final cachedData = prefs.getString('cached_categories');
+        if (cachedData != null) {
+          final List<dynamic> decodedData = jsonDecode(cachedData);
+          final categories = decodedData
+              .map(
+                (x) => CategoryModel.fromJson(x as Map<String, dynamic>),
+              )
+              .toList();
+          return Result.ok(categories);
+        }
+        return Result.error(error);
+      },
+      (data) {
         try {
+          prefs.setString(
+            'cached_categories',
+            jsonEncode(data),
+          );
+
+          final categories = data
+              .map(
+                (x) => CategoryModel.fromJson(x as Map<String, dynamic>),
+              )
+              .toList();
+          return Result.ok(categories);
+        } catch (e) {
+          return Result.error(
+            Exception("Category parse error: $e"),
+          );
+        }
+      },
+    );
+  }
+
+  Future<Result<List<ProductModel>>> getProductsByCategoryId(int id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final cacheKey = 'cached_products_$id';
+
+    final result = await _client.get<List<dynamic>>(
+      '/products/get_any_cat_and_prod/$id/',
+    );
+
+    return result.fold(
+      (error) {
+        final cachedData = prefs.getString(cacheKey);
+        if (cachedData != null) {
+          final List<dynamic> decodedData = jsonDecode(cachedData);
+          final products = decodedData
+              .map((x) => ProductModel.fromJson(x as Map<String, dynamic>))
+              .toList();
+          return Result.ok(products);
+        }
+        return Result.error(error);
+      },
+      (data) {
+        try {
+          prefs.setString(cacheKey, jsonEncode(data));
+
           final products = data
-              .map((x) => CategoriesModel.fromJson(x as Map<String, dynamic>))
+              .map((x) => ProductModel.fromJson(x as Map<String, dynamic>))
               .toList();
           return Result.ok(products);
         } catch (e) {
-          return Result.error(
-            Exception("Mahsulotlarni parse qilishda xato: $e"),
-          );
+          return Result.error(Exception("Product parse error: $e"));
         }
       },
     );

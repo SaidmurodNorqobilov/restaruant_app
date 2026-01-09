@@ -55,5 +55,8 @@
   "no" : "Yo'q",
 
   "register" : "Ro\\'yxatdan o\\'ting",
-  "auth_required_before_order" : "Buyurtma berishdan oldin tizimga kirishingiz yoki ro\\'yxatdan o\\'tishingiz kerak"
+  "auth_required_before_order" : "Buyurtma berishdan oldin tizimga kirishingiz yoki ro\\'yxatdan o\\'tishingiz kerak",
+  "dataEdit" : "Ma\\'lumotlaringizni tahrirlang",
+
+  "save" : "Saqlash"
 }

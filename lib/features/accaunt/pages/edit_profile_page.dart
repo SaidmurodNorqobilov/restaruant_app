@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/core/utils/status.dart';
 import '../../../core/routing/routes.dart';
 import '../../auth/managers/profileCubit/profile_cubit.dart';
@@ -65,11 +66,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   bool _validateForm() {
-    if (ismController.text.trim().isEmpty) {
+    if (ismController.text
+        .trim()
+        .isEmpty) {
       _showError('Ismingizni kiriting');
       return false;
     }
-    if (familiyaController.text.trim().isEmpty) {
+    if (familiyaController.text
+        .trim()
+        .isEmpty) {
       _showError('Familyangizni kiriting');
       return false;
     }
@@ -115,7 +120,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.black : AppColors.white,
@@ -151,17 +158,61 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ismController.text = userState.user!.firstName;
                       familiyaController.text = userState.user!.lastName;
                       final region = userState.user!.address;
-                      tanlanganViloyat = viloyatlar.containsKey(region) ? region : null;
+                      tanlanganViloyat = viloyatlar.containsKey(region)
+                          ? region
+                          : null;
                       phoneNumberController.text = userState.user!.phone;
 
-                      if (userState.user!.image != null && userState.user!.image!.isNotEmpty) {
+                      if (userState.user!.image != null &&
+                          userState.user!.image!.isNotEmpty) {
                         networkImageUrl = userState.user!.image;
                       }
                     }
                     if (userState.status == Status.loading) {
                       return Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.primary,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 80.w,
+                              height: 80.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 60.w,
+                                    height: 60.w,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.restaurant_menu,
+                                    size: 28.sp,
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 24.h),
+                            Text(
+                              'Mahsulotlar yuklanmoqda...',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: isDark
+                                    ? AppColors.white.withOpacity(0.7)
+                                    : AppColors.black.withOpacity(0.6),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     }
@@ -170,7 +221,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       children: [
                         SizedBox(height: 20.h),
                         Text(
-                          'Profilni tahririlash',
+                          context.translate("editProfile"),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24.sp,
@@ -180,7 +231,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          'Ma\'lumotlaringizni tahrirlang',
+                          context.translate('dataEdit'),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14.sp,
@@ -210,8 +261,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   child: rasm != null
                                       ? Image.file(rasm!, fit: BoxFit.cover)
                                       : networkImageUrl != null
-                                      ? Image.network(networkImageUrl!, fit: BoxFit.cover)
-                                      : Icon(Icons.person, size: 50.sp, color: Colors.grey[600]),
+                                      ? Image.network(
+                                    networkImageUrl!,
+                                    fit: BoxFit.cover,
+                                  )
+                                      : Icon(
+                                    Icons.person,
+                                    size: 50.sp,
+                                    color: Colors.grey[600],
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -223,7 +281,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     color: AppColors.primary,
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: isDark ? AppColors.black : AppColors.white,
+                                      color: isDark
+                                          ? AppColors.black
+                                          : AppColors.white,
                                       width: 2,
                                     ),
                                   ),
@@ -257,12 +317,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           value: tanlanganViloyat,
                           hintText: "Viloyatingiz",
                           items: viloyatlar.entries
-                              .map((entry) => DropdownMenuItem(
-                            value: entry.key,
-                            child: Text(entry.value),
-                          ))
+                              .map(
+                                (entry) =>
+                                DropdownMenuItem(
+                                  value: entry.key,
+                                  child: Text(entry.value),
+                                ),
+                          )
                               .toList(),
-                          onChanged: (yangi) => setState(() => tanlanganViloyat = yangi),
+                          onChanged: (yangi) =>
+                              setState(() => tanlanganViloyat = yangi),
                         ),
                         SizedBox(height: 60.h),
                         SizedBox(
@@ -281,9 +345,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                             child: profileState.status == Status.loading
                                 ? const CircularProgressIndicator(
-                                color: Colors.white)
+                              color: Colors.white,
+                            )
                                 : Text(
-                              'Saqlash',
+                              context.translate('save'),
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,

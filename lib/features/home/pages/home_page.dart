@@ -1,18 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurantapp/core/client.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
-import 'package:restaurantapp/core/utils/icons.dart';
+import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
-import 'package:restaurantapp/features/accaunt/managers/user_profile_bloc.dart';
-import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
+import 'package:restaurantapp/core/utils/status.dart';
+import 'package:restaurantapp/data/repositories/category_repositories.dart';
+import 'package:restaurantapp/features/home/managers/categoriesBloc/categories_state.dart';
+import 'package:restaurantapp/features/home/widgets/home_page_appbar.dart';
 import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
-import '../../../core/utils/colors.dart';
-import '../../common/manager/langBloc/language_bloc.dart';
-import '../../common/manager/langBloc/language_event.dart';
-import '../../common/manager/langBloc/language_state.dart';
+import '../managers/categoriesBloc/categories_bloc.dart';
+import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,30 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController controllerSearch = TextEditingController();
-
-  final List<String> categoryImg = [
-    'assets/categoryImg/category1.png',
-    'assets/categoryImg/category2.png',
-    'assets/categoryImg/category3.png',
-    'assets/categoryImg/category4.png',
-    'assets/categoryImg/category5.png',
-    'assets/categoryImg/category6.png',
-    'assets/categoryImg/category6.png',
-    'assets/categoryImg/category6.png',
-    'assets/categoryImg/category6.png',
-  ];
-
-  final List<String> categoryText = [
-    'Breakfast',
-    'Appetizers',
-    'Soups/salad',
-    'Main Course',
-    'Desserts',
-    'Drinks',
-    'For Kids',
-    'Pasta',
-    'Burgers',
-  ];
+  final String baseUrl = "https://atsrestaurant.pythonanywhere.com";
 
   final List<String> promotionsImg = [
     'https://i.pinimg.com/originals/37/cc/51/37cc518c0d49a2fd03bc93fd151c9ca1.jpg',
@@ -58,281 +36,161 @@ class _HomePageState extends State<HomePage> {
     'Milk shakes',
     'Artisan Lattes',
     'Special Cake',
-    'ovqat karochi',
+    'Ovqat',
   ];
   final List<String> promotionsText = [
-    'Banana, chocolate, vanilla, strawberry, caramel/pistachio.',
-    'Honey, rose, lavendar, matcha..',
-    'Freshly baked delicious cake',
-    'test uchun',
+    'Banana, chocolate, vanilla...',
+    'Honey, rose, lavendar...',
+    'Freshly baked...',
+    'Test description',
   ];
-  final List<double> promotionsPrice = [35.00, 30.00, 70.00, 1000.00];
-
-  String currentLang = 'en';
-  bool _isSearching = false;
+  final List<double> promotionsPrice = [35.00, 30.00, 70.00, 100.00];
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
-    return Scaffold(
-      extendBody: true,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: AppColors.white),
-        backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
-        titleSpacing: 0,
-        title: Stack(
-          alignment: Alignment.centerLeft,
-          children: [
-            AnimatedSlide(
-              offset: _isSearching ? const Offset(-1.2, 0) : Offset.zero,
-              duration: const Duration(milliseconds: 350),
-              curve: Curves.easeInOutCubic,
-              child: AnimatedOpacity(
-                opacity: _isSearching ? 0.0 : 1.0,
-                duration: const Duration(milliseconds: 200),
-                child: Text(
-                  "ATS",
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
+
+    return BlocProvider(
+      create: (context) => CategoriesBLoc(
+        categoryRepository: CategoryRepository(client: ApiClient()),
+      )..add(CategoriesLoading()),
+      child: Builder(
+        builder: (innerContext) => Scaffold(
+          extendBody: true,
+          appBar: HomePageAppbar(),
+          drawer: const DrawerWidgets(),
+          body: RefreshIndicator(
+            backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
+            onRefresh: () async => innerContext.read<CategoriesBLoc>().add(
+              CategoriesLoading(),
             ),
-            AnimatedSlide(
-              offset: _isSearching ? Offset.zero : const Offset(1.2, 0),
-              duration: const Duration(milliseconds: 350),
-              curve: Curves.easeInOutCubic,
-              child: AnimatedOpacity(
-                opacity: _isSearching ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 250),
-                child: Container(
-                  key: const ValueKey('SearchField'),
-                  height: 40.h,
-                  margin: EdgeInsets.only(right: 15.w),
-                  decoration: BoxDecoration(
-                    color:
-                    isDark ? Colors.blueGrey.shade700 : AppColors.orangeSearch,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: const Icon(Icons.search, color: Colors.white),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
+                    child: Text(
+                      context.translate('mealCategories'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: isTablet ? 20.sp : 18.sp,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
-                      Expanded(
-                        child: TextField(
-                          controller: controllerSearch,
-                          autofocus: true,
-                          style: const TextStyle(color: Colors.white),
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            hintText: 'Search...',
-                            hintStyle:
-                            TextStyle(color: AppColors.white.withOpacity(0.7)),
-                            border: InputBorder.none,
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                  BlocBuilder<CategoriesBLoc, CategoriesState>(
+                    builder: (context, state) {
+                      if (state.status == Status.loading &&
+                          state.categories.isEmpty) {
+                        return SizedBox(
+                          height: 120.h,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          if (!_isSearching)
-            BlocBuilder<LanguageBloc, LanguageState>(
-              builder: (context, langState) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      DropdownButton<String>(
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15.sp,
-                        ),
-                        underline: const SizedBox(),
-                        iconDisabledColor: Colors.white,
-                        iconEnabledColor: Colors.white,
-                        focusColor: Colors.white,
-                        dropdownColor:
-                        isDark ? AppColors.darkAppBar : AppColors.primary,
-                        value: langState.languageCode,
-                        onChanged: (value) {
-                          if (value != null) {
-                            context.read<LanguageBloc>().add(
-                              LanguageChanged(value),
-                            );
-                          }
-                        },
-                        items: const [
-                          DropdownMenuItem(value: 'en', child: Text('English')),
-                          DropdownMenuItem(value: 'ru', child: Text('Русский')),
-                          DropdownMenuItem(value: 'uz', child: Text('O\'zbek')),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          if (!_isSearching)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: Icon(
-                Icons.language,
-                color: Colors.white,
-              ),
-            ),
-          InkWell(
-            borderRadius: BorderRadius.circular(100.r),
-            onTap: () {
-              setState(() {
-                _isSearching = !_isSearching;
-                if (!_isSearching) {
-                  controllerSearch.clear();
-                }
-              });
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              child: AnimatedCrossFade(
-                duration: const Duration(milliseconds: 300),
-                firstChild: SvgPicture.asset(
-                  AppIcons.search,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                ),
-                secondChild: const Icon(Icons.close, color: Colors.white),
-                crossFadeState:
-                _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-              ),
-            ),
-          ),
-        ],
-      ),
-      drawer: DrawerWidgets(),
-      body: RefreshIndicator(
-        color: isDark ? AppColors.darkAppBar : AppColors.primary,
-        onRefresh: () async {
-          GetUserProfile();
-        },
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
-                  child: Text(
-                    context.translate('mealCategories'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: isTablet ? 20.sp : 18.sp,
-                      color: isDark ? Colors.white : Colors.black,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: isTablet ? 230.h : 250.h,
-                  child: GridView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: categoryImg.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 15.w,
-                      crossAxisSpacing: 10.h,
-                      childAspectRatio: isTablet ? 0.7 : 1.2,
-                    ),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () => context.push(Routes.categories),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              height: isTablet ? 70.h : 75.w,
-                              width: isTablet ? 70.h : 75.w,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
+                        );
+                      }
+                      if (state.status == Status.error &&
+                          state.categories.isEmpty) {
+                        return Center(
+                          child: Text("Xatolik yuz berdi"),
+                        );
+                      }
+                      return SizedBox(
+                        height: isTablet ? 230.h : 250.h,
+                        child: GridView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.categories.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 15.w,
+                                crossAxisSpacing: 10.h,
+                                childAspectRatio: isTablet ? 0.7 : 1.2,
+                              ),
+                          itemBuilder: (context, index) {
+                            final category = state.categories[index];
+                            return GestureDetector(
+                              onTap: () => context.push(
+                                Routes.categories,
+                                extra: state.categories[index].id,
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 75.w,
+                                    width: 75.w,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(50.r),
+                                      child: CachedNetworkImage(
+                                        imageUrl: "$baseUrl${category.image}",
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            Container(
+                                              color: Colors.grey.shade200,
+                                              child: const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                    ),
+                                              ),
+                                            ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                              color: Colors.grey.shade300,
+                                              child: const Icon(Icons.fastfood),
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    category.name,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                   ),
                                 ],
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50.r),
-                                child: Image.asset(
-                                  categoryImg[index],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-                            Flexible(
-                              child: Text(
-                                categoryText[index],
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: isTablet ? 11.sp : 12.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: isDark
-                                      ? AppColors.white
-                                      : AppColors.textColor,
-                                ),
-                              ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       );
                     },
                   ),
-                ),
-                SizedBox(height: 25.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Text(
-                    context.translate('promotions'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: isTablet ? 20.sp : 18.sp,
-                      color: isDark ? Colors.white : Colors.black,
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20.w, 25.h, 20.w, 15.h),
+                    child: Text(
+                      context.translate('promotions'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: isTablet ? 20.sp : 18.sp,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 15.h),
-                SizedBox(
-                  height: isTablet ? 280.h : 260.h,
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: promotionsImg.length,
-                    separatorBuilder: (context, index) => SizedBox(width: 15.w),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          context.push(Routes.promotions, extra: 1);
-                        },
+                  SizedBox(
+                    height: isTablet ? 280.h : 260.h,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: promotionsImg.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(width: 15.w),
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () => context.push(Routes.promotions, extra: 1),
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: isTablet ? 220.w : 200.w,
@@ -344,36 +202,30 @@ class _HomePageState extends State<HomePage> {
                             price: promotionsPrice[index],
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 25.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Text(
-                    context.translate('new'),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: isTablet ? 20.sp : 18.sp,
-                      color: isDark ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 15.h),
-                SizedBox(
-                  height: isTablet ? 280.h : 260.h,
-                  child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 20.w),
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: promotionsImg.length,
-                    separatorBuilder: (context, index) => SizedBox(width: 15.w),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          context.push(Routes.promotions, extra: 1);
-                        },
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20.w, 25.h, 20.w, 15.h),
+                    child: Text(
+                      context.translate('new'),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: isTablet ? 20.sp : 18.sp,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: isTablet ? 280.h : 260.h,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: promotionsImg.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(width: 15.w),
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () => context.push(Routes.promotions, extra: 1),
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
                             maxWidth: isTablet ? 220.w : 200.w,
@@ -385,12 +237,12 @@ class _HomePageState extends State<HomePage> {
                             price: promotionsPrice[index],
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 100.h),
-              ],
+                  SizedBox(height: 100.h),
+                ],
+              ),
             ),
           ),
         ),
