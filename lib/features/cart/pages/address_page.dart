@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
-
 import '../../../core/routing/routes.dart';
 import '../../../core/utils/colors.dart';
 import '../../Reservations/widgets/text_and_text_field.dart';
@@ -19,12 +18,18 @@ class _AddressPageState extends State<AddressPage> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController buildingController = TextEditingController();
   final TextEditingController houseController = TextEditingController();
+  final TextEditingController floorController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     addressController.dispose();
     buildingController.dispose();
     houseController.dispose();
+    floorController.dispose();
+    notesController.dispose();
     super.dispose();
   }
 
@@ -32,41 +37,53 @@ class _AddressPageState extends State<AddressPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBarWidgets(title: 'Address'),
+      appBar: AppBarWidgets(title: 'Manzil ma\'lumotlari'),
       body: SafeArea(
         child: Stack(
           children: [
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14.w),
+            Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.only(
+                  left: 16.w,
+                  right: 16.w,
+                  top: 16.h,
+                  bottom: 100.h,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 35.h),
-                    Text(
-                      'Enter your delivery address',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16.sp,
-                        color: isDark ? AppColors.white : AppColors.textColor,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.location_on,
+                          color: AppColors.primary,
+                          size: 28.sp,
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          'Yetkazish manzili',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20.sp,
+                            color:
+                            isDark ? AppColors.white : AppColors.textColor,
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 20.h),
                     Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 24.h,
-                        horizontal: 16.w,
-                      ),
-                      width: double.infinity,
+                      padding: EdgeInsets.all(16.w),
                       decoration: BoxDecoration(
                         color: isDark ? AppColors.darkAppBar : AppColors.white,
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(16.r),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withOpacity(0.03),
                             blurRadius: 10,
-                            offset: const Offset(0, 5),
+                            offset: const Offset(0, 2),
                           ),
                         ],
                       ),
@@ -74,53 +91,95 @@ class _AddressPageState extends State<AddressPage> {
                         children: [
                           TextAndTextField(
                             controller: addressController,
-                            text: 'Address',
-                            hintText: 'Enter street address',
+                            text: 'Ko\'cha nomi',
+                            hintText: 'Masalan: Amir Temur ko\'chasi',
+                            // validator: (value) {
+                            //   if (value == null || value.isEmpty) {
+                            //     return 'Iltimos, ko\'cha nomini kiriting';
+                            //   }
+                            //   return null;
+                            // },
+                          ),
+                          SizedBox(height: 16.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextAndTextField(
+                                  controller: buildingController,
+                                  text: 'Bino',
+                                  hintText: 'Bino nomi',
+                                  // validator: (value) {
+                                  //   if (value == null || value.isEmpty) {
+                                  //     return 'Bino nomini kiriting';
+                                  //   }
+                                  //   return null;
+                                  // },
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
+                              Expanded(
+                                child: TextAndTextField(
+                                  controller: houseController,
+                                  text: 'Uy/Kvartira',
+                                  hintText: 'Raqam',
+                                  // validator: (value) {
+                                  //   if (value == null || value.isEmpty) {
+                                  //     return 'Raqamni kiriting';
+                                  //   }
+                                  //   return null;
+                                  // },
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 16.h),
                           TextAndTextField(
-                            controller: buildingController,
-                            text: 'Building Name',
-                            hintText: 'Enter building name',
+                            controller: floorController,
+                            text: 'Qavat (ixtiyoriy)',
+                            hintText: 'Qavat raqami',
                           ),
                           SizedBox(height: 16.h),
                           TextAndTextField(
-                            controller: houseController,
-                            text: 'House Number',
-                            hintText: 'Enter villa/apartment number',
+                            controller: notesController,
+                            text: 'Qo\'shimcha ma\'lumot (ixtiyoriy)',
+                            hintText: 'Masalan: Eshik rangi, bino yonidagi mo\'ljal',
+                            // maxLines: 3,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 120.h),
                   ],
                 ),
               ),
             ),
             Align(
-              alignment: AlignmentGeometry.bottomCenter,
+              alignment: Alignment.bottomCenter,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.darkAppBar : AppColors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
                       spreadRadius: 1,
-                      blurRadius: 10.r,
+                      blurRadius: 10,
                       offset: const Offset(0, -2),
                     ),
                   ],
                 ),
-                child: TextButtonApp(
-                  onPressed: () {
-                    context.push(Routes.payment);
-                  },
-                  width: 403,
-                  height: 50,
-                  text: "Proceed to payment",
-                  textColor: AppColors.white,
-                  buttonColor: AppColors.primary,
+                child: SafeArea(
+                  child: TextButtonApp(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        context.push(Routes.payment);
+                      }
+                    },
+                    width: 403,
+                    height: 50,
+                    text: "To'lovga o'tish",
+                    textColor: AppColors.white,
+                    buttonColor: AppColors.primary,
+                  ),
                 ),
               ),
             ),

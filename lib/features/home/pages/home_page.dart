@@ -50,7 +50,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenWidth = MediaQuery.of(context).size.width;
-    final isTablet = screenWidth > 600;
+
+    final bool isTablet = screenWidth >= 600;
+    final bool isDesktop = screenWidth >= 1024;
+
+    final double hPadding = isDesktop ? 40.w : (isTablet ? 30.w : 20.w);
+    final double titleSize = isDesktop ? 22.sp : (isTablet ? 20.sp : 18.sp);
+    final double catItemSize = isDesktop ? 100.w : (isTablet ? 85.w : 75.w);
+    final double catSectionHeight = isDesktop
+        ? 320.h
+        : (isTablet ? 280.h : 250.h);
+    final double recipeCardWidth = isDesktop
+        ? 260.w
+        : (isTablet ? 220.w : 190.w);
+    final double recipeSectionHeight = isDesktop
+        ? 320.h
+        : (isTablet ? 300.h : 270.h);
 
     return BlocProvider(
       create: (context) => CategoriesBLoc(
@@ -63,106 +78,130 @@ class _HomePageState extends State<HomePage> {
           drawer: const DrawerWidgets(),
           body: RefreshIndicator(
             backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
-            onRefresh: () async => innerContext.read<CategoriesBLoc>().add(
-              CategoriesLoading(),
-            ),
+            color: AppColors.white,
+            onRefresh: () async =>
+                innerContext.read<CategoriesBLoc>().add(CategoriesLoading()),
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
-                    child: Text(
-                      context.translate('mealCategories'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: isTablet ? 20.sp : 18.sp,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
+                  SizedBox(height: 16.h),
+                  _buildSectionHeader(
+                    context,
+                    'mealCategories',
+                    titleSize,
+                    hPadding,
+                    Icons.restaurant_menu,
+                    isDark,
                   ),
+                  SizedBox(height: 16.h),
                   BlocBuilder<CategoriesBLoc, CategoriesState>(
                     builder: (context, state) {
-                      if (state.status == Status.loading &&
-                          state.categories.isEmpty) {
-                        return SizedBox(
-                          height: 120.h,
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
+                      if (state.status == Status.loading) {
+                        return _buildLoading(catSectionHeight, isDark);
                       }
                       if (state.status == Status.error &&
                           state.categories.isEmpty) {
-                        return Center(
-                          child: Text("Xatolik yuz berdi"),
-                        );
+                        return _buildError(catSectionHeight, isDark);
                       }
                       return SizedBox(
-                        height: isTablet ? 230.h : 250.h,
+                        height: catSectionHeight,
                         child: GridView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          padding: EdgeInsets.symmetric(horizontal: hPadding),
                           scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
                           itemCount: state.categories.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 15.w,
-                                crossAxisSpacing: 10.h,
-                                childAspectRatio: isTablet ? 0.7 : 1.2,
+                                crossAxisSpacing: 12.h,
+                                childAspectRatio: isDesktop
+                                    ? 1.0
+                                    : (isTablet ? 0.85 : 1.1),
                               ),
                           itemBuilder: (context, index) {
                             final category = state.categories[index];
                             return GestureDetector(
                               onTap: () => context.push(
                                 Routes.categories,
-                                extra: state.categories[index].id,
+                                extra: category.id,
                               ),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    height: 75.w,
-                                    width: 75.w,
-                                    decoration: const BoxDecoration(
-                                      shape: BoxShape.circle,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? AppColors.darkAppBar
+                                      : AppColors.white,
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.03),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50.r),
-                                      child: CachedNetworkImage(
-                                        imageUrl: "$baseUrl${category.image}",
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            Container(
-                                              color: Colors.grey.shade200,
-                                              child: const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: catItemSize,
+                                      width: catItemSize,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: AppColors.primary
+                                                .withOpacity(0.15),
+                                            blurRadius: 8,
+                                            offset: const Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(
+                                          100.r,
+                                        ),
+                                        child: CachedNetworkImage(
+                                          imageUrl: "$baseUrl${category.image}",
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: AppColors.primary,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(
+                                                Icons.fastfood,
+                                                color: AppColors.primary,
+                                                size: 28.sp,
                                               ),
-                                            ),
-                                        errorWidget: (context, url, error) =>
-                                            Container(
-                                              color: Colors.grey.shade300,
-                                              child: const Icon(Icons.fastfood),
-                                            ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: 6.h),
-                                  Text(
-                                    category.name,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: isDark
-                                          ? Colors.white
-                                          : Colors.black,
+                                    SizedBox(height: 8.h),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 4.w,
+                                      ),
+                                      child: Text(
+                                        category.name,
+                                        maxLines: 1,
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: isTablet ? 13.sp : 12.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: isDark
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             );
                           },
@@ -170,81 +209,132 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 25.h, 20.w, 15.h),
-                    child: Text(
-                      context.translate('promotions'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: isTablet ? 20.sp : 18.sp,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
+                  _buildRecipeSection(
+                    context,
+                    'promotions',
+                    Icons.local_offer,
+                    recipeSectionHeight,
+                    recipeCardWidth,
+                    hPadding,
+                    titleSize,
+                    isDark,
                   ),
-                  SizedBox(
-                    height: isTablet ? 280.h : 260.h,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: promotionsImg.length,
-                      separatorBuilder: (context, index) =>
-                          SizedBox(width: 15.w),
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () => context.push(Routes.promotions, extra: 1),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: isTablet ? 220.w : 200.w,
-                          ),
-                          child: RecipeWidgets(
-                            img: promotionsImg[index],
-                            title: promotionsTitle[index],
-                            text: promotionsText[index],
-                            price: promotionsPrice[index],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 25.h, 20.w, 15.h),
-                    child: Text(
-                      context.translate('new'),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: isTablet ? 20.sp : 18.sp,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: isTablet ? 280.h : 260.h,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: promotionsImg.length,
-                      separatorBuilder: (context, index) =>
-                          SizedBox(width: 15.w),
-                      itemBuilder: (context, index) => GestureDetector(
-                        onTap: () => context.push(Routes.promotions, extra: 1),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: isTablet ? 220.w : 200.w,
-                          ),
-                          child: RecipeWidgets(
-                            img: promotionsImg[index],
-                            title: promotionsTitle[index],
-                            text: promotionsText[index],
-                            price: promotionsPrice[index],
-                          ),
-                        ),
-                      ),
-                    ),
+                  _buildRecipeSection(
+                    context,
+                    'new',
+                    Icons.fiber_new,
+                    recipeSectionHeight,
+                    recipeCardWidth,
+                    hPadding,
+                    titleSize,
+                    isDark,
                   ),
                   SizedBox(height: 100.h),
                 ],
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String titleKey,
+    double size,
+    double padding,
+    IconData icon,
+    bool isDark,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: padding),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.primary, size: size),
+          SizedBox(width: 8.w),
+          Text(
+            context.translate(titleKey),
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: size,
+              color: isDark ? Colors.white : Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecipeSection(
+    BuildContext context,
+    String titleKey,
+    IconData icon,
+    double sHeight,
+    double cWidth,
+    double padding,
+    double tSize,
+    bool isDark,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 24.h),
+        _buildSectionHeader(context, titleKey, tSize, padding, icon, isDark),
+        SizedBox(height: 16.h),
+        SizedBox(
+          height: sHeight,
+          child: ListView.separated(
+            padding: EdgeInsets.symmetric(horizontal: padding),
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: promotionsImg.length,
+            separatorBuilder: (context, index) => SizedBox(width: 12.w),
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () => context.push(Routes.promotions, extra: 1),
+              child: SizedBox(
+                width: cWidth,
+                child: RecipeWidgets(
+                  img: promotionsImg[index],
+                  title: promotionsTitle[index],
+                  text: promotionsText[index],
+                  price: promotionsPrice[index],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoading(double height, bool isDark) {
+    return SizedBox(
+      height: height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(color: AppColors.primary),
+            SizedBox(height: 16.h),
+            Text(
+              'Yuklanmoqda...',
+              style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildError(double height, bool isDark) {
+    return SizedBox(
+      height: height,
+      child: Center(
+        child: Icon(
+          Icons.error_outline,
+          size: 40.sp,
+          color: Colors.red.withOpacity(0.5),
         ),
       ),
     );

@@ -7,6 +7,15 @@ class TextAndTextField extends StatelessWidget {
   final String text;
   final String? hintText;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+  final bool obscureText;
+  final int? maxLines;
+  final int? maxLength;
+  final bool enabled;
+  final VoidCallback? onTap;
+  final Function(String)? onChanged;
 
   const TextAndTextField({
     super.key,
@@ -14,54 +23,135 @@ class TextAndTextField extends StatelessWidget {
     required this.text,
     this.hintText,
     this.prefixIcon,
+    this.suffixIcon,
+    this.validator,
+    this.keyboardType,
+    this.obscureText = false,
+    this.maxLines = 1,
+    this.maxLength,
+    this.enabled = true,
+    this.onTap,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
-      spacing: 6.h,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           text,
           style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+            fontSize: 14.sp,
             color: isDark ? AppColors.white : AppColors.textColor,
           ),
         ),
-        TextField(
+        SizedBox(height: 8.h),
+        TextFormField(
+          controller: controller,
+          validator: validator,
+          keyboardType: keyboardType,
+          obscureText: obscureText,
+          maxLines: maxLines,
+          maxLength: maxLength,
+          enabled: enabled,
+          onTap: onTap,
+          onChanged: onChanged,
           style: TextStyle(
             color: isDark ? AppColors.white : AppColors.textColor,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w400,
           ),
-          controller: controller,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w300,
-              color: AppColors.borderColor,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: isDark
+                  ? Colors.white38
+                  : AppColors.borderColor.withOpacity(0.8),
             ),
-            constraints: BoxConstraints(
-              maxWidth: 348.w,
-              maxHeight: 43.h,
-              minHeight: 43.h,
-              minWidth: 348.w,
+            prefixIcon: prefixIcon != null
+                ? Padding(
+              padding: EdgeInsets.only(left: 12.w, right: 8.w),
+              child: prefixIcon,
+            )
+                : null,
+            suffixIcon: suffixIcon != null
+                ? Padding(
+              padding: EdgeInsets.only(right: 12.w),
+              child: suffixIcon,
+            )
+                : null,
+            prefixIconConstraints: BoxConstraints(
+              minWidth: 40.w,
+              minHeight: 20.h,
             ),
-            prefixIcon: prefixIcon ?? null,
-            // enabledBorder: UnderlineInputBorder(
-            //   borderSide: BorderSide(
-            //     color: isDark ? Colors.white54 : Colors.grey,
-            //   ),
-            // ),
-
-            focusedBorder: UnderlineInputBorder(
+            suffixIconConstraints: BoxConstraints(
+              minWidth: 40.w,
+              minHeight: 20.h,
+            ),
+            filled: true,
+            fillColor: isDark
+                ? AppColors.black.withOpacity(0.3)
+                : Colors.grey[50],
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 14.h,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
+                color: isDark
+                    ? AppColors.borderColor.withOpacity(0.2)
+                    : AppColors.borderColor.withOpacity(0.3),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(
+                color: isDark
+                    ? AppColors.borderColor.withOpacity(0.2)
+                    : AppColors.borderColor.withOpacity(0.3),
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: const BorderSide(
                 color: AppColors.primary,
                 width: 2.0,
               ),
             ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(
+                color: Colors.red.shade400,
+                width: 1.5,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(
+                color: Colors.red.shade400,
+                width: 2.0,
+              ),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(
+                color: isDark
+                    ? AppColors.borderColor.withOpacity(0.1)
+                    : AppColors.borderColor.withOpacity(0.2),
+              ),
+            ),
+            errorStyle: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+              color: Colors.red.shade400,
+            ),
+            counterText: '',
           ),
         ),
       ],

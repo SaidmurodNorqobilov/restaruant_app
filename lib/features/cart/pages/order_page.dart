@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurantapp/core/client.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
+import 'package:restaurantapp/core/utils/status.dart';
+import 'package:restaurantapp/data/repositories/orders_repostories.dart';
+import 'package:restaurantapp/features/cart/managers/orderBLoc/orders_bloc.dart';
+import 'package:restaurantapp/features/cart/managers/orderBLoc/orders_state.dart';
 import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
 
 class OrderPage extends StatefulWidget {
@@ -18,102 +24,382 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      backgroundColor: isDark ? AppColors.black : AppColors.white,
       appBar: AppBarWidgets(title: context.translate('orders')),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            SizedBox(height: 10.h),
-            ...List.generate(5, (index) {
-              return InkWell(
-                onTap: () {
-                  context.push(Routes.orderDetail);
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(
-                    vertical: 12.h,
-                    horizontal: 20.w,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: AppColors.borderColor.withOpacity(0.3),
-                        width: 1,
+      body: BlocProvider(
+        create: (context) => OrdersBloc(
+          orderRepository: OrderRepository(
+            client: ApiClient(),
+          ),
+        )..add(OrdersLoading()),
+        child: BlocBuilder<OrdersBloc, OrdersState>(
+          builder: (context, state) {
+            if (state.status == Status.loading) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 80.w,
+                      height: 80.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
                       ),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Stack(
+                        alignment: Alignment.center,
                         children: [
-                          Text(
-                            '12/01/2025 • 10:00 am',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
-                            decoration: BoxDecoration(
-                              color: AppColors.orange.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(4.r),
-                            ),
-                            child: Text(
-                              'Waiting',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.sp,
-                                color: AppColors.orange,
+                          SizedBox(
+                            width: 60.w,
+                            height: 60.w,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primary,
                               ),
                             ),
                           ),
+                          Icon(
+                            Icons.restaurant_menu,
+                            size: 28.sp,
+                            color: AppColors.primary,
+                          ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                    ),
+                    SizedBox(height: 24.h),
+                    Text(
+                      'Buyurtmalar yuklanmoqda...',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                        color: isDark
+                            ? AppColors.white.withOpacity(0.7)
+                            : AppColors.black.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (state.status == Status.error) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64.sp,
+                      color: Colors.red.withOpacity(0.6),
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      "Xatolik yuz berdi",
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? AppColors.white : AppColors.textColor,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      state.errorMessage ?? "Iltimos, qaytadan urinib ko'ring",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (state.status == Status.success) {
+              if (state.orders.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.receipt_long_outlined,
+                        size: 80.sp,
+                        color: Colors.grey.withOpacity(0.4),
+                      ),
+                      SizedBox(height: 16.h),
                       Text(
-                        'Order No : #234R12',
+                        "Buyurtmalar yo'q",
                         style: TextStyle(
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
-                          fontSize: 16.sp,
                           color: isDark ? AppColors.white : AppColors.textColor,
                         ),
                       ),
-                      SizedBox(height: 4.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '2 items',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14.sp,
-                              color: isDark ? Colors.white70 : Colors.grey[700],
-                            ),
-                          ),
-                          Text(
-                            'AED 120.00',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 15.sp,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
+                );
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<OrdersBloc>().add(OrdersLoading());
+                },
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  itemCount: state.orders.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                  itemBuilder: (context, index) {
+                    final order = state.orders[index];
+                    return InkWell(
+                      onTap: () {
+                        context.push(Routes.orderDetail);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 16.w),
+                        padding: EdgeInsets.all(16.w),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.black.withOpacity(0.3)
+                              : AppColors.white,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isDark
+                                ? AppColors.borderColor.withOpacity(0.2)
+                                : AppColors.borderColor.withOpacity(0.3),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDark
+                                  ? Colors.transparent
+                                  : Colors.black.withOpacity(0.04),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      order.orderType.toLowerCase() == 'delivery'
+                                          ? Icons.delivery_dining
+                                          : Icons.table_restaurant,
+                                      size: 18.sp,
+                                      color: AppColors.primary,
+                                    ),
+                                    SizedBox(width: 6.w),
+                                    Text(
+                                      order.orderType.toLowerCase() == 'delivery'
+                                          ? 'Yetkazib berish'
+                                          : order.tipTable ?? 'Stol',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14.sp,
+                                        color: isDark
+                                            ? AppColors.white.withOpacity(0.8)
+                                            : Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 6.h,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: _getStatusColor(order.status)
+                                        .withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                  child: Text(
+                                    _getStatusText(order.status),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12.sp,
+                                      color: _getStatusColor(order.status),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+                            Text(
+                              'Buyurtma #${order.id}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18.sp,
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  size: 16.sp,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 4.w),
+                                Expanded(
+                                  child: Text(
+                                    order.location,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 13.sp,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 12.h),
+                            Container(
+                              height: 1,
+                              color: isDark
+                                  ? AppColors.borderColor.withOpacity(0.1)
+                                  : AppColors.borderColor.withOpacity(0.2),
+                            ),
+                            SizedBox(height: 12.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'To\'lov usuli',
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          order.paymentMethod.toLowerCase() ==
+                                              'online'
+                                              ? Icons.credit_card
+                                              : Icons.money,
+                                          size: 16.sp,
+                                          color: AppColors.primary,
+                                        ),
+                                        SizedBox(width: 4.w),
+                                        Text(
+                                          order.paymentMethod.toLowerCase() ==
+                                              'online'
+                                              ? 'Online'
+                                              : 'Naqd',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14.sp,
+                                            color: isDark
+                                                ? AppColors.white
+                                                : AppColors.textColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Jami summa',
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.h),
+                                    Text(
+                                      '${_formatPrice(order.totalPrice)} UZS',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18.sp,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               );
-            }),
-          ],
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
+  }
+
+  String _formatPrice(String price) {
+    try {
+      final num = double.parse(price);
+      return num.toStringAsFixed(0).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+            (Match m) => '${m[1]} ',
+      );
+    } catch (e) {
+      return price;
+    }
+  }
+
+  String _getStatusText(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'Kutilmoqda';
+      case 'confirmed':
+        return 'Tasdiqlandi';
+      case 'preparing':
+        return 'Tayyorlanmoqda';
+      case 'ready':
+        return 'Tayyor';
+      case 'delivered':
+        return 'Yetkazildi';
+      case 'cancelled':
+        return 'Bekor qilindi';
+      default:
+        return status;
+    }
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return AppColors.orange;
+      case 'confirmed':
+        return Colors.blue;
+      case 'preparing':
+        return Colors.purple;
+      case 'ready':
+        return Colors.green;
+      case 'delivered':
+        return Colors.teal;
+      case 'cancelled':
+        return Colors.red;
+      default:
+        return AppColors.orange;
+    }
   }
 }
