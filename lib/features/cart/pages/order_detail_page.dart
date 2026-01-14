@@ -14,17 +14,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   List orderProducts = [
     'https://static.toiimg.com/photo/102941656.cms',
     'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
-    'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
     'https://i.pinimg.com/originals/32/07/8e/32078e4d3c1e9edb4d76dba9a419f71f.jpg',
-    'https://static.toiimg.com/photo/102941656.cms',
-    'https://static.toiimg.com/photo/102941656.cms',
   ];
   List orderTitle = [
     'Provencal Breakf',
     '2 Provencal Breakf',
-    '2 Provencal Breakf',
-    '3 Provencal Breakf',
-    '4 Provesfsdfncal Bredghdfgsdfgsgfdakf',
     '4 Provesfsdfncal Bredghdfgsdfgsgfdakf',
   ];
 
@@ -334,7 +328,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     padding: EdgeInsetsGeometry.symmetric(horizontal: 10.w),
                     decoration: BoxDecoration(
                       color: AppColors.orange,
-                      borderRadius: BorderRadius.circular(100.r)
+                      borderRadius: BorderRadius.circular(100.r),
                     ),
                     child: DropdownButton<String>(
                       alignment: AlignmentGeometry.center,
@@ -361,12 +355,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                         DropdownMenuItem(
                           value: 'ru',
-                          child: Text('Delivered/ Picked up',
+                          child: Text(
+                            'Delivered/ Picked up',
                             style: TextStyle(
                               color: isDark
                                   ? AppColors.white
                                   : AppColors.textColor,
-                            ),),
+                            ),
+                          ),
                         ),
                       ],
                     ),

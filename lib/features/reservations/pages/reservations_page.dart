@@ -1,17 +1,15 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
-import 'package:restaurantapp/features/common/widgets/secces_page.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
-
-import '../../../core/routing/routes.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
+    as picker;
 
 class ReservationsPage extends StatefulWidget {
   const ReservationsPage({super.key});
@@ -29,6 +27,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   final TextEditingController specialController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
 
+
   @override
   void dispose() {
     nameController.dispose();
@@ -44,6 +43,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isTablet = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       appBar: AppBarHome(
         title: Text(context.translate('reservation')),
@@ -64,9 +64,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   color: isDark ? AppColors.white : AppColors.textColor,
                 ),
               ),
-              SizedBox(
-                height: 8.h,
-              ),
+              SizedBox(height: 8.h),
               Text(
                 context.translate('viewMyReservations'),
                 style: TextStyle(
@@ -132,8 +130,14 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.person_outline, size: 20, color: AppColors.white,),
-                          SizedBox(width: 8.w),
+                          const Icon(
+                            Icons.person_outline,
+                            size: 20,
+                            color: AppColors.white,
+                          ),
+                          SizedBox(
+                            width: 8.w,
+                          ),
                           Expanded(
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<int>(
@@ -162,11 +166,43 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 15.h),
-                    TextAndTextField(
-                      controller: reservationTimeController,
-                      text: context.translate('reservationTime'),
-                      hintText: context.translate('enterTime'),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        picker.DatePicker.showDateTimePicker(
+                          context,
+                          showTitleActions: true,
+                          minTime: DateTime.now(),
+                          onConfirm: (date) {
+                            setState(() {
+                              reservationTimeController.text =
+                                  "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+                            });
+                          },
+                          locale: picker.LocaleType.en,
+                          theme: picker.DatePickerTheme(
+                            backgroundColor: isDark
+                                ? AppColors.darkAppBar
+                                : Colors.white,
+                            itemStyle: TextStyle(
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                            doneStyle: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      },
+                      child: AbsorbPointer(
+                        child: TextAndTextField(
+                          controller: reservationTimeController,
+                          text: context.translate('reservationTime'),
+                          hintText: context.translate('enterTime'),
+                        ),
+                      ),
                     ),
                     SizedBox(height: 15.h),
                     TextAndTextField(
@@ -202,23 +238,15 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                           surface: Colors.white,
                                           onSurface: AppColors.textColor,
                                         ),
-                                  textButtonTheme: TextButtonThemeData(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: AppColors.primary,
-                                    ),
-                                  ),
                                 ),
                                 child: child!,
                               );
                             },
                           );
-
                           if (pickedDate != null) {
                             setState(() {
                               dateController.text =
-                                  "${pickedDate.day.toString().padLeft(2, '0')}/"
-                                  "${pickedDate.month.toString().padLeft(2, '0')}/"
-                                  "${pickedDate.year}";
+                                  "${pickedDate.day.toString().padLeft(2, '0')}/${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.year}";
                             });
                           }
                         },
@@ -241,22 +269,22 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       builder: (context) => BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                         child: Container(
-                          height: isTablet ? MediaQuery.of(context).size.height * 0.65 : MediaQuery.of(context).size.height * 0.55,
+                          height: isTablet
+                              ? MediaQuery.of(context).size.height * 0.65
+                              : MediaQuery.of(context).size.height * 0.55,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors:
-                              Theme.of(context).brightness ==
-                                  Brightness.dark
+                              colors: isDark
                                   ? [
-                                AppColors.black.withOpacity(0.9),
-                                AppColors.black.withOpacity(0.8),
-                              ]
+                                      AppColors.black.withOpacity(0.9),
+                                      AppColors.black.withOpacity(0.8),
+                                    ]
                                   : [
-                                AppColors.white.withOpacity(0.9),
-                                AppColors.white.withOpacity(0.8),
-                              ],
+                                      AppColors.white.withOpacity(0.9),
+                                      AppColors.white.withOpacity(0.8),
+                                    ],
                             ),
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30.r),
@@ -326,7 +354,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                     ],
                                   ).createShader(bounds),
                                   child: Text(
-                                    'Ro\'yxatdan o\'ting',
+                                    "hozircha ishlamaydi",
+                                    // 'Ro\'yxatdan o\'ting',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 26.sp,
@@ -336,20 +365,18 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                   ),
                                 ),
                                 SizedBox(height: 16.h),
-                                Text(
-                                  'Buyurtma berishdan oldin tizimga kirishingiz yoki ro\'yxatdan o\'tishingiz kerak',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color:
-                                    Theme.of(context).brightness ==
-                                        Brightness.dark
-                                        ? AppColors.white.withOpacity(0.8)
-                                        : AppColors.black.withOpacity(0.7),
-                                    height: 1.6,
-                                  ),
-                                ),
+                                // Text(
+                                //   'Bron qilishdan oldin tizimga kirishingiz yoki ro\'yxatdan o\'tishingiz kerak',
+                                //   textAlign: TextAlign.center,
+                                //   style: TextStyle(
+                                //     fontSize: 14.sp,
+                                //     fontWeight: FontWeight.w400,
+                                //     color: isDark
+                                //         ? AppColors.white.withOpacity(0.8)
+                                //         : AppColors.black.withOpacity(0.7),
+                                //     height: 1.6,
+                                //   ),
+                                // ),
                                 SizedBox(height: 45.h),
                                 Container(
                                   width: double.infinity,
@@ -378,12 +405,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       borderRadius: BorderRadius.circular(15.r),
                                       onTap: () {
                                         Navigator.pop(context);
-                                        context.push(Routes.login);
+                                        // context.push(Routes.login);
                                       },
                                       child: Center(
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               Icons.login_rounded,
@@ -392,7 +419,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                             ),
                                             SizedBox(width: 10.w),
                                             Text(
-                                              'Kirish',
+                                              "Yaxshilab bekor qilish )))",
+                                              // 'Kirish',
                                               style: TextStyle(
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w600,
@@ -421,9 +449,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(15.r),
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
+                                      onTap: () => Navigator.pop(context),
                                       child: Center(
                                         child: Text(
                                           'Bekor qilish',
@@ -444,17 +470,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       ),
                     );
                   },
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => SuccessPage(
-                    //       onBackPressed: () => Navigator.pop(context),
-                    //       message:
-                    //           "Your reservation has been made successfully",
-                    //       appbarTitle: 'Reservation',
-                    //     ),
-                    //   ),
-                    // );
                   text: context.translate('submit'),
                   textColor: AppColors.white,
                   buttonColor: AppColors.primary,

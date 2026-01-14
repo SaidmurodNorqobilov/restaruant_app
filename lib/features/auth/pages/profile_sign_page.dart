@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/status.dart';
-import 'package:restaurantapp/features/accaunt/managers/user_profile_bloc.dart';
+import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_bloc.dart';
 import '../../../core/routing/routes.dart';
 import '../managers/authCubit/auth_cubit.dart';
 import '../managers/profileCubit/profile_cubit.dart';

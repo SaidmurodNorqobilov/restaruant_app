@@ -23,4 +23,5 @@ class Routes {
   static const otpSms = '/otpSms';
   static const profileSign = '/profileSign';
   static const editProfile = '/editProfile';
+  static const location = '/location';
 }

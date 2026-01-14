@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final TextEditingController controllerSearch = TextEditingController();
   final String baseUrl = "https://atsrestaurant.pythonanywhere.com";
+  bool _isImagesPreCached = false;
 
   final List<String> promotionsImg = [
     'https://i.pinimg.com/originals/37/cc/51/37cc518c0d49a2fd03bc93fd151c9ca1.jpg',
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
     'Freshly baked...',
     'Test description',
   ];
-  final List<double> promotionsPrice = [35.00, 30.00, 70.00, 100.00];
+  final List<double> promotionsPrice = [35000.00, 30000.00, 79000.00, 110000.00];
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
     final double hPadding = isDesktop ? 40.w : (isTablet ? 30.w : 20.w);
     final double titleSize = isDesktop ? 22.sp : (isTablet ? 20.sp : 18.sp);
-    final double catItemSize = isDesktop ? 100.w : (isTablet ? 85.w : 75.w);
+    final double catItemSize = isDesktop ? 100.w : (isTablet ? 35.w : 75.w);
     final double catSectionHeight = isDesktop
         ? 320.h
         : (isTablet ? 280.h : 250.h);
@@ -79,8 +80,12 @@ class _HomePageState extends State<HomePage> {
           body: RefreshIndicator(
             backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
             color: AppColors.white,
-            onRefresh: () async =>
-                innerContext.read<CategoriesBLoc>().add(CategoriesLoading()),
+            onRefresh: () async {
+              innerContext.read<CategoriesBLoc>().add(CategoriesLoading());
+              setState(() {
+                _isImagesPreCached = false;
+              });
+            },
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -105,6 +110,11 @@ class _HomePageState extends State<HomePage> {
                           state.categories.isEmpty) {
                         return _buildError(catSectionHeight, isDark);
                       }
+
+                      if (!_isImagesPreCached && state.categories.isNotEmpty) {
+                        _precacheImages(state.categories);
+                      }
+
                       return SizedBox(
                         height: catSectionHeight,
                         child: GridView.builder(
@@ -129,6 +139,8 @@ class _HomePageState extends State<HomePage> {
                                 extra: category.id,
                               ),
                               child: Container(
+                                height: catItemSize,
+                                width: catItemSize,
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? AppColors.darkAppBar
@@ -163,22 +175,61 @@ class _HomePageState extends State<HomePage> {
                                         borderRadius: BorderRadius.circular(
                                           100.r,
                                         ),
-                                        child: CachedNetworkImage(
-                                          imageUrl: "$baseUrl${category.image}",
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) => Center(
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              color: AppColors.primary,
-                                            ),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(
-                                                Icons.fastfood,
-                                                color: AppColors.primary,
-                                                size: 28.sp,
+                                        child:
+                                            category.image != null &&
+                                                category.image
+                                                    .toString()
+                                                    .isNotEmpty
+                                            ? CachedNetworkImage(
+                                                imageUrl:
+                                                    "$baseUrl${category.image}",
+                                                fit: BoxFit.cover,
+                                                memCacheHeight: 200,
+                                                memCacheWidth: 200,
+                                                maxHeightDiskCache: 400,
+                                                maxWidthDiskCache: 400,
+                                                fadeInDuration: const Duration(
+                                                  milliseconds: 200,
+                                                ),
+                                                placeholder: (context, url) =>
+                                                    Container(
+                                                      color: isDark
+                                                          ? AppColors.darkAppBar
+                                                          : Colors.grey[100],
+                                                      child: Icon(
+                                                        Icons.fastfood,
+                                                        color: AppColors.primary
+                                                            .withOpacity(0.3),
+                                                        size: 28.sp,
+                                                      ),
+                                                    ),
+                                                errorWidget:
+                                                    (
+                                                      context,
+                                                      url,
+                                                      error,
+                                                    ) => Container(
+                                                      color: isDark
+                                                          ? AppColors.darkAppBar
+                                                          : Colors.grey[100],
+                                                      child: Icon(
+                                                        Icons.fastfood,
+                                                        color:
+                                                            AppColors.primary,
+                                                        size: 28.sp,
+                                                      ),
+                                                    ),
+                                              )
+                                            : Container(
+                                                color: isDark
+                                                    ? AppColors.darkAppBar
+                                                    : Colors.grey[100],
+                                                child: Icon(
+                                                  Icons.fastfood,
+                                                  color: AppColors.primary,
+                                                  size: 28.sp,
+                                                ),
                                               ),
-                                        ),
                                       ),
                                     ),
                                     SizedBox(height: 8.h),
@@ -192,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                                         textAlign: TextAlign.center,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
-                                          fontSize: isTablet ? 13.sp : 12.sp,
+                                          fontSize: isTablet ? 10.sp : 12.sp,
                                           fontWeight: FontWeight.w600,
                                           color: isDark
                                               ? Colors.white
@@ -237,6 +288,28 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _precacheImages(List categories) async {
+    if (_isImagesPreCached) return;
+
+    try {
+      await Future.wait(
+        categories.map(
+          (category) => precacheImage(
+            CachedNetworkImageProvider("$baseUrl${category.image}"),
+            context,
+          ),
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          _isImagesPreCached = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error precaching images: $e');
+    }
   }
 
   Widget _buildSectionHeader(

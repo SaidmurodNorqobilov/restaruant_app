@@ -12,8 +12,8 @@ import '../../auth/managers/profileCubit/profile_cubit.dart';
 import '../../auth/managers/profileCubit/profile_state.dart';
 import '../../auth/widgets/custom_drop_down_widget.dart';
 import '../../auth/widgets/custom_text_field_widget.dart';
-import '../managers/user_profile_bloc.dart';
-import '../managers/user_profile_state.dart';
+import '../managers/userBloc/user_profile_bloc.dart';
+import '../managers/userBloc/user_profile_state.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -66,15 +66,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   bool _validateForm() {
-    if (ismController.text
-        .trim()
-        .isEmpty) {
+    if (ismController.text.trim().isEmpty) {
       _showError('Ismingizni kiriting');
       return false;
     }
-    if (familiyaController.text
-        .trim()
-        .isEmpty) {
+    if (familiyaController.text.trim().isEmpty) {
       _showError('Familyangizni kiriting');
       return false;
     }
@@ -120,12 +116,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkAppBar : AppColors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -149,7 +142,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       context.read<UserProfileBloc>().add(GetUserProfile());
                       context.go(Routes.home);
                     } else if (profileState.status == Status.error) {
-                      _showError(profileState.errorMessage ?? 'Xatolik yuz berdi');
+                      _showError('Xatolik yuz berdi');
                     }
                   },
                   builder: (context, profileState) {
@@ -190,9 +183,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                         height: 60.w,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 3,
-                                          valueColor: AlwaysStoppedAnimation<Color>(
-                                            AppColors.primary,
-                                          ),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                AppColors.primary,
+                                              ),
                                         ),
                                       ),
                                       Icon(
@@ -218,6 +212,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ),
                           );
                         }
+                        if (userState.status == Status.error) {
+                          return Center(
+                            child: Text("xatolik yuz berdi"),
+                          );
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -228,7 +227,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               style: TextStyle(
                                 fontSize: 24.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.white : AppColors.black,
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.black,
                               ),
                             ),
                             SizedBox(height: 8.h),
@@ -255,7 +256,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                       shape: BoxShape.circle,
                                       color: Colors.grey[300],
                                       border: Border.all(
-                                        color: AppColors.primary.withOpacity(0.3),
+                                        color: AppColors.primary.withOpacity(
+                                          0.3,
+                                        ),
                                         width: 2,
                                       ),
                                     ),
@@ -264,14 +267,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                           ? Image.file(rasm!, fit: BoxFit.cover)
                                           : networkImageUrl != null
                                           ? Image.network(
-                                        networkImageUrl!,
-                                        fit: BoxFit.cover,
-                                      )
+                                              networkImageUrl!,
+                                              fit: BoxFit.cover,
+                                            )
                                           : Icon(
-                                        Icons.person,
-                                        size: 50.sp,
-                                        color: Colors.grey[600],
-                                      ),
+                                              Icons.person,
+                                              size: 50.sp,
+                                              color: Colors.grey[600],
+                                            ),
                                     ),
                                   ),
                                   Positioned(
@@ -320,12 +323,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               hintText: "Viloyatingiz",
                               items: viloyatlar.entries
                                   .map(
-                                    (entry) =>
-                                    DropdownMenuItem(
+                                    (entry) => DropdownMenuItem(
                                       value: entry.key,
                                       child: Text(entry.value),
                                     ),
-                              )
+                                  )
                                   .toList(),
                               onChanged: (yangi) =>
                                   setState(() => tanlanganViloyat = yangi),
@@ -347,16 +349,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                                 child: profileState.status == Status.loading
                                     ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
+                                        color: Colors.white,
+                                      )
                                     : Text(
-                                  context.translate('save'),
-                                  style: TextStyle(
-                                    fontSize: 16.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                        context.translate('save'),
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                               ),
                             ),
                             SizedBox(height: 20.h),
@@ -369,7 +371,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
             ),
           );
-        }
+        },
       ),
     );
   }

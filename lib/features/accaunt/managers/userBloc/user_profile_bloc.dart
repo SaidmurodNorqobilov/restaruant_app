@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurantapp/data/repositories/user_profile_repository.dart';
 import 'package:restaurantapp/core/utils/status.dart';
-import 'package:restaurantapp/features/accaunt/managers/user_profile_state.dart';
-import '../../../core/user_service.dart';
+import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_state.dart';
+import '../../../../core/network/user_service.dart';
 part 'user_profile_event.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {

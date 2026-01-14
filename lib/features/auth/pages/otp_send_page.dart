@@ -12,7 +12,7 @@ import 'package:restaurantapp/core/utils/status.dart';
 import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
 import '../managers/authCubit/auth_cubit.dart';
 import '../managers/authCubit/auth_state.dart';
-import '../../accaunt/managers/user_profile_bloc.dart';
+import '../../accaunt/managers/userBloc/user_profile_bloc.dart';
 
 class OtpSendPage extends StatefulWidget {
   final String sessionId;

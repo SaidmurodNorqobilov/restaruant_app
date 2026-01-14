@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,19 +23,30 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
   final String imageUrlBase = "https://atsrestaurant.pythonanywhere.com";
+  bool _isImagesPreCached = false;
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
-    final bool isTablet = screenWidth > 600;
-    final bool isDesktop = screenWidth > 900;
+    final bool isTablet = screenWidth >= 600;
+    final bool isDesktop = screenWidth >= 1024;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     int crossAxisCount = 2;
+    double mainAxisExtent = 290.h;
+    double horizontalPadding = 20.w;
+    double verticalPadding = 20.h;
+
     if (isDesktop) {
       crossAxisCount = 4;
+      mainAxisExtent = 340.h;
+      horizontalPadding = 40.w;
+      verticalPadding = 30.h;
     } else if (isTablet) {
       crossAxisCount = 3;
+      mainAxisExtent = 320.h;
+      horizontalPadding = 30.w;
+      verticalPadding = 25.h;
     }
 
     return BlocProvider(
@@ -52,8 +64,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 80.w,
-                      height: 80.w,
+                      width: isTablet ? 100.w : 80.w,
+                      height: isTablet ? 100.w : 80.w,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withOpacity(0.1),
                         shape: BoxShape.circle,
@@ -62,10 +74,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         alignment: Alignment.center,
                         children: [
                           SizedBox(
-                            width: 60.w,
-                            height: 60.w,
+                            width: isTablet ? 75.w : 60.w,
+                            height: isTablet ? 75.w : 60.w,
                             child: CircularProgressIndicator(
-                              strokeWidth: 3,
+                              strokeWidth: isTablet ? 4 : 3,
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 AppColors.primary,
                               ),
@@ -73,17 +85,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           ),
                           Icon(
                             Icons.restaurant_menu,
-                            size: 28.sp,
+                            size: isTablet ? 35.sp : 28.sp,
                             color: AppColors.primary,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: isTablet ? 30.h : 24.h),
                     Text(
                       'Mahsulotlar yuklanmoqda...',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: isTablet ? 18.sp : 16.sp,
                         fontWeight: FontWeight.w500,
                         color: isDark
                             ? AppColors.white.withOpacity(0.7)
@@ -98,39 +110,39 @@ class _CategoriesPageState extends State<CategoriesPage> {
             if (state.status == Status.error) {
               return Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32.w),
+                  padding: EdgeInsets.all(isTablet ? 40.w : 32.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 100.w,
-                        height: 100.w,
+                        width: isTablet ? 120.w : 100.w,
+                        height: isTablet ? 120.w : 100.w,
                         decoration: BoxDecoration(
                           color: AppColors.red.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.error_outline_rounded,
-                          size: 50.sp,
+                          size: isTablet ? 60.sp : 50.sp,
                           color: AppColors.red,
                         ),
                       ),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: isTablet ? 30.h : 24.h),
                       Text(
                         'Xatolik yuz berdi',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 20.sp,
+                          fontSize: isTablet ? 24.sp : 20.sp,
                           fontWeight: FontWeight.w700,
                           color: isDark ? AppColors.white : AppColors.black,
                         ),
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: isTablet ? 16.h : 12.h),
                       Text(
                         'Mahsulotlarni yuklashda muammo yuz berdi.\nKeyinroq qaytadan urinib ko\'ring.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: isTablet ? 16.sp : 14.sp,
                           fontWeight: FontWeight.w400,
                           color: isDark
                               ? AppColors.white.withOpacity(0.7)
@@ -138,9 +150,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           height: 1.5,
                         ),
                       ),
-                      SizedBox(height: 32.h),
+                      SizedBox(height: isTablet ? 40.h : 32.h),
                       ElevatedButton.icon(
                         onPressed: () {
+                          setState(() {
+                            _isImagesPreCached = false;
+                          });
                           context.read<CategoriesBLoc>().add(
                             CategoryGetId(widget.categoryId),
                           );
@@ -148,8 +163,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           padding: EdgeInsets.symmetric(
-                            horizontal: 32.w,
-                            vertical: 16.h,
+                            horizontal: isTablet ? 40.w : 32.w,
+                            vertical: isTablet ? 18.h : 16.h,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
@@ -158,13 +173,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         ),
                         icon: Icon(
                           Icons.refresh_rounded,
-                          size: 20.sp,
+                          size: isTablet ? 24.sp : 20.sp,
                           color: AppColors.white,
                         ),
                         label: Text(
                           'Qayta urinish',
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: isTablet ? 18.sp : 16.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.white,
                           ),
@@ -179,13 +194,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
             if (state.products.isEmpty) {
               return Center(
                 child: Padding(
-                  padding: EdgeInsets.all(32.w),
+                  padding: EdgeInsets.all(isTablet ? 40.w : 32.w),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 120.w,
-                        height: 120.w,
+                        width: isTablet ? 140.w : 120.w,
+                        height: isTablet ? 140.w : 120.w,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
@@ -199,26 +214,26 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         ),
                         child: Icon(
                           Icons.inventory_2_outlined,
-                          size: 60.sp,
+                          size: isTablet ? 70.sp : 60.sp,
                           color: AppColors.primary.withOpacity(0.6),
                         ),
                       ),
-                      SizedBox(height: 32.h),
+                      SizedBox(height: isTablet ? 40.h : 32.h),
                       Text(
                         'Hozircha mahsulot yo\'q',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 24.sp,
+                          fontSize: isTablet ? 28.sp : 24.sp,
                           fontWeight: FontWeight.w700,
                           color: isDark ? AppColors.white : AppColors.black,
                         ),
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: isTablet ? 16.h : 12.h),
                       Text(
                         'Bu kategoriyada hozircha mahsulotlar\nmavjud emas. Keyinroq qaytib ko\'ring!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: isTablet ? 16.sp : 14.sp,
                           fontWeight: FontWeight.w400,
                           color: isDark
                               ? AppColors.white.withOpacity(0.7)
@@ -226,15 +241,15 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           height: 1.5,
                         ),
                       ),
-                      SizedBox(height: 40.h),
+                      SizedBox(height: isTablet ? 48.h : 40.h),
                       OutlinedButton.icon(
                         onPressed: () {
                           context.pop();
                         },
                         style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 32.w,
-                            vertical: 16.h,
+                            horizontal: isTablet ? 40.w : 32.w,
+                            vertical: isTablet ? 18.h : 16.h,
                           ),
                           side: BorderSide(
                             color: AppColors.primary,
@@ -246,13 +261,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         ),
                         icon: Icon(
                           Icons.arrow_back_rounded,
-                          size: 20.sp,
+                          size: isTablet ? 24.sp : 20.sp,
                           color: AppColors.primary,
                         ),
                         label: Text(
                           'Orqaga qaytish',
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: isTablet ? 18.sp : 16.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.primary,
                           ),
@@ -264,15 +279,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
               );
             }
 
+            if (!_isImagesPreCached && state.products.isNotEmpty) {
+              _precacheProductImages(state.products);
+            }
+
             return GridView.builder(
-              padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 120.h),
+              padding: EdgeInsets.fromLTRB(
+                horizontalPadding,
+                verticalPadding,
+                horizontalPadding,
+                isTablet ? 140.h : 120.h,
+              ),
               physics: const BouncingScrollPhysics(),
               itemCount: state.products.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 15.w,
-                mainAxisSpacing: 15.h,
-                mainAxisExtent: isTablet ? 320.h : 290.h,
+                crossAxisSpacing: isTablet ? 20.w : 15.w,
+                mainAxisSpacing: isTablet ? 20.h : 15.h,
+                mainAxisExtent: mainAxisExtent,
               ),
               itemBuilder: (BuildContext context, int index) {
                 final product = state.products[index];
@@ -297,5 +321,30 @@ class _CategoriesPageState extends State<CategoriesPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _precacheProductImages(List products) async {
+    if (_isImagesPreCached) return;
+
+    try {
+      await Future.wait(
+        products.map((product) {
+          final String fullImgUrl = product.image.startsWith('http')
+              ? product.image
+              : "$imageUrlBase${product.image}";
+          return precacheImage(
+            CachedNetworkImageProvider(fullImgUrl),
+            context,
+          );
+        }),
+      );
+      if (mounted) {
+        setState(() {
+          _isImagesPreCached = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error precaching product images: $e');
+    }
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 import '../../../core/utils/colors.dart';
-import '../../Reservations/widgets/text_and_text_field.dart';
 import '../../common/widgets/secces_page.dart';
 
 class PaymentDetailsPage extends StatefulWidget {
@@ -53,9 +52,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(title: 'To\'lov ma\'lumotlari'),
       body: SingleChildScrollView(
@@ -71,7 +68,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   gradient: LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withOpacity(0.7)
+                      AppColors.primary.withOpacity(0.7),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -159,7 +156,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                             SizedBox(height: 4.h),
                             Text(
                               expiryDateController.text.isEmpty
-                                  ? 'MM/YY' : expiryDateController.text,
+                                  ? 'MM/YY'
+                                  : expiryDateController.text,
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,
@@ -189,13 +187,17 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                 child: Column(
                   children: [
                     TextFormField(
-                      style: TextStyle(color: isDark ? AppColors.white : AppColors.textColor),
+                      style: TextStyle(
+                        color: isDark ? AppColors.white : AppColors.textColor,
+                      ),
                       controller: nameController,
                       decoration: InputDecoration(
                         labelText: 'Karta egasi',
                         hintText: 'Ism Familiya',
                         prefixIcon: Icon(
-                            Icons.person_outline, color: AppColors.primary),
+                          Icons.person_outline,
+                          color: AppColors.primary,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
@@ -209,8 +211,10 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(color: AppColors.primary,
-                              width: 2),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                            width: 2,
+                          ),
                         ),
                       ),
                       textCapitalization: TextCapitalization.words,
@@ -224,13 +228,17 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                     ),
                     SizedBox(height: 16.h),
                     TextFormField(
-                      style: TextStyle(color: isDark ? AppColors.white : AppColors.textColor),
+                      style: TextStyle(
+                        color: isDark ? AppColors.white : AppColors.textColor,
+                      ),
                       controller: cardNumberController,
                       decoration: InputDecoration(
                         labelText: 'Karta raqami',
                         hintText: '**** **** **** ****',
                         prefixIcon: Icon(
-                            Icons.credit_card, color: AppColors.primary),
+                          Icons.credit_card,
+                          color: AppColors.primary,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
@@ -244,8 +252,10 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.r),
-                          borderSide: const BorderSide(color: AppColors.primary,
-                              width: 2),
+                          borderSide: const BorderSide(
+                            color: AppColors.primary,
+                            width: 2,
+                          ),
                         ),
                       ),
                       keyboardType: TextInputType.number,
@@ -271,13 +281,19 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                       children: [
                         Expanded(
                           child: TextFormField(
-                            style: TextStyle(color: isDark ? AppColors.white : AppColors.textColor),
+                            style: TextStyle(
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
                             controller: expiryDateController,
                             decoration: InputDecoration(
                               labelText: 'Amal qilish muddati',
                               hintText: 'MM/YY',
-                              prefixIcon: Icon(Icons.calendar_today,
-                                  color: AppColors.primary),
+                              prefixIcon: Icon(
+                                Icons.calendar_today,
+                                color: AppColors.primary,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
@@ -291,9 +307,10 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.r),
-                                borderSide:
-                                const BorderSide(
-                                    color: AppColors.primary, width: 2),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                  width: 2,
+                                ),
                               ),
                             ),
                             keyboardType: TextInputType.number,
@@ -303,14 +320,15 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                             ],
                             onChanged: (value) {
                               if (value.length == 4) {
-                                expiryDateController.text =
-                                    _formatExpiryDate(value);
-                                expiryDateController.selection =
-                                    TextSelection.fromPosition(
-                                      TextPosition(
-                                          offset: expiryDateController.text
-                                              .length),
-                                    );
+                                expiryDateController.text = _formatExpiryDate(
+                                  value,
+                                );
+                                expiryDateController
+                                    .selection = TextSelection.fromPosition(
+                                  TextPosition(
+                                    offset: expiryDateController.text.length,
+                                  ),
+                                );
                               }
                               setState(() {});
                             },
@@ -329,15 +347,23 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                         Expanded(
                           child: TextFormField(
                             controller: cvcController,
-                            style: TextStyle(color: isDark ? AppColors.white : AppColors.textColor),
+                            style: TextStyle(
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textColor,
+                            ),
                             decoration: InputDecoration(
                               labelText: 'CVV/CVC',
                               hintText: '***',
                               hintStyle: TextStyle(
-                                color: isDark ? AppColors.white : AppColors.textColor,
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
                               ),
                               prefixIcon: Icon(
-                                  Icons.lock_outline, color: AppColors.primary),
+                                Icons.lock_outline,
+                                color: AppColors.primary,
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
@@ -351,9 +377,10 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12.r),
-                                borderSide:
-                                const BorderSide(
-                                    color: AppColors.primary, width: 2),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primary,
+                                  width: 2,
+                                ),
                               ),
                             ),
                             keyboardType: TextInputType.number,
@@ -363,13 +390,14 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                               LengthLimitingTextInputFormatter(3),
                             ],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'CVV kiriting';
-                              }
-                              if (value.length < 3) {
-                                return '3 ta raqam';
-                              }
-                              return null;
+                              //   if (value == null || value.isEmpty) {
+                              //     return 'CVV kiriting';
+                              //   }
+                              //   if (value.length < 3) {
+                              //     return '3 ta raqam';
+                              //   }
+                              //   return null;
+                              // },
                             },
                           ),
                         ),
@@ -384,9 +412,9 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                              const SuccessPage(
-                                message: "To'lovingiz muvaffaqiyatli amalga oshirildi",
+                              builder: (context) => const SuccessPage(
+                                message:
+                                    "To'lovingiz muvaffaqiyatli amalga oshirildi",
                                 appbarTitle: 'To\'lov tasdiqlandi',
                               ),
                             ),

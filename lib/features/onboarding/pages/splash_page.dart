@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/icons.dart';
-import 'package:restaurantapp/core/utils/auth_storage.dart';
+import 'package:restaurantapp/core/network/auth_storage.dart';
 import '../../../core/utils/onboarding_service.dart';
 
 class SplashPage extends StatefulWidget {

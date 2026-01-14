@@ -44,6 +44,28 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	 <key>NSLocationWhenInUseUsageDescription</key>
+     <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+
+     <key>NSLocationAlwaysUsageDescription</key>
+     <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+
+     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+     <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+
+        <!-- Yandex Map uchun -->
+     <key>io.flutter.embedded_views_preview</key>
+     <key>NSLocationWhenInUseUsageDescription</key>
+     <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+
+     <key>NSLocationAlwaysUsageDescription</key>
+     <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+
+     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+     <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+
+     <key>io.flutter.embedded_views_preview</key>
+
 	<true/>
 </dict>
 </plist>

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,9 +84,9 @@ class UserService {
     await prefs.remove(_imagePathKey);
     await prefs.setBool(_isLoggedInKey, false);
     await prefs.clear();
-
     userDataChanged.value++;
   }
+
   static Future<String> getFullName() async {
     final userData = await getUserData();
     final firstName = userData['firstName'] ?? '';

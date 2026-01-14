@@ -20,33 +20,33 @@ class CategoryRepository {
       (error) {
         final cachedData = prefs.getString('cached_categories');
         if (cachedData != null) {
-          final List<dynamic> decodedData = jsonDecode(cachedData);
-          final categories = decodedData
-              .map(
-                (x) => CategoryModel.fromJson(x as Map<String, dynamic>),
-              )
-              .toList();
-          return Result.ok(categories);
+          try {
+            final List<dynamic> decodedData = jsonDecode(cachedData);
+            final categories = decodedData
+                .map((x) => CategoryModel.fromJson(x as Map<String, dynamic>))
+                .toList();
+            return Result.ok(categories);
+          } catch (e) {
+            return Result.error(Exception("Cache parse error: $e"));
+          }
         }
         return Result.error(error);
       },
       (data) {
         try {
-          prefs.setString(
-            'cached_categories',
-            jsonEncode(data),
-          );
+          prefs.setString('cached_categories', jsonEncode(data));
 
-          final categories = data
-              .map(
-                (x) => CategoryModel.fromJson(x as Map<String, dynamic>),
-              )
-              .toList();
+          final categories = data.map((x) {
+            final Map<String, dynamic> map = x as Map<String, dynamic>;
+            if (map['image'] == null || map['image'].toString().isEmpty) {
+              map['image'] = "";
+            }
+            return CategoryModel.fromJson(map);
+          }).toList();
+
           return Result.ok(categories);
         } catch (e) {
-          return Result.error(
-            Exception("Category parse error: $e"),
-          );
+          return Result.error(Exception("Category parse error: $e"));
         }
       },
     );
@@ -64,11 +64,15 @@ class CategoryRepository {
       (error) {
         final cachedData = prefs.getString(cacheKey);
         if (cachedData != null) {
-          final List<dynamic> decodedData = jsonDecode(cachedData);
-          final products = decodedData
-              .map((x) => ProductModel.fromJson(x as Map<String, dynamic>))
-              .toList();
-          return Result.ok(products);
+          try {
+            final List<dynamic> decodedData = jsonDecode(cachedData);
+            final products = decodedData
+                .map((x) => ProductModel.fromJson(x as Map<String, dynamic>))
+                .toList();
+            return Result.ok(products);
+          } catch (e) {
+            return Result.error(Exception("Product cache parse error: $e"));
+          }
         }
         return Result.error(error);
       },
@@ -76,9 +80,14 @@ class CategoryRepository {
         try {
           prefs.setString(cacheKey, jsonEncode(data));
 
-          final products = data
-              .map((x) => ProductModel.fromJson(x as Map<String, dynamic>))
-              .toList();
+          final products = data.map((x) {
+            final Map<String, dynamic> map = x as Map<String, dynamic>;
+            if (map['image'] == null || map['image'].toString().isEmpty) {
+              map['image'] = "";
+            }
+            return ProductModel.fromJson(map);
+          }).toList();
+
           return Result.ok(products);
         } catch (e) {
           return Result.error(Exception("Product parse error: $e"));

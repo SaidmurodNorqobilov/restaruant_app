@@ -92,7 +92,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
 
 
                 if (state.status == Status.error && state.products.isEmpty) {
-                  return Center(child: Text(state.errorMessage ?? "Error"));
+                  return Center(child: Text( "Xatolik yuz berdi"));
                 }
 
                 return ListView.builder(

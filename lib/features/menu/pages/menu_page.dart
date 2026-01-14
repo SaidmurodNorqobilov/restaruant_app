@@ -230,7 +230,14 @@ class _MenuPageState extends State<MenuPage> {
 
             if (state.status == Status.error && state.categories.isEmpty) {
               return Center(
-                child: Text(context.translate("Xatolik Yuz berdi")),
+                child: Text(
+                  "Xatolik Yuz berdi",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                    fontSize: 20.sp,
+                  ),
+                ),
               );
             }
 
@@ -350,28 +357,29 @@ class _MenuPageState extends State<MenuPage> {
                   child: CachedNetworkImage(
                     imageUrl: "$baseUrl${category.image}",
                     fit: BoxFit.cover,
+                    fadeInDuration: Duration(milliseconds: 200),
                     placeholder: (context, url) => Container(
-                      color: isDark
-                          ? Colors.grey.shade800
-                          : Colors.grey.shade200,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      color: isDark
-                          ? Colors.grey.shade800
-                          : Colors.grey.shade300,
+                      color: isDark ? AppColors.darkAppBar : Colors.grey[100],
                       child: Icon(
                         Icons.fastfood,
-                        color: AppColors.primary,
+                        color: AppColors.primary.withOpacity(0.3),
+                        size: 28.sp,
                       ),
                     ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.fastfood,
+                      color: AppColors.primary,
+                      size: 28.sp,
+                    ),
+                    // errorWidget: (context, url, error) => Container(
+                    //   color: isDark
+                    //       ? Colors.grey.shade800
+                    //       : Colors.grey.shade300,
+                    //   child: Icon(
+                    //     Icons.fastfood,
+                    //     color: AppColors.primary,
+                    //   ),
+                    // ),
                   ),
                 ),
               ),

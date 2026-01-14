@@ -24,9 +24,9 @@ class CustomDropDownWidget extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return DropdownButtonFormField<String>(
       value: value,
-      dropdownColor: isDark ? Colors.grey[150] : Colors.white,
+      dropdownColor: isDark ? AppColors.darkAppBar : Colors.white,
       style: TextStyle(
-        color: Colors.black,
+        color: isDark ? AppColors.white : AppColors.textColor,
         fontSize: 16.sp,
       ),
       decoration: InputDecoration(
@@ -65,11 +65,13 @@ class CustomDropDownWidget extends StatelessWidget {
           ),
         ),
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor: isDark
+            ? AppColors.darkAppBar
+            : Colors.grey[50],
       ),
       icon: Icon(
         Icons.arrow_drop_down,
-        color: Colors.black,
+        color: isDark ? AppColors.white : AppColors.textColor,
       ),
       validator: validator,
       items: items,

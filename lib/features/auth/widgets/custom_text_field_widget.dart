@@ -44,7 +44,7 @@ class  CustomTextFeldWidget extends StatelessWidget {
       maxLines: maxLines,
       maxLength: maxLength,
       style: TextStyle(
-        color: Colors.black,
+        color: isDark ? AppColors.white : AppColors.textColor,
         fontSize: 16.sp,
       ),
       decoration: InputDecoration(
@@ -55,7 +55,9 @@ class  CustomTextFeldWidget extends StatelessWidget {
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         filled: true,
-        fillColor: Colors.grey[100],
+        fillColor: isDark
+            ? AppColors.darkAppBar
+            : Colors.grey[50],
         counterText: maxLength != null ? null : '',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16.r),

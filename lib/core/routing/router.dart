@@ -25,6 +25,7 @@ import 'package:restaurantapp/features/onboarding/pages/splash_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/welcome_page.dart';
 import 'package:restaurantapp/features/home/pages/home_page.dart';
 import '../../data/models/category_model.dart';
+import '../../features/cart/pages/location_page.dart';
 import '../../features/common/widgets/bottom_navigation_bar_app.dart';
 
 final router = GoRouter(
@@ -170,6 +171,10 @@ final router = GoRouter(
     GoRoute(
       path: Routes.editProfile,
       builder: (context, state) => EditProfilePage(),
+    ),
+    GoRoute(
+      path: Routes.location,
+      builder: (context, state) => const LocationPage(),
     ),
   ],
 );

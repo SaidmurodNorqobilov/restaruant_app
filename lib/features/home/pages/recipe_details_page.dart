@@ -101,12 +101,8 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             children: [
               Stack(
                 children: [
-                  Image.network(
-                    fullImgUrl,
-                    width: double.infinity,
-                    height: 363.h,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
+                  if (fullImgUrl.isEmpty)
+                    Container(
                       height: 363.h,
                       color: Colors.grey,
                       child: const Icon(
@@ -114,7 +110,21 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         color: Colors.white,
                       ),
                     ),
-                  ),
+                  if (fullImgUrl.isNotEmpty)
+                    Image.network(
+                      fullImgUrl,
+                      width: double.infinity,
+                      height: 363.h,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        height: 363.h,
+                        color: Colors.grey,
+                        child: const Icon(
+                          Icons.broken_image,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -165,13 +175,13 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 32.h),
+                    SizedBox(height: 22.h),
                     const Divider(),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 12.h),
                     Text(
                       'Description',
                       style: TextStyle(
-                        fontSize: 18.sp,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                         color: isDark ? AppColors.white : AppColors.textColor,
                       ),
@@ -223,6 +233,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       ),
     );
   }
+
   Widget _buildNavigationButtons(bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -242,7 +253,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 child: Icon(
                   Icons.arrow_back_rounded,
                   color: AppColors.borderColor,
-                  size: 24.w,
+                  size: 20.w,
                 ),
               ),
               SizedBox(width: 8.w),
@@ -270,9 +281,10 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.arrow_forward_rounded,
                   color: Colors.white,
+                  size: 20.w,
                 ),
               ),
             ],
@@ -305,6 +317,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.white : AppColors.textColor,
                         ),
                       ),
                       Text(

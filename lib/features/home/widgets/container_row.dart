@@ -57,7 +57,7 @@ class CounterRow extends StatelessWidget {
               border: Border.all(color: AppColors.borderColor),
               borderRadius: BorderRadius.circular(3.r),
             ),
-            child: const Icon(Icons.add, size: 16),
+            child: Icon(Icons.add, size: 16),
           ),
         ),
       ],

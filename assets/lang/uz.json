@@ -5,7 +5,9 @@
   "promotions": "Aksiyalar",
   "orders": "Mening Buyrutmalarim",
   "about": "Haqida",
+  "appAbout" : "Ilova haqida ma'lumot",
   "refund": "To'lov qaytaruvi",
+  "cancelRefund" : "Qaytarilgan to'lovlar",
   "terms": "Foydalanish Shartlari",
   "reservation": "Band qilish",
   "feedback": "bu oddiy fedbek aka",
@@ -13,6 +15,7 @@
   "profile" : "Profil",
   "mode" : "Mavzu Rejimi",
   "editProfile" : "Profilni tahrirlash",
+  "personEdit" : "Shaxsiy ma'lumotlarni tahrirlash",
   "payments" : "To'lovlar",
   "orderHistory" : "Buyurtma tarixi",
   "exit" : "Chiqish",
@@ -54,10 +57,21 @@
   "yes" : "Ha",
   "no" : "Yo'q",
 
-  "register" : "Ro\\'yxatdan o\\'ting",
-  "auth_required_before_order" : "Buyurtma berishdan oldin tizimga kirishingiz yoki ro\\'yxatdan o\\'tishingiz kerak",
-  "dataEdit" : "Ma\\'lumotlaringizni tahrirlang",
+  "register" : "Ro'yxatdan o'ting",
+  "auth_required_before_order" : "Buyurtma berishdan oldin tizimga kirishingiz yoki ro'yxatdan o'tishingiz kerak",
+  "dataEdit" : "Ma'lumotlaringizni tahrirlang",
 
   "save" : "Saqlash",
-  "selectTable" : "Jadvalni tanlang"
+  "selectTable" : "Jadvalni tanlang",
+
+  "qrCashback" : "Xarid qiling va bonuslar to'plang",
+
+  "exitAccount" : "Akkauntdan chiqish",
+  "aboutUs" : "IZGARA – shahar ichidagi yangi ta’m va yangi kayfiyat. Biz mehmonlarimizning faqatgina ovqat emas, balki tajriba izlab kelishini yaxshi bilamiz. Shu sababli IZGARA jamoasi — oshpazlar, dizaynerlar, baristalar, xizmat ko‘rsatish mutaxassislari va g‘oyaga oshufta insonlardan tashkil topgan.",
+  "refundUs" : "QAYTARISH VA PUL QAYTARISH SIYOSATI\n\nBizdan xarid qilganingiz uchun rahmat. Mahsulotlarimiz sizga yoqadi degan umiddamiz, ammo agar siz qoniqmasangiz, biz yordam berishga tayyormiz.\n\nQaytarish muddati\n\nMahsulotni xarid qilingan sanadan boshlab 7 kalendar kun ichida qaytarish uchun murojaat qilishingiz mumkin.\nAgar 7 kundan ko‘p vaqt o‘tgan bo‘lsa, afsuski, pulni qaytarish yoki almashtirishni taklif qila olmaymiz.\n\nQaytariladigan mahsulot holati\n\nQaytarish uchun mahsulot:\n\nishlatilmagan bo‘lishi\n\nasl holatida bo‘lishi\n\nbarcha qismlari saqlangan bo‘lishi\n\noriginal qadoqda bo‘lishi\n\nBizning xatoliklarimizdan tashqari sabablar bilan shikastlangan, o‘zgartirilgan yoki detallari yetishmaydigan mahsulotlar qabul qilinmaydi.\n\nQaytarib bo‘lmaydigan mahsulotlar\n\nQuyidagi mahsulot turlari qaytarilmaydi:\n\ntez buziladigan oziq-ovqat mahsulotlari\n\ngazeta, jurnal va bosma nashrlar\n\nintim va gigiyenik vositalar\n\nochilgan kosmetika va shaxsiy parvarish mahsulotlari\n\nxavfli moddalar va kimyoviy vositalar\n\nyonuvchan suyuqliklar va gazlar\n\nraqamli va yuklab olinadigan mahsulotlar\n\nsovg‘a kartalari\n\nMahsulotni ishlab chiqaruvchiga jo‘natmang, qaytarish faqat biz orqali amalga oshiriladi.\n\nChek yoki tasdiq\n\nQaytarish uchun quyidagilardan biri talab qilinadi:\n\nkassa cheki\n\nbuyurtma raqami\n\nxaridni tasdiqlovchi hujjat\n\nTasdiqsiz qaytarish rad etilishi mumkin.\n\nQisman pul qaytarish\n\nBa’zi holatlarda qisman pul qaytarilishi mumkin:\n\nishlatilganligi seziladigan mahsulotlar\n\nochilgan disklar, dasturlar, o‘yinlar\n\nasl holatini yo‘qotgan mahsulotlar\n\n7 kundan keyin, ammo 30 kundan oshmagan qaytarishlar (bizning qarorimizga ko‘ra)\n\nPulni qaytarish jarayoni\n\nQaytarilgan mahsulotni qabul qilib, tekshirganimizdan so‘ng sizga:\n\nqabul qilingani\n\ntasdiqlangan yoki rad etilgani\n\nhaqida xabar beramiz.\n\nTasdiqlangan taqdirda, mablag‘ xarid qilingan usul bo‘yicha qaytariladi. Bank yoki to‘lov tizimi muddatlari tufayli kechikishlar bo‘lishi mumkin.\n\nAlmashtirish\n\nAgar mahsulot nuqsonli yoki shikastlangan bo‘lsa, biz uni almashtirib beramiz. Shu maqsadda biz bilan bog‘laning.\n\nYetkazib berish xarajatlari\n\nOdatda yetkazib berish xarajatlari qaytarilmaydi. Ayrim holatlarda qaytarilayotgan summadan ushlab qolinish mumkin.",
+
+  "location" : "Joylashuv",
+  "inputLocation" : "Joylashuvni kiriting"
+
+
 }

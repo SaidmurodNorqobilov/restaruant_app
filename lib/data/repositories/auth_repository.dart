@@ -1,4 +1,4 @@
-import 'package:restaurantapp/core/utils/auth_storage.dart';
+import 'package:restaurantapp/core/network/auth_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/client.dart';
 import '../../../core/utils/result.dart';

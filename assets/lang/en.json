@@ -5,7 +5,9 @@
   "promotions": "Promotions",
   "orders": "My Orders",
   "about": "About us",
+  "appAbout" : "About application information",
   "refund": "Refund Policy",
+  "cancelRefund" : "Cancelled payments",
   "terms": "Terms and Conditions",
   "reservation": "Reservation",
   "feedback": "Feedback form",
@@ -13,6 +15,7 @@
   "profile" : "Profile",
   "mode" : "Theme Mode",
   "editProfile" : "Edit Profile",
+  "personEdit" : "Edit personal data",
   "payments" : "Payments",
   "orderHistory" : "Order history",
   "exit" : "Exit",
@@ -59,6 +62,17 @@
   "dataEdit" : "Edit data",
 
   "save" : "Save",
-  "selectTable" : "Select table"
+  "selectTable" : "Select table",
+
+  "qrCashback" : "Shop and collect bonuses",
+
+  "exitAccount" : "Exit account",
+  "aboutUs" : "IZGARA is a new place in town — a new taste and a new atmosphere. We know that people come not only to eat, but to enjoy a memorable experience. That is why the IZGARA team is a mix of chefs, designers, baristas, service professionals, and passionate creators who truly love what they do.",
+  "refundUs" : "RETURNS & REFUND POLICY\n\nThank you for shopping with us. We hope you enjoy our products, but if for any reason you are not satisfied, we are here to help.\n\nReturn period\n\nYou may request a return within 7 calendar days from the date of purchase.\nIf more than 7 days have passed since your purchase, unfortunately we cannot offer a refund or exchange.\n\nCondition of returned items\n\nTo be eligible for a return, the item must:\n\nbe unused\n\nbe in the same condition as received\n\ncontain all original accessories and components\n\nbe in its original packaging\n\nItems that are damaged, altered, or missing parts not due to our error will not be accepted.\n\nNon-returnable items\n\nCertain types of goods cannot be returned, including but not limited to:\n\nperishable goods (food, beverages, flowers)\n\nnewspapers, magazines, printed media\n\nintimate or hygiene products\n\ncosmetics and personal care items already opened\n\nhazardous materials, chemicals\n\nflammable liquids or gases\n\ndigital or downloadable products\n\ngift cards\n\nPlease do not send your purchase back to the manufacturer.\n\nProof of purchase\n\nTo complete your return, we require:\n\nreceipt, or\n\norder confirmation, or\n\nother valid proof of purchase\n\nReturns without proof of purchase may be refused.\n\nPartial refunds\n\nIn some cases, only partial refunds may be granted, for example:\n\nitems with visible signs of use\n\nopened CDs, DVDs, software, games, or vinyl records\n\nitems not in original condition\n\nitems returned after the return period but within 30 days at our discretion\n\nRefund process\n\nOnce your returned item is received and inspected, we will notify you by email or message regarding:\n\nreceipt of the item\n\napproval or rejection of the refund\n\nIf the refund is approved, it will be processed and issued to the original method of payment within a reasonable number of days. Processing time may vary depending on your bank or payment provider.\n\nExchanges\n\nWe only replace items if they are defective or damaged upon receipt. If you need to exchange an item for the same product, please contact us before sending it.\n\nShipping costs\n\nShipping costs are generally non-refundable. If you receive a refund, the cost of return shipping may be deducted from your refund unless otherwise stated.",
+
+  "location" : "Location",
+  "inputLocation" : "Enter your location"
+
+
 }
 

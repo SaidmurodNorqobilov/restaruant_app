@@ -20,6 +20,8 @@ class DrawerWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth >= 600;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocBuilder<LanguageBloc, LanguageState>(
       builder: (context, langState) {
@@ -32,55 +34,14 @@ class DrawerWidgets extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              DrawerHeader(
+              Container(
+                height: 290.h,
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 25.h,),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SvgPicture.asset(
-                          AppIcons.menu,
-                          colorFilter: const ColorFilter.mode(
-                            AppColors.white,
-                            BlendMode.srcIn,
-                          ),
-                          width: 80.w,
-                          height: 80.h,
-                        ),
-                        SizedBox(width: 25.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'IZGARA',
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                'CAFE',
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 28.sp,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  image: DecorationImage(
+                    image: AssetImage('assets/appLogo/divider.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Padding(
@@ -92,7 +53,7 @@ class DrawerWidgets extends StatelessWidget {
                       child: Text(
                         context.translate('language'),
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: isTablet ? 10.sp : 14.sp,
                           fontWeight: FontWeight.w500,
                           color: isDark ? AppColors.white : AppColors.textColor,
                         ),
@@ -130,9 +91,12 @@ class DrawerWidgets extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Icon(
-                          Icons.language,
-                          color: AppColors.primary,
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.language,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ],
                     ),
@@ -365,7 +329,7 @@ class DrawerWidgets extends StatelessWidget {
       },
     );
   }
-  
+
   Widget _drawerItem(
     BuildContext context, {
     required IconData icon,
@@ -373,12 +337,14 @@ class DrawerWidgets extends StatelessWidget {
     required VoidCallback onPressed,
     required bool isDark,
   }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth >= 600;
     return ListTile(
       leading: Icon(icon, color: AppColors.primary),
       title: Text(
         text,
         style: TextStyle(
-          fontSize: 15.sp,
+          fontSize: isTablet ? 12.sp : 15.sp,
           fontWeight: FontWeight.w500,
           color: isDark ? Colors.white : Colors.black,
         ),

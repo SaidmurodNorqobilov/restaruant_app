@@ -24,8 +24,9 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDark ? AppColors.black : AppColors.white,
-      appBar: AppBarWidgets(title: context.translate('orders')),
+      appBar: AppBarWidgets(
+        title: context.translate('orders'),
+      ),
       body: BlocProvider(
         create: (context) => OrdersBloc(
           orderRepository: OrderRepository(
@@ -93,7 +94,9 @@ class _OrderPageState extends State<OrderPage> {
                       size: 64.sp,
                       color: Colors.red.withOpacity(0.6),
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(
+                      height: 16.h,
+                    ),
                     Text(
                       "Xatolik yuz berdi",
                       style: TextStyle(
@@ -115,7 +118,6 @@ class _OrderPageState extends State<OrderPage> {
                 ),
               );
             }
-
             if (state.status == Status.success) {
               if (state.orders.isEmpty) {
                 return Center(
@@ -140,208 +142,224 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 );
               }
-
               return RefreshIndicator(
                 onRefresh: () async {
                   context.read<OrdersBloc>().add(OrdersLoading());
                 },
-                child: ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  itemCount: state.orders.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
-                  itemBuilder: (context, index) {
-                    final order = state.orders[index];
-                    return InkWell(
-                      onTap: () {
-                        context.push(Routes.orderDetail);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16.w),
-                        padding: EdgeInsets.all(16.w),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? AppColors.black.withOpacity(0.3)
-                              : AppColors.white,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: ListView.separated(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    itemCount: state.orders.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                    itemBuilder: (context, index) {
+                      final order = state.orders[index];
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(12.r),
+                        onTap: () {
+                          context.push(Routes.orderDetail);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(16.w),
+                          decoration: BoxDecoration(
                             color: isDark
-                                ? AppColors.borderColor.withOpacity(0.2)
-                                : AppColors.borderColor.withOpacity(0.3),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
+                                ? AppColors.black.withOpacity(0.3)
+                                : AppColors.white,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
                               color: isDark
-                                  ? Colors.transparent
-                                  : Colors.black.withOpacity(0.04),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
+                                  ? AppColors.borderColor.withOpacity(0.2)
+                                  : AppColors.borderColor.withOpacity(0.3),
                             ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      order.orderType.toLowerCase() == 'delivery'
-                                          ? Icons.delivery_dining
-                                          : Icons.table_restaurant,
-                                      size: 18.sp,
-                                      color: AppColors.primary,
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    Text(
-                                      order.orderType.toLowerCase() == 'delivery'
-                                          ? 'Yetkazib berish'
-                                          : order.tipTable ?? 'Stol',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14.sp,
-                                        color: isDark
-                                            ? AppColors.white.withOpacity(0.8)
-                                            : Colors.grey[700],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 6.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _getStatusColor(order.status)
-                                        .withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  child: Text(
-                                    _getStatusText(order.status),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12.sp,
-                                      color: _getStatusColor(order.status),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12.h),
-                            Text(
-                              'Buyurtma #${order.id}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18.sp,
+                            boxShadow: [
+                              BoxShadow(
                                 color: isDark
-                                    ? AppColors.white
-                                    : AppColors.textColor,
+                                    ? Colors.transparent
+                                    : Colors.black.withOpacity(0.04),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  size: 16.sp,
-                                  color: Colors.grey,
-                                ),
-                                SizedBox(width: 4.w),
-                                Expanded(
-                                  child: Text(
-                                    order.location,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13.sp,
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12.h),
-                            Container(
-                              height: 1,
-                              color: isDark
-                                  ? AppColors.borderColor.withOpacity(0.1)
-                                  : AppColors.borderColor.withOpacity(0.2),
-                            ),
-                            SizedBox(height: 12.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'To\'lov usuli',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          order.paymentMethod.toLowerCase() ==
-                                              'online'
-                                              ? Icons.credit_card
-                                              : Icons.money,
-                                          size: 16.sp,
-                                          color: AppColors.primary,
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          order.paymentMethod.toLowerCase() ==
-                                              'online'
-                                              ? 'Online'
-                                              : 'Naqd',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14.sp,
-                                            color: isDark
-                                                ? AppColors.white
-                                                : AppColors.textColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'Jami summa',
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.h),
-                                    Text(
-                                      '${_formatPrice(order.totalPrice)} UZS',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 18.sp,
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        order.orderType.toLowerCase() ==
+                                                'delivery'
+                                            ? Icons.delivery_dining
+                                            : Icons.table_restaurant,
+                                        size: 18.sp,
                                         color: AppColors.primary,
                                       ),
+                                      SizedBox(width: 6.w),
+                                      Text(
+                                        order.orderType.toLowerCase() ==
+                                                'delivery'
+                                            ? 'Yetkazib berish'
+                                            : order.tipTable ?? 'Stol',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14.sp,
+                                          color: isDark
+                                              ? AppColors.white.withOpacity(
+                                                  0.8,
+                                                )
+                                              : Colors.grey[700],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                      vertical: 6.h,
                                     ),
-                                  ],
+                                    decoration: BoxDecoration(
+                                      color: _getStatusColor(
+                                        order.status,
+                                      ).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(
+                                        20.r,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      _getStatusText(order.status),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12.sp,
+                                        color: _getStatusColor(order.status),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12.h),
+                              Text(
+                                'Buyurtma #${order.id}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18.sp,
+                                  color: isDark
+                                      ? AppColors.white
+                                      : AppColors.textColor,
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              SizedBox(height: 8.h),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: 16.sp,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Expanded(
+                                    child: Text(
+                                      order.location,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 13.sp,
+                                        color: Colors.grey,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12.h),
+                              Container(
+                                height: 1,
+                                color: isDark
+                                    ? AppColors.borderColor.withOpacity(0.1)
+                                    : AppColors.borderColor.withOpacity(0.2),
+                              ),
+                              SizedBox(height: 12.h),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'To\'lov usuli',
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 4.h,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            order.paymentMethod.toLowerCase() ==
+                                                    'online'
+                                                ? Icons.credit_card
+                                                : Icons.money,
+                                            size: 16.sp,
+                                            color: AppColors.primary,
+                                          ),
+                                          SizedBox(
+                                            width: 4.w,
+                                          ),
+                                          Text(
+                                            order.paymentMethod.toLowerCase() ==
+                                                    'online'
+                                                ? 'Online'
+                                                : 'Naqd',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14.sp,
+                                              color: isDark
+                                                  ? AppColors.white
+                                                  : AppColors.textColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        'Jami summa',
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4.h),
+                                      Text(
+                                        '${_formatPrice(order.totalPrice)} UZS',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18.sp,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               );
             }
@@ -358,7 +376,7 @@ class _OrderPageState extends State<OrderPage> {
       final num = double.parse(price);
       return num.toStringAsFixed(0).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (Match m) => '${m[1]} ',
+        (Match m) => '${m[1]} ',
       );
     } catch (e) {
       return price;

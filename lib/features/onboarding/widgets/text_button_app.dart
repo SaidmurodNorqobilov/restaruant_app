@@ -49,7 +49,7 @@ class _TextButtonAppState extends State<TextButtonApp> {
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 4.w),
+        padding: EdgeInsetsGeometry.symmetric(horizontal: 14.w),
         alignment: Alignment.center,
         width: (widget.width ?? double.infinity).w,
         height: (widget.height ?? 50).h,

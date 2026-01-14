@@ -29,7 +29,9 @@ class _HomePageAppbarState extends State<HomePageAppbar> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
 
+    final bool isTablet = screenWidth >= 600;
     return AppBar(
       iconTheme: const IconThemeData(color: AppColors.white),
       backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
@@ -48,7 +50,7 @@ class _HomePageAppbarState extends State<HomePageAppbar> {
                 "IZGARA",
                 style: TextStyle(
                   color: AppColors.white,
-                  fontSize: 24.sp,
+                  fontSize: isTablet ? 18.sp : 24.sp,
                   fontWeight: FontWeight.w700,
                 ),
               ),

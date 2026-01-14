@@ -6,34 +6,42 @@ import 'language_state.dart';
 
 class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   LanguageBloc()
-      : super(LanguageState(
-    languageCode: 'en',
-    localization: AppLocalization('en'),
-  )) {
+    : super(
+        LanguageState(
+          languageCode: 'en',
+          localization: AppLocalization('en'),
+        ),
+      ) {
     on<LanguageLoaded>(_onLanguageLoaded);
     on<LanguageChanged>(_onLanguageChanged);
   }
 
   Future<void> _onLanguageLoaded(
-      LanguageLoaded event,
-      Emitter<LanguageState> emit,
-      ) async {
+    LanguageLoaded event,
+    Emitter<LanguageState> emit,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     final savedLang = prefs.getString('language') ?? 'en';
     final localization = AppLocalization(savedLang);
     await localization.load();
 
-    emit(state.copyWith(
-      languageCode: savedLang,
-      localization: localization,
-    ));
+    emit(
+      state.copyWith(
+        languageCode: savedLang,
+        localization: localization,
+      ),
+    );
   }
 
   Future<void> _onLanguageChanged(
-      LanguageChanged event,
-      Emitter<LanguageState> emit,
-      ) async {
-    emit(state.copyWith(isLoading: true));
+    LanguageChanged event,
+    Emitter<LanguageState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isLoading: true,
+      ),
+    );
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language', event.languageCode);
@@ -41,10 +49,12 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     final localization = AppLocalization(event.languageCode);
     await localization.load();
 
-    emit(state.copyWith(
-      languageCode: event.languageCode,
-      localization: localization,
-      isLoading: false,
-    ));
+    emit(
+      state.copyWith(
+        languageCode: event.languageCode,
+        localization: localization,
+        isLoading: false,
+      ),
+    );
   }
 }
