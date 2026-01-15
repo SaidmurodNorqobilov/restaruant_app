@@ -38,7 +38,8 @@ class OnboardingPage extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 13.sp,
-                    color: AppColors.white.withOpacity(0.9),
+                    color: AppColors.white.withAlpha(230)
+,
                   ),
                 ),
               ],

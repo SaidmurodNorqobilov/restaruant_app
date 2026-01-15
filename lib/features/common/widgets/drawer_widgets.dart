@@ -248,7 +248,8 @@ class DrawerWidgets extends StatelessWidget {
                       BoxShadow(
                         color: isDark
                             ? Colors.black26
-                            : Colors.grey.withOpacity(0.2),
+                            : Colors.grey.withAlpha(51)
+,
                         blurRadius: isTablet ? 12 : 8,
                         offset: const Offset(0, 2),
                       ),

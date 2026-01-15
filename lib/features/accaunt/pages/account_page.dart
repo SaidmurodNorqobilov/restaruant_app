@@ -115,7 +115,7 @@ class _AccountPageState extends State<AccountPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withAlpha(128),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
@@ -147,7 +147,7 @@ class _AccountPageState extends State<AccountPage> {
                   shaderCallback: (bounds) => LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withOpacity(0.7),
+                      AppColors.primary.withAlpha(179),
                     ],
                   ).createShader(bounds),
                   child: Text(
@@ -176,7 +176,7 @@ class _AccountPageState extends State<AccountPage> {
                     borderRadius: BorderRadius.circular(24.r),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.2),
+                        color: AppColors.primary.withAlpha(51),
                         blurRadius: 30,
                         spreadRadius: 5,
                       ),
@@ -191,8 +191,7 @@ class _AccountPageState extends State<AccountPage> {
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: QrImageView(
-                          data:
-                              'USER_${user.id ?? 'unknown'}',
+                          data: 'USER_${user.id ?? 'unknown'}',
                           version: QrVersions.auto,
                           size: isTablet ? 240 : 250,
                           backgroundColor: AppColors.white,
@@ -215,10 +214,10 @@ class _AccountPageState extends State<AccountPage> {
                       //   decoration: BoxDecoration(
                       //     color: isDark
                       //         ? AppColors.primary.withOpacity(0.15)
-                      //         : AppColors.primary.withOpacity(0.1),
+                      //         : AppColors.primary.withAlpha(21)
                       //     borderRadius: BorderRadius.circular(12.r),
                       //     border: Border.all(
-                      //       color: AppColors.primary.withOpacity(0.3),
+                      //       color: AppColors.primary.withAlpha(77)
                       //       width: 1.5,
                       //     ),
                       //   ),
@@ -255,10 +254,10 @@ class _AccountPageState extends State<AccountPage> {
                     vertical: isTablet ? 18.h : 14.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withAlpha(21),
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withAlpha(77),
                       width: 2,
                     ),
                   ),
@@ -311,10 +310,10 @@ class _AccountPageState extends State<AccountPage> {
                   decoration: BoxDecoration(
                     color: isDark
                         ? Colors.green.withOpacity(0.15)
-                        : Colors.green.withOpacity(0.1),
+                        : Colors.green.withAlpha(21),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: Colors.green.withOpacity(0.3),
+                      color: Colors.green.withAlpha(77),
                       width: 1.5,
                     ),
                   ),
@@ -377,7 +376,7 @@ class _AccountPageState extends State<AccountPage> {
                   width: isTablet ? 100.w : 80.w,
                   height: isTablet ? 100.w : 80.w,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withAlpha(21),
                     shape: BoxShape.circle,
                   ),
                   child: Stack(
@@ -408,7 +407,7 @@ class _AccountPageState extends State<AccountPage> {
                     fontSize: isTablet ? 18.sp : 16.sp,
                     fontWeight: FontWeight.w500,
                     color: isDark
-                        ? AppColors.white.withOpacity(0.7)
+                        ? AppColors.white.withAlpha(179)
                         : AppColors.black.withOpacity(0.6),
                   ),
                 ),
@@ -429,7 +428,7 @@ class _AccountPageState extends State<AccountPage> {
                       width: isTablet ? 140.w : 120.w,
                       height: isTablet ? 140.h : 120.h,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withAlpha(21),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -456,7 +455,7 @@ class _AccountPageState extends State<AccountPage> {
                         fontSize: isTablet ? 16.sp : 14.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
-                            ? AppColors.white.withOpacity(0.7)
+                            ? AppColors.white.withAlpha(179)
                             : AppColors.black.withOpacity(0.6),
                         height: 1.5,
                       ),
@@ -547,7 +546,7 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
+                                      color: Colors.black.withAlpha(51),
                                       blurRadius: 20,
                                       offset: const Offset(0, 10),
                                     ),
@@ -586,7 +585,7 @@ class _AccountPageState extends State<AccountPage> {
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
+                                        color: Colors.black.withAlpha(51),
                                         blurRadius: 8,
                                         offset: const Offset(0, 4),
                                       ),
@@ -622,7 +621,7 @@ class _AccountPageState extends State<AccountPage> {
                               Icon(
                                 Icons.phone_outlined,
                                 size: isTablet ? 12.sp : 16.sp,
-                                color: AppColors.white.withOpacity(0.9),
+                                color: AppColors.white.withAlpha(230),
                               ),
                               SizedBox(width: isTablet ? 8.w : 6.w),
                               Text(
@@ -630,7 +629,7 @@ class _AccountPageState extends State<AccountPage> {
                                 style: TextStyle(
                                   fontSize: isTablet ? 9.sp : 15.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: AppColors.white.withOpacity(0.9),
+                                  color: AppColors.white.withAlpha(230),
                                 ),
                               ),
                             ],
@@ -666,7 +665,7 @@ class _AccountPageState extends State<AccountPage> {
                         icon: Icons.receipt_long_outlined,
                         title: context.translate('orders'),
                         subtitle: context.translate('orderHistory'),
-                        onTap: () => context.push(Routes.location),
+                        onTap: () => context.push(Routes.order),
                         isDark: isDark,
                         color: Colors.orange,
                         isTablet: isTablet,
@@ -679,7 +678,7 @@ class _AccountPageState extends State<AccountPage> {
                         subtitle: context.translate('inputLocation'),
                         onTap: () => context.push(Routes.location),
                         isDark: isDark,
-                        color: Colors.white,
+                        color: Colors.lightBlue,
                         isTablet: isTablet,
                       ),
                       SizedBox(height: isTablet ? 16.h : 12.h),
@@ -776,8 +775,8 @@ class _AccountPageState extends State<AccountPage> {
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isDark
-                ? AppColors.borderColor.withOpacity(0.1)
-                : AppColors.borderColor.withOpacity(0.2),
+                ? AppColors.borderColor.withAlpha(21)
+                : AppColors.borderColor.withAlpha(51),
           ),
           boxShadow: [
             BoxShadow(
@@ -793,7 +792,7 @@ class _AccountPageState extends State<AccountPage> {
               width: isTablet ? 26.w : 48.w,
               height: isTablet ? 26.w : 48.w,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withAlpha(21),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
@@ -845,7 +844,7 @@ class _AccountPageState extends State<AccountPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withAlpha(128),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Padding(
@@ -881,12 +880,12 @@ class _AccountPageState extends State<AccountPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withAlpha(77),
                       width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.2),
+                        color: AppColors.primary.withAlpha(51),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -903,7 +902,7 @@ class _AccountPageState extends State<AccountPage> {
                   shaderCallback: (bounds) => LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withOpacity(0.7),
+                      AppColors.primary.withAlpha(179),
                     ],
                   ).createShader(bounds),
                   child: Text(
@@ -930,7 +929,7 @@ class _AccountPageState extends State<AccountPage> {
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withAlpha(77),
                         blurRadius: 15,
                         offset: const Offset(0, 5),
                       ),
@@ -976,7 +975,7 @@ class _AccountPageState extends State<AccountPage> {
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(15.r),
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withAlpha(77),
                       width: 1.5,
                     ),
                   ),

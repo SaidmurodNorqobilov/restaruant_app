@@ -95,7 +95,8 @@ class TextAndTextField extends StatelessWidget {
             ),
             filled: true,
             fillColor: isDark
-                ? AppColors.black.withOpacity(0.3)
+                ? AppColors.black.withAlpha(77)
+
                 : Colors.grey[50],
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
@@ -105,16 +106,20 @@ class TextAndTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: isDark
-                    ? AppColors.borderColor.withOpacity(0.2)
-                    : AppColors.borderColor.withOpacity(0.3),
+                    ? AppColors.borderColor.withAlpha(51)
+
+                    : AppColors.borderColor.withAlpha(77)
+,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: isDark
-                    ? AppColors.borderColor.withOpacity(0.2)
-                    : AppColors.borderColor.withOpacity(0.3),
+                    ? AppColors.borderColor.withAlpha(51)
+
+                    : AppColors.borderColor.withAlpha(77)
+,
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -142,8 +147,10 @@ class TextAndTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
                 color: isDark
-                    ? AppColors.borderColor.withOpacity(0.1)
-                    : AppColors.borderColor.withOpacity(0.2),
+                    ? AppColors.borderColor.withAlpha(21)
+
+                    : AppColors.borderColor.withAlpha(51)
+,
               ),
             ),
             errorStyle: TextStyle(

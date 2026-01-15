@@ -68,7 +68,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   gradient: LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withOpacity(0.7),
+                      AppColors.primary.withAlpha(179)
+,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -76,7 +77,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withAlpha(77)
+,
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -205,7 +207,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           borderRadius: BorderRadius.circular(12.r),
                           borderSide: BorderSide(
                             color: isDark
-                                ? AppColors.borderColor.withOpacity(0.2)
+                                ? AppColors.borderColor.withAlpha(51)
+
                                 : AppColors.borderColor,
                           ),
                         ),
@@ -246,7 +249,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           borderRadius: BorderRadius.circular(12.r),
                           borderSide: BorderSide(
                             color: isDark
-                                ? AppColors.borderColor.withOpacity(0.2)
+                                ? AppColors.borderColor.withAlpha(51)
+
                                 : AppColors.borderColor,
                           ),
                         ),
@@ -301,7 +305,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                                 borderRadius: BorderRadius.circular(12.r),
                                 borderSide: BorderSide(
                                   color: isDark
-                                      ? AppColors.borderColor.withOpacity(0.2)
+                                      ? AppColors.borderColor.withAlpha(51)
+
                                       : AppColors.borderColor,
                                 ),
                               ),
@@ -371,7 +376,8 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                                 borderRadius: BorderRadius.circular(12.r),
                                 borderSide: BorderSide(
                                   color: isDark
-                                      ? AppColors.borderColor.withOpacity(0.2)
+                                      ? AppColors.borderColor.withAlpha(51)
+
                                       : AppColors.borderColor,
                                 ),
                               ),

@@ -37,8 +37,10 @@ class BottomNavigationBarApp extends StatelessWidget {
             border: Border(
               top: BorderSide(
                 color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.1),
+                    ? Colors.white.withAlpha(21)
+
+                    : Colors.black.withAlpha(21)
+,
                 width: 0.5,
               ),
             ),

@@ -120,10 +120,12 @@ class NoInternetScreen extends StatelessWidget {
             padding: EdgeInsets.all(isTablet ? 30.w : 40.w),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isDark ? Colors.white.withOpacity(0.1) : Colors.white,
+              color: isDark ? Colors.white.withAlpha(21)
+ : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withAlpha(21)
+,
                   blurRadius: isTablet ? 30 : 20,
                   offset: Offset(0, isTablet ? 15 : 10),
                 ),
@@ -163,7 +165,8 @@ class NoInternetScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: isTablet ? 10.sp : 16.sp,
           color: isDark
-              ? Colors.white.withOpacity(0.7)
+              ? Colors.white.withAlpha(179)
+
               : const Color(0xFF6C757D),
           height: 1.5,
         ),
@@ -178,11 +181,13 @@ class NoInternetScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withOpacity(0.05)
-            : Colors.white.withOpacity(0.5),
+            : Colors.white.withAlpha(128)
+,
         borderRadius: BorderRadius.circular(isTablet ? 20.r : 16.r),
         border: Border.all(
           color: isDark
-              ? Colors.white.withOpacity(0.1)
+              ? Colors.white.withAlpha(21)
+
               : Colors.black.withOpacity(0.05),
         ),
       ),
@@ -250,8 +255,10 @@ class _RetryButtonState extends State<_RetryButton> {
             gradient: LinearGradient(
               colors: _isChecking
                   ? [
-                Colors.grey.withOpacity(0.5),
-                Colors.grey.withOpacity(0.3),
+                Colors.grey.withAlpha(128)
+,
+                Colors.grey.withAlpha(77)
+,
               ]
                   : [
                 const Color(0xFF4CAF50),
@@ -263,7 +270,8 @@ class _RetryButtonState extends State<_RetryButton> {
                 ? []
                 : [
               BoxShadow(
-                color: const Color(0xFF4CAF50).withOpacity(0.3),
+                color: const Color(0xFF4CAF50).withAlpha(77)
+,
                 blurRadius: widget.isTablet ? 20 : 15,
                 offset: Offset(0, widget.isTablet ? 10 : 8),
               ),
@@ -335,7 +343,8 @@ class _InfoRow extends StatelessWidget {
             style: TextStyle(
               fontSize: isTablet ? 14.sp : 14.sp,
               color: isDark
-                  ? Colors.white.withOpacity(0.7)
+                  ? Colors.white.withAlpha(179)
+
                   : const Color(0xFF6C757D),
             ),
           ),

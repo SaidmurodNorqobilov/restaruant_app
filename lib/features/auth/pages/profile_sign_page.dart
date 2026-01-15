@@ -166,7 +166,8 @@ class _ProfileSignPageState extends State<ProfileSignPage> {
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
                         color: isDark
-                            ? AppColors.white.withOpacity(0.7)
+                            ? AppColors.white.withAlpha(179)
+
                             : AppColors.black.withOpacity(0.6),
                       ),
                     ),

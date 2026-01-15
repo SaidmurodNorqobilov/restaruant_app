@@ -110,7 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                         filled: true,
-                        fillColor: isDark ? AppColors.darkAppBar.withOpacity(0.5) : Colors.grey.shade100,
+                        fillColor: isDark ? AppColors.darkAppBar.withAlpha(128)
+ : Colors.grey.shade100,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15.r),
                           borderSide: BorderSide.none,

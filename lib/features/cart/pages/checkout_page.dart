@@ -153,9 +153,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
+              ? AppColors.primary.withAlpha(21)
+
               : (isDark
-              ? AppColors.black.withOpacity(0.3)
+              ? AppColors.black.withAlpha(77)
+
               : Colors.grey[100]),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
@@ -234,7 +236,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
           SizedBox(height: 12.h),
           Divider(
             color: isDark
-                ? AppColors.borderColor.withOpacity(0.2)
+                ? AppColors.borderColor.withAlpha(51)
+
                 : AppColors.borderColor,
           ),
           SizedBox(height: 12.h),
@@ -331,17 +334,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.1)
+              ? AppColors.primary.withAlpha(21)
+
               : (isDark
-              ? AppColors.black.withOpacity(0.3)
+              ? AppColors.black.withAlpha(77)
+
               : Colors.grey[50]),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary
                 : (isDark
-                ? AppColors.borderColor.withOpacity(0.2)
-                : AppColors.borderColor.withOpacity(0.3)),
+                ? AppColors.borderColor.withAlpha(51)
+
+                : AppColors.borderColor.withAlpha(77)
+),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -499,7 +506,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
           color: isDark ? AppColors.darkAppBar : AppColors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withAlpha(21)
+,
               spreadRadius: 1,
               blurRadius: 10,
               offset: const Offset(0, -2),
@@ -576,7 +584,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withAlpha(128)
+,
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Padding(
@@ -612,12 +621,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withAlpha(77)
+,
                       width: 2,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.2),
+                        color: AppColors.primary.withAlpha(51)
+,
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -634,7 +645,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   shaderCallback: (bounds) => LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withOpacity(0.7),
+                      AppColors.primary.withAlpha(179)
+,
                     ],
                   ).createShader(bounds),
                   child: Text(
@@ -656,7 +668,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).brightness == Brightness.dark
                         ? AppColors.white.withOpacity(0.8)
-                        : AppColors.black.withOpacity(0.7),
+                        : AppColors.black.withAlpha(179)
+,
                     height: 1.6,
                   ),
                 ),
@@ -674,7 +687,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withAlpha(77)
+,
                         blurRadius: 15,
                         offset: const Offset(0, 5),
                       ),
@@ -720,7 +734,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(15.r),
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withAlpha(77)
+,
                       width: 1.5,
                     ),
                   ),

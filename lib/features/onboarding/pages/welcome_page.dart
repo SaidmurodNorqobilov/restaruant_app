@@ -76,7 +76,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   fontWeight: FontWeight.w400,
                   color: isDark
                       ? AppColors.white.withOpacity(0.8)
-                      : AppColors.black.withOpacity(0.7),
+                      : AppColors.black.withAlpha(179)
+,
                 ),
               ),
               SizedBox(height: 30.h),

@@ -67,7 +67,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       width: isTablet ? 100.w : 80.w,
                       height: isTablet ? 100.w : 80.w,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withAlpha(21)
+,
                         shape: BoxShape.circle,
                       ),
                       child: Stack(
@@ -98,7 +99,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         fontSize: isTablet ? 18.sp : 16.sp,
                         fontWeight: FontWeight.w500,
                         color: isDark
-                            ? AppColors.white.withOpacity(0.7)
+                            ? AppColors.white.withAlpha(179)
+
                             : AppColors.black.withOpacity(0.6),
                       ),
                     ),
@@ -118,7 +120,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         width: isTablet ? 120.w : 100.w,
                         height: isTablet ? 120.w : 100.w,
                         decoration: BoxDecoration(
-                          color: AppColors.red.withOpacity(0.1),
+                          color: AppColors.red.withAlpha(21)
+,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -145,7 +148,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           fontSize: isTablet ? 16.sp : 14.sp,
                           fontWeight: FontWeight.w400,
                           color: isDark
-                              ? AppColors.white.withOpacity(0.7)
+                              ? AppColors.white.withAlpha(179)
+
                               : AppColors.black.withOpacity(0.6),
                           height: 1.5,
                         ),
@@ -206,7 +210,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              AppColors.primary.withOpacity(0.1),
+                              AppColors.primary.withAlpha(21)
+,
                               AppColors.primary.withOpacity(0.05),
                             ],
                           ),
@@ -236,7 +241,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           fontSize: isTablet ? 16.sp : 14.sp,
                           fontWeight: FontWeight.w400,
                           color: isDark
-                              ? AppColors.white.withOpacity(0.7)
+                              ? AppColors.white.withAlpha(179)
+
                               : AppColors.black.withOpacity(0.6),
                           height: 1.5,
                         ),

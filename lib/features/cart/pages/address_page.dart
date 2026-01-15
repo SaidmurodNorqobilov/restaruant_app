@@ -160,7 +160,8 @@ class _AddressPageState extends State<AddressPage> {
                   color: isDark ? AppColors.darkAppBar : AppColors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withAlpha(21)
+,
                       spreadRadius: 1,
                       blurRadius: 10,
                       offset: const Offset(0, -2),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -18,6 +19,8 @@ class _LocationPageState extends State<LocationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -39,6 +42,10 @@ class _LocationPageState extends State<LocationPage> {
           YandexMap(
             onMapCreated: (controller) async {
               mapController = controller;
+              await mapController.toggleUserLayer(
+                visible: true,
+                headingEnabled: true,
+              );
               await _moveToCurrentLocation();
             },
             onCameraPositionChanged: (position, reason, finished) {
@@ -48,6 +55,13 @@ class _LocationPageState extends State<LocationPage> {
               if (finished) {
                 _getAddressFromPoint(position.target);
               }
+            },
+            onUserLocationAdded: (view) async {
+              return view.copyWith(
+                accuracyCircle: view.accuracyCircle.copyWith(
+                  fillColor: Colors.blue.withOpacity(0.15),
+                ),
+              );
             },
           ),
           Center(
@@ -67,11 +81,12 @@ class _LocationPageState extends State<LocationPage> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? AppColors.darkAppBar : AppColors.white,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha(21)
+,
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -86,16 +101,20 @@ class _LocationPageState extends State<LocationPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
+                        Text(
                           'Yetkazib berish manzili',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: isDark ? AppColors.white : Colors.grey
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           selectedAddress,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
+                            color: isDark ? AppColors.white : Colors.black,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -153,7 +172,6 @@ class _LocationPageState extends State<LocationPage> {
 
   Future<void> _moveToCurrentLocation() async {
     setState(() => isLoading = true);
-
     try {
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
@@ -174,17 +192,12 @@ class _LocationPageState extends State<LocationPage> {
           ),
           animation: const MapAnimation(
             type: MapAnimationType.smooth,
-            duration: 1,
+            duration: 1.5,
           ),
         );
       }
     } catch (e) {
       debugPrint('Location error: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Joylashuvni aniqlab bo\'lmadi')),
-        );
-      }
     } finally {
       if (mounted) {
         setState(() => isLoading = false);
@@ -192,13 +205,8 @@ class _LocationPageState extends State<LocationPage> {
     }
   }
 
-
   Future<void> _getAddressFromPoint(Point point) async {
     try {
-      setState(() {
-        selectedAddress = "Aniqlanmoqda...";
-      });
-
       List<Placemark> placemarks = await placemarkFromCoordinates(
         point.latitude,
         point.longitude,
@@ -220,6 +228,7 @@ class _LocationPageState extends State<LocationPage> {
       });
     }
   }
+
   void _confirmLocation() {
     if (cameraPosition != null) {
       Navigator.pop(context, {

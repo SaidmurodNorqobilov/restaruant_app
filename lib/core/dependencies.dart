@@ -3,8 +3,10 @@ import 'package:provider/single_child_widget.dart';
 import 'package:restaurantapp/core/client.dart';
 import 'package:restaurantapp/features/common/manager/themeBloc/theme_bloc.dart';
 import 'package:restaurantapp/features/common/manager/themeBloc/theme_event.dart';
+import 'package:restaurantapp/features/reservations/managers/reservation_bloc.dart';
 import '../data/repositories/auth_repository.dart';
 import '../data/repositories/profile_repositroy.dart';
+import '../data/repositories/reservations_repository.dart';
 import '../data/repositories/user_profile_repository.dart';
 import '../features/accaunt/managers/userBloc/user_profile_bloc.dart';
 import '../features/auth/managers/authCubit/auth_cubit.dart';
@@ -20,6 +22,7 @@ class AppDependencies {
     BlocProvider<LanguageBloc>(
       create: (_) => LanguageBloc()..add(LanguageLoaded()),
     ),
+
   ];
 }
 
@@ -34,6 +37,9 @@ final repositoryProviderMain = <SingleChildWidget>[
   ),
   RepositoryProvider(
     create: (context) => UserProfileRepository(client: apiClient),
+  ),
+  RepositoryProvider(
+    create: (context) => ReservationRepository(client: apiClient),
   ),
 ];
 
@@ -52,6 +58,13 @@ final blocProviderMain = <SingleChildWidget>[
   BlocProvider<UserProfileBloc>(
     create: (context) => UserProfileBloc(
       repository: context.read<UserProfileRepository>(),
+    ),
+  ),
+  BlocProvider(
+    create: (context) => ReservationBloc(
+      repository: ReservationRepository(
+        client: ApiClient(),
+      ),
     ),
   ),
 ];

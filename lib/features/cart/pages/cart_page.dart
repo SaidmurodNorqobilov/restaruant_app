@@ -37,7 +37,6 @@ class _CartPageState extends State<CartPage>
     'Provencal Breakf',
     '2 Provencal Breakf',
     '2 Provencal Breakf',
-
   ];
 
   final List<double> cartAddPrice = [
@@ -162,7 +161,8 @@ class _CartPageState extends State<CartPage>
                           decoration: InputDecoration(
                             hintText: 'Search...',
                             hintStyle: TextStyle(
-                              color: AppColors.white.withOpacity(0.7),
+                              color: AppColors.white.withAlpha(179)
+,
                             ),
                             border: InputBorder.none,
                             isDense: true,
@@ -233,7 +233,9 @@ class _CartPageState extends State<CartPage>
           }
           return Column(
             children: [
-              Expanded(child: _buildCartList(isTablet, isDark, false)),
+              Expanded(
+                child: _buildCartList(isTablet, isDark, false),
+              ),
               _buildBottomSection(isTablet, isDark, false),
             ],
           );
@@ -323,7 +325,9 @@ class _CartPageState extends State<CartPage>
                   SizedBox(
                     width: isTablet ? 55.w : 150.w,
                     child: Text(
-                      index < cartAddTitle.length ? cartAddTitle[index] : 'not found',
+                      index < cartAddTitle.length
+                          ? cartAddTitle[index]
+                          : 'not found',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -350,11 +354,11 @@ class _CartPageState extends State<CartPage>
           ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(right: isTablet ? 8.w : 20.w, left: 18.w),
-              child:
-                  index <
-                      quantities
-                          .length
+              padding: EdgeInsets.only(
+                right: isTablet ? 8.w : 20.w,
+                left: 18.w,
+              ),
+              child: index < quantities.length
                   ? CounterRow(
                       count: quantities[index],
                       onIncrement: () {
@@ -460,7 +464,8 @@ class _CartPageState extends State<CartPage>
   //     context: context,
   //     isScrollControlled: true,
   //     backgroundColor: Colors.transparent,
-  //     barrierColor: Colors.black.withOpacity(0.5),
+  //     barrierColor: Colors.black.withAlpha(128)
+
   //     builder: (context) => BackdropFilter(
   //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
   //       child: Padding(
@@ -496,12 +501,14 @@ class _CartPageState extends State<CartPage>
   //                 decoration: BoxDecoration(
   //                   shape: BoxShape.circle,
   //                   border: Border.all(
-  //                     color: AppColors.primary.withOpacity(0.3),
+  //                     color: AppColors.primary.withAlpha(77)
+
   //                     width: 2,
   //                   ),
   //                   boxShadow: [
   //                     BoxShadow(
-  //                       color: AppColors.primary.withOpacity(0.2),
+  //                       color: AppColors.primary.withAlpha(51)
+
   //                       blurRadius: 20,
   //                       spreadRadius: 5,
   //                     ),
@@ -518,7 +525,7 @@ class _CartPageState extends State<CartPage>
   //                 shaderCallback: (bounds) => LinearGradient(
   //                   colors: [
   //                     AppColors.primary,
-  //                     AppColors.primary.withOpacity(0.7),
+  //                     AppColors.primary.withAlpha(179)
   //                   ],
   //                 ).createShader(bounds),
   //                 child: Text(
@@ -540,7 +547,7 @@ class _CartPageState extends State<CartPage>
   //                   fontWeight: FontWeight.w400,
   //                   color: Theme.of(context).brightness == Brightness.dark
   //                       ? AppColors.white.withOpacity(0.8)
-  //                       : AppColors.black.withOpacity(0.7),
+  //                       : AppColors.black.withAlpha(179)
   //                   height: 1.6,
   //                 ),
   //               ),
@@ -558,7 +565,7 @@ class _CartPageState extends State<CartPage>
   //                   borderRadius: BorderRadius.circular(15.r),
   //                   boxShadow: [
   //                     BoxShadow(
-  //                       color: AppColors.primary.withOpacity(0.3),
+  //                       color: AppColors.primary.withAlpha(77)
   //                       blurRadius: 15,
   //                       offset: const Offset(0, 5),
   //                     ),
@@ -604,7 +611,7 @@ class _CartPageState extends State<CartPage>
   //                   color: Colors.transparent,
   //                   borderRadius: BorderRadius.circular(15.r),
   //                   border: Border.all(
-  //                     color: AppColors.primary.withOpacity(0.3),
+  //                     color: AppColors.primary.withAlpha(77)
   //                     width: 1.5,
   //                   ),
   //                 ),

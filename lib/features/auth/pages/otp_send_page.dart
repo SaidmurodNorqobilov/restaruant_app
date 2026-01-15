@@ -141,7 +141,8 @@ class _OtpSendPageState extends State<OtpSendPage> {
       ),
       decoration: BoxDecoration(
         color: isDark
-            ? AppColors.darkAppBar.withOpacity(0.5)
+            ? AppColors.darkAppBar.withAlpha(128)
+
             : const Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: Colors.transparent),
@@ -218,8 +219,10 @@ class _OtpSendPageState extends State<OtpSendPage> {
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          AppColors.primary.withOpacity(0.2),
-                          AppColors.primary.withOpacity(0.1),
+                          AppColors.primary.withAlpha(51)
+,
+                          AppColors.primary.withAlpha(21)
+,
                         ],
                       ),
                       shape: BoxShape.circle,
@@ -246,8 +249,10 @@ class _OtpSendPageState extends State<OtpSendPage> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: isDark
-                          ? AppColors.white.withOpacity(0.7)
-                          : AppColors.textColor.withOpacity(0.7),
+                          ? AppColors.white.withAlpha(179)
+
+                          : AppColors.textColor.withAlpha(179)
+,
                       fontWeight: FontWeight.w400,
                       height: 1.5,
                     ),
@@ -292,8 +297,10 @@ class _OtpSendPageState extends State<OtpSendPage> {
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: isDark
-                                ? AppColors.white.withOpacity(0.7)
-                                : AppColors.textColor.withOpacity(0.7),
+                                ? AppColors.white.withAlpha(179)
+
+                                : AppColors.textColor.withAlpha(179)
+,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -310,7 +317,8 @@ class _OtpSendPageState extends State<OtpSendPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
-                        backgroundColor: AppColors.primary.withOpacity(0.1),
+                        backgroundColor: AppColors.primary.withAlpha(21)
+,
                       ),
                       icon: Icon(
                         Icons.refresh_rounded,
@@ -332,7 +340,8 @@ class _OtpSendPageState extends State<OtpSendPage> {
                           width: double.infinity,
                           height: 52.h,
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.7),
+                            color: AppColors.primary.withAlpha(179)
+,
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           child: const Center(

@@ -65,7 +65,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                           fontWeight: FontWeight.w400,
                           color: isDark
                               ? AppColors.white.withOpacity(0.8)
-                              : AppColors.textColor.withOpacity(0.7),
+                              : AppColors.textColor.withAlpha(179)
+,
                         ),
                       ),
                       SizedBox(height: 30.h),
@@ -93,8 +94,10 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                   color: isSelected
                                       ? AppColors.primary
                                       : isDark
-                                      ? AppColors.white.withOpacity(0.3)
-                                      : AppColors.black.withOpacity(0.2),
+                                      ? AppColors.white.withAlpha(77)
+
+                                      : AppColors.black.withAlpha(51)
+,
                                 ),
                               ),
                               child: Column(
@@ -119,7 +122,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                       height: 1.4,
                                       color: isDark
                                           ? AppColors.white.withOpacity(0.8)
-                                          : AppColors.textColor.withOpacity(0.7),
+                                          : AppColors.textColor.withAlpha(179)
+,
                                     ),
                                   ),
                                 ],

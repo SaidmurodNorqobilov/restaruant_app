@@ -104,7 +104,8 @@ class _MenuPageState extends State<MenuPage> {
                           decoration: InputDecoration(
                             hintText: 'Qidirish...',
                             hintStyle: TextStyle(
-                              color: AppColors.white.withOpacity(0.7),
+                              color: AppColors.white.withAlpha(179)
+,
                             ),
                             border: InputBorder.none,
                             isDense: true,
@@ -120,7 +121,8 @@ class _MenuPageState extends State<MenuPage> {
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
                             child: Icon(
                               Icons.clear,
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withAlpha(179)
+,
                               size: 20.sp,
                             ),
                           ),
@@ -188,7 +190,8 @@ class _MenuPageState extends State<MenuPage> {
                       width: 80.w,
                       height: 80.w,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withAlpha(21)
+,
                         shape: BoxShape.circle,
                       ),
                       child: Stack(
@@ -219,7 +222,8 @@ class _MenuPageState extends State<MenuPage> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: isDark
-                            ? AppColors.white.withOpacity(0.7)
+                            ? AppColors.white.withAlpha(179)
+
                             : AppColors.black.withOpacity(0.6),
                       ),
                     ),
@@ -292,8 +296,10 @@ class _MenuPageState extends State<MenuPage> {
             Icons.search_off_rounded,
             size: 80.sp,
             color: isDark
-                ? Colors.white.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.5),
+                ? Colors.white.withAlpha(77)
+
+                : Colors.grey.withAlpha(128)
+,
           ),
           SizedBox(height: 16.h),
           Text(
@@ -302,7 +308,8 @@ class _MenuPageState extends State<MenuPage> {
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: isDark
-                  ? AppColors.white.withOpacity(0.7)
+                  ? AppColors.white.withAlpha(179)
+
                   : AppColors.black.withOpacity(0.6),
             ),
           ),
@@ -312,7 +319,8 @@ class _MenuPageState extends State<MenuPage> {
             style: TextStyle(
               fontSize: 14.sp,
               color: isDark
-                  ? AppColors.white.withOpacity(0.5)
+                  ? AppColors.white.withAlpha(128)
+
                   : AppColors.black.withOpacity(0.4),
             ),
           ),
@@ -346,7 +354,8 @@ class _MenuPageState extends State<MenuPage> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withAlpha(21)
+,
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -362,7 +371,8 @@ class _MenuPageState extends State<MenuPage> {
                       color: isDark ? AppColors.darkAppBar : Colors.grey[100],
                       child: Icon(
                         Icons.fastfood,
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withAlpha(77)
+,
                         size: 28.sp,
                       ),
                     ),
@@ -457,7 +467,8 @@ class _MenuPageState extends State<MenuPage> {
               fontSize: 16.sp,
               fontWeight: FontWeight.w700,
               color: AppColors.primary,
-              backgroundColor: AppColors.primary.withOpacity(0.1),
+              backgroundColor: AppColors.primary.withAlpha(21)
+,
             ),
           ),
           TextSpan(

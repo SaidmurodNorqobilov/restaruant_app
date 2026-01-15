@@ -12,6 +12,7 @@ import 'package:restaurantapp/data/repositories/category_repositories.dart';
 import 'package:restaurantapp/features/home/managers/categoriesBloc/categories_state.dart';
 import 'package:restaurantapp/features/home/widgets/home_page_appbar.dart';
 import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
+import '../../accaunt/managers/userBloc/user_profile_bloc.dart';
 import '../managers/categoriesBloc/categories_bloc.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 
@@ -26,6 +27,12 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController controllerSearch = TextEditingController();
   final String baseUrl = "https://atsrestaurant.pythonanywhere.com";
   bool _isImagesPreCached = false;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<UserProfileBloc>().add(GetUserProfile());
+  }
 
   final List<String> promotionsImg = [
     'https://i.pinimg.com/originals/37/cc/51/37cc518c0d49a2fd03bc93fd151c9ca1.jpg',
@@ -199,7 +206,8 @@ class _HomePageState extends State<HomePage> {
                                                       child: Icon(
                                                         Icons.fastfood,
                                                         color: AppColors.primary
-                                                            .withOpacity(0.3),
+                                                            .withAlpha(77)
+,
                                                         size: 28.sp,
                                                       ),
                                                     ),
@@ -407,7 +415,8 @@ class _HomePageState extends State<HomePage> {
         child: Icon(
           Icons.error_outline,
           size: 40.sp,
-          color: Colors.red.withOpacity(0.5),
+          color: Colors.red.withAlpha(128)
+,
         ),
       ),
     );

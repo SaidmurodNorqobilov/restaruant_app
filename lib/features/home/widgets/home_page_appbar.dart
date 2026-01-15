@@ -86,7 +86,8 @@ class _HomePageAppbarState extends State<HomePageAppbar> {
                         decoration: InputDecoration(
                           hintText: 'Search...',
                           hintStyle: TextStyle(
-                            color: AppColors.white.withOpacity(0.7),
+                            color: AppColors.white.withAlpha(179)
+,
                           ),
                           border: InputBorder.none,
                           isDense: true,

@@ -44,7 +44,8 @@ class _OrderPageState extends State<OrderPage> {
                       width: 80.w,
                       height: 80.w,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withAlpha(21)
+,
                         shape: BoxShape.circle,
                       ),
                       child: Stack(
@@ -75,7 +76,8 @@ class _OrderPageState extends State<OrderPage> {
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: isDark
-                            ? AppColors.white.withOpacity(0.7)
+                            ? AppColors.white.withAlpha(179)
+
                             : AppColors.black.withOpacity(0.6),
                       ),
                     ),
@@ -164,13 +166,16 @@ class _OrderPageState extends State<OrderPage> {
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
                             color: isDark
-                                ? AppColors.black.withOpacity(0.3)
+                                ? AppColors.black.withAlpha(77)
+
                                 : AppColors.white,
                             borderRadius: BorderRadius.circular(12.r),
                             border: Border.all(
                               color: isDark
-                                  ? AppColors.borderColor.withOpacity(0.2)
-                                  : AppColors.borderColor.withOpacity(0.3),
+                                  ? AppColors.borderColor.withAlpha(51)
+
+                                  : AppColors.borderColor.withAlpha(77)
+,
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -225,7 +230,8 @@ class _OrderPageState extends State<OrderPage> {
                                     decoration: BoxDecoration(
                                       color: _getStatusColor(
                                         order.status,
-                                      ).withOpacity(0.1),
+                                      ).withAlpha(21)
+,
                                       borderRadius: BorderRadius.circular(
                                         20.r,
                                       ),
@@ -279,8 +285,10 @@ class _OrderPageState extends State<OrderPage> {
                               Container(
                                 height: 1,
                                 color: isDark
-                                    ? AppColors.borderColor.withOpacity(0.1)
-                                    : AppColors.borderColor.withOpacity(0.2),
+                                    ? AppColors.borderColor.withAlpha(21)
+
+                                    : AppColors.borderColor.withAlpha(51)
+,
                               ),
                               SizedBox(height: 12.h),
                               Row(

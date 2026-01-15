@@ -50,7 +50,8 @@ class _PromotionsPageState extends State<PromotionsPage> {
                           width: 80.w,
                           height: 80.w,
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
+                            color: AppColors.primary.withAlpha(21)
+,
                             shape: BoxShape.circle,
                           ),
                           child: Stack(
@@ -81,7 +82,8 @@ class _PromotionsPageState extends State<PromotionsPage> {
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                             color: isDark
-                                ? AppColors.white.withOpacity(0.7)
+                                ? AppColors.white.withAlpha(179)
+
                                 : AppColors.black.withOpacity(0.6),
                           ),
                         ),

@@ -24,4 +24,5 @@ class Routes {
   static const profileSign = '/profileSign';
   static const editProfile = '/editProfile';
   static const location = '/location';
+  static const myReservations = '/myReservations';
 }
