@@ -1,17 +1,24 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
+import 'package:restaurantapp/core/utils/status.dart';
 import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
-import 'package:restaurantapp/features/home/widgets/container_row.dart';
+import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_bloc.dart';
+import 'package:restaurantapp/features/cart/managers/cartBloc/cart_bloc.dart';
+import 'package:restaurantapp/features/cart/managers/cartBloc/cart_state.dart';
+import 'package:restaurantapp/features/common/widgets/common_state_widgets.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
+
 import '../../../core/utils/icons.dart';
+import '../../accaunt/managers/userBloc/user_profile_state.dart';
+import '../widgets/auth_profile_empty_widget.dart';
+import '../widgets/empty_cart_widgets.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -27,24 +34,6 @@ class _CartPageState extends State<CartPage>
   final TextEditingController controllerSearch = TextEditingController();
   late AnimationController _animationController;
 
-  final List<String> cartAddProducts = [
-    'https://static.toiimg.com/photo/102941656.cms',
-    'https://townsquare.media/site/385/files/2023/06/attachment-milkshake-.jpg?w=1200&q=75&format=natural',
-    'https://i.pinimg.com/originals/32/07/8e/32078e4d3c1e9edb4d76dba9a419f71f.jpg',
-  ];
-
-  final List<String> cartAddTitle = [
-    'Provencal Breakf',
-    '2 Provencal Breakf',
-    '2 Provencal Breakf',
-  ];
-
-  final List<double> cartAddPrice = [
-    20.0,
-    70.0,
-    50.0,
-  ];
-  List<int> quantities = [];
   final List<String> tableList = [
     'Table 1',
     'Table 2',
@@ -63,7 +52,6 @@ class _CartPageState extends State<CartPage>
   @override
   void initState() {
     super.initState();
-    quantities = List.generate(cartAddProducts.length, (index) => 1);
     tipController.addListener(() {
       if (mounted) setState(() {});
     });
@@ -71,6 +59,7 @@ class _CartPageState extends State<CartPage>
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat();
+    context.read<CartBloc>().add(CartLoading());
   }
 
   @override
@@ -83,13 +72,10 @@ class _CartPageState extends State<CartPage>
     super.dispose();
   }
 
-  double calculateSubtotal() {
+  double calculateSubtotal(List cartItems) {
     double total = 0;
-    final length = cartAddPrice.length < quantities.length
-        ? cartAddPrice.length
-        : quantities.length;
-    for (int i = 0; i < length; i++) {
-      total += cartAddPrice[i] * quantities[i];
+    for (var item in cartItems) {
+      total += (item.price ?? 0.0) * (item.quantity ?? 1);
     }
     return total;
   }
@@ -161,8 +147,7 @@ class _CartPageState extends State<CartPage>
                           decoration: InputDecoration(
                             hintText: 'Search...',
                             hintStyle: TextStyle(
-                              color: AppColors.white.withAlpha(179)
-,
+                              color: AppColors.white.withAlpha(179),
                             ),
                             border: InputBorder.none,
                             isDense: true,
@@ -211,50 +196,119 @@ class _CartPageState extends State<CartPage>
         ],
       ),
       drawer: const DrawerWidgets(),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (isLandscape || (isTablet && constraints.maxWidth > 700)) {
-            return Row(
-              children: [
-                Expanded(
-                  flex: 7,
-                  child: _buildCartList(isTablet, isDark, true),
-                ),
-                VerticalDivider(
-                  width: 1,
-                  color: isDark ? Colors.white12 : Colors.grey[300],
-                ),
-                Expanded(
-                  flex: 6,
-                  child: _buildBottomSection(isTablet, isDark, true),
-                ),
-              ],
-            );
+      body: BlocBuilder<UserProfileBloc, UserProfileState>(
+        builder: (context, userState) {
+          if (userState.status == Status.error || userState.user == null) {
+            return const UnauthenticatedCartState();
           }
-          return Column(
-            children: [
-              Expanded(
-                child: _buildCartList(isTablet, isDark, false),
-              ),
-              _buildBottomSection(isTablet, isDark, false),
-            ],
+
+          return BlocBuilder<CartBloc, CartState>(
+            builder: (context, cartState) {
+              if (cartState.status == Status.initial ||
+                  cartState.status == Status.loading) {
+                return LoadingState(
+                  isDark: isDark,
+                );
+              }
+              if (cartState.status == Status.error) {
+                return ErrorState(
+                  isDark: isDark,
+                  onRetry: () {
+                    context.read<CartBloc>().add(CartLoading());
+                  },
+                );
+              }
+
+              final cartItems = cartState.cart ?? [];
+
+              if (cartItems.isEmpty) {
+                return const EmptyCartState();
+              }
+
+              return LayoutBuilder(
+                builder: (context, constraints) {
+                  if (isLandscape || (isTablet && constraints.maxWidth > 700)) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          flex: 7,
+                          child: _buildCartList(
+                            isTablet,
+                            isDark,
+                            true,
+                            cartItems,
+                          ),
+                        ),
+                        VerticalDivider(
+                          width: 1,
+                          color: isDark ? Colors.white12 : Colors.grey[300],
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: _buildBottomSection(
+                            isTablet,
+                            isDark,
+                            true,
+                            cartItems,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<CartBloc>().add(
+                        CartLoading(),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: _buildCartList(
+                            isTablet,
+                            isDark,
+                            false,
+                            cartItems,
+                          ),
+                        ),
+                        _buildBottomSection(isTablet, isDark, false, cartItems),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
           );
         },
       ),
     );
   }
 
-  Widget _buildCartList(bool isTablet, bool isDark, bool isLandscape) {
-    return ListView.builder(
+  Widget _buildCartList(
+    bool isTablet,
+    bool isDark,
+    bool isLandscape,
+    List cartItems,
+  ) {
+    if (cartItems.isEmpty) {
+      return const EmptyCartState();
+    }
+
+    return ListView.separated(
+      key: const PageStorageKey('cart_list'),
       physics: const BouncingScrollPhysics(),
-      itemCount: cartAddProducts.length + 1,
+      itemCount: cartItems.length + 1,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+      separatorBuilder: (context, index) {
+        if (index == 0) return const SizedBox.shrink();
+        return SizedBox(height: 12.h);
+      },
       itemBuilder: (context, index) {
         if (index == 0) {
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: Text(
-              '${cartAddProducts.length} ${context.translate('itemsInCart')}',
+              '${cartItems.length} ${context.translate('itemsInCart')}',
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w700,
@@ -263,56 +317,91 @@ class _CartPageState extends State<CartPage>
             ),
           );
         }
-        return Padding(
-          padding: EdgeInsets.only(bottom: 12.h),
-          child: _buildCartItem(index - 1, isLandscape, isDark, isTablet),
+
+        final actualIndex = index - 1;
+        if (actualIndex < 0 || actualIndex >= cartItems.length) {
+          return const SizedBox.shrink();
+        }
+
+        final item = cartItems[actualIndex];
+        if (item == null) {
+          return const SizedBox.shrink();
+        }
+
+        return _buildCartItem(
+          key: ValueKey('cart_item_${item.id ?? actualIndex}'),
+          index: actualIndex,
+          isLandscape: isLandscape,
+          isDark: isDark,
+          isTablet: isTablet,
+          cartItems: cartItems,
         );
       },
     );
   }
 
-  Widget _buildCartItem(
-    int index,
-    bool isLandscape,
-    bool isDark,
-    bool isTablet,
-  ) {
-    if (index < 0 || index >= cartAddProducts.length) {
+  Widget _buildCartItem({
+    Key? key,
+    required int index,
+    required bool isLandscape,
+    required bool isDark,
+    required bool isTablet,
+    required List cartItems,
+  }) {
+    if (index < 0 || index >= cartItems.length) {
       return const SizedBox.shrink();
     }
 
+    final item = cartItems[index];
+    if (item == null) {
+      return const SizedBox.shrink();
+    }
+
+    final product = item.product;
+    final String? imageUrl = product?.image;
+    final int itemQuantity = item.quantity ?? 1;
+    final int itemId = item.id ?? 0;
+
     return Container(
+      key: key,
       height: isLandscape ? 72.h : 82.h,
+      margin: EdgeInsets.symmetric(vertical: 4.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkAppBar : Colors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
         ],
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(12.r)),
-            child: Image.network(
-              cartAddProducts[index],
-              width: (isTablet ? 50.0 : 85.0).w,
+            borderRadius: BorderRadius.horizontal(
+              left: Radius.circular(12.r),
+            ),
+            child: SizedBox(
+              width: (isTablet ? 60.0 : 85.0).w,
               height: double.infinity,
-              fit: BoxFit.cover,
-              cacheWidth: 250,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  width: (isTablet ? 50.0 : 85.0).w,
-                  color: Colors.grey[200],
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              },
-              errorBuilder: (_, __, ___) => Container(
-                width: (isTablet ? 50.0 : 85.0).w,
-                color: Colors.grey[200],
-                child: const Icon(Icons.error_outline),
-              ),
+              child: (imageUrl != null && imageUrl.isNotEmpty)
+                  ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          _buildPlaceholderIcon(isDark),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.w,
+                          ),
+                        );
+                      },
+                    )
+                  : _buildPlaceholderIcon(isDark),
             ),
           ),
           Expanded(
@@ -322,334 +411,140 @@ class _CartPageState extends State<CartPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: isTablet ? 55.w : 150.w,
-                    child: Text(
-                      index < cartAddTitle.length
-                          ? cartAddTitle[index]
-                          : 'not found',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: isTablet
-                            ? FontWeight.w500
-                            : FontWeight.w600,
-                        fontSize: isTablet ? 7.sp : 14.sp,
-                        color: isDark ? AppColors.white : AppColors.textColor,
-                      ),
+                  Text(
+                    product?.name ?? 'Unknown',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: isTablet ? 12.sp : 14.sp,
+                      color: isDark ? Colors.white : AppColors.textColor,
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    index < cartAddPrice.length
-                        ? "${cartAddPrice[index].toStringAsFixed(2)} SO'M"
-                        : "SO'M 0.00",
+                    "${(item.price ?? 0.0).toStringAsFixed(0)} SO'M",
                     style: const TextStyle(
                       color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(
-                right: isTablet ? 8.w : 20.w,
-                left: 18.w,
-              ),
-              child: index < quantities.length
-                  ? CounterRow(
-                      count: quantities[index],
-                      onIncrement: () {
-                        if (mounted) {
-                          setState(() => quantities[index]++);
-                        }
-                      },
-                      onDecrement: () {
-                        if (mounted) {
-                          setState(() {
-                            if (quantities[index] > 1) quantities[index]--;
-                          });
-                        }
-                      },
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 8.w),
+          //   child: CounterRow(
+          //     count: itemQuantity,
+          //     onIncrement: () {
+          //       if (itemId > 0) {
+          //         context.read<CartBloc>().add(
+          //           CartUpdate(
+          //             itemId: itemId,
+          //             quantity: itemQuantity + 1,
+          //           ),
+          //         );
+          //       }
+          //     },
+          //     onDecrement: () {
+          //       if (itemQuantity > 1 && itemId > 0) {
+          //         context.read<CartBloc>().add(
+          //           CartUpdate(
+          //             itemId: itemId,
+          //             quantity: itemQuantity - 1,
+          //           ),
+          //         );
+          //       }
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  Widget _buildBottomSection(bool isTablet, bool isDark, bool isLandscape) {
-    return RepaintBoundary(
-      child: Container(
-        padding: EdgeInsets.all(isTablet ? 24.w : 16.w),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkAppBar : Colors.white,
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, -5),
-            ),
-          ],
-          borderRadius: isLandscape
-              ? BorderRadius.horizontal(left: Radius.circular(24.r))
-              : BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: SafeArea(
-          top: false,
+  Widget _buildPlaceholderIcon(bool isDark) {
+    return Container(
+      color: isDark ? Colors.white10 : Colors.grey[200],
+      child: Icon(
+        Icons.fastfood_rounded,
+        color: isDark ? Colors.white30 : Colors.grey[400],
+        size: 30.r,
+      ),
+    );
+  }
+
+  Widget _buildBottomSection(
+    bool isTablet,
+    bool isDark,
+    bool isLandscape,
+    List cartItems,
+  ) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: isLandscape
+            ? double.infinity
+            : MediaQuery.of(context).size.height * 0.6,
+      ),
+      padding: EdgeInsets.all(isTablet ? 24.w : 16.w),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkAppBar : Colors.white,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
+        ],
+        borderRadius: isLandscape
+            ? BorderRadius.horizontal(left: Radius.circular(24.r))
+            : BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: isLandscape || isTablet
-                ? [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          children: [
-                            _buildCouponSection(isDark, isTablet),
-                            SizedBox(height: 12.h),
-                            _buildTipButton(isDark, isTablet),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    _buildPricingSection(isDark, isTablet, isLandscape),
-                    SizedBox(height: 16.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: TextButtonApp(
-                        onPressed: () {
-                          context.push(Routes.checkout);
-                          // _showAuthBottomSheet(context, isDark, isTablet);
-                        },
-                        text: context.translate('checkout'),
-                        buttonColor: AppColors.primary,
-                        textColor: Colors.white,
-                      ),
-                    ),
-                  ]
-                : [
-                    _buildCouponSection(isDark, isTablet),
-                    SizedBox(height: 12.h),
-                    _buildTipButton(isDark, isTablet),
-                    SizedBox(height: 12.h),
-                    _buildPricingSection(isDark, isTablet, isLandscape),
-                    SizedBox(height: 16.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: TextButtonApp(
-                        onPressed: () {
-                          context.push(Routes.checkout);
-                          // _showAuthBottomSheet(context, isDark, isTablet);
-                        },
-                        text: context.translate('checkout'),
-                        buttonColor: AppColors.primary,
-                        textColor: Colors.white,
-                      ),
-                    ),
-                  ],
+            children: [
+              _buildCouponSection(isDark, isTablet),
+              SizedBox(height: 12.h),
+              _buildTipButton(isDark, isTablet),
+              SizedBox(height: 12.h),
+              _buildPricingSection(isDark, isTablet, isLandscape, cartItems),
+              SizedBox(height: 16.h),
+              SizedBox(
+                width: double.infinity,
+                child: TextButtonApp(
+                  onPressed: () {
+                    context.push(Routes.checkout);
+                  },
+                  text: context.translate('checkout'),
+                  buttonColor: AppColors.primary,
+                  textColor: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  // void _showAuthBottomSheet(BuildContext context, bool isDark, bool isTablet) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     backgroundColor: Colors.transparent,
-  //     barrierColor: Colors.black.withAlpha(128)
-
-  //     builder: (context) => BackdropFilter(
-  //       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-  //       child: Padding(
-  //         padding: EdgeInsets.only(
-  //           bottom: MediaQuery.of(context).viewInsets.bottom,
-  //         ),
-  //         child: Container(
-  //           padding: EdgeInsets.symmetric(
-  //             horizontal: 24.w,
-  //             vertical: 20.h,
-  //           ),
-  //           decoration: BoxDecoration(
-  //             color: isDark ? AppColors.darkAppBar : AppColors.white,
-  //             borderRadius: BorderRadius.vertical(
-  //               top: Radius.circular(30.r),
-  //             ),
-  //           ),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               Container(
-  //                 width: 50.w,
-  //                 height: 5.h,
-  //                 decoration: BoxDecoration(
-  //                   color: Colors.grey.shade400,
-  //                   borderRadius: BorderRadius.circular(10.r),
-  //                 ),
-  //               ),
-  //               SizedBox(height: 30.h),
-  //               Container(
-  //                 width: 80.w,
-  //                 height: 80.h,
-  //                 decoration: BoxDecoration(
-  //                   shape: BoxShape.circle,
-  //                   border: Border.all(
-  //                     color: AppColors.primary.withAlpha(77)
-
-  //                     width: 2,
-  //                   ),
-  //                   boxShadow: [
-  //                     BoxShadow(
-  //                       color: AppColors.primary.withAlpha(51)
-
-  //                       blurRadius: 20,
-  //                       spreadRadius: 5,
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 child: Icon(
-  //                   Icons.person_outline_rounded,
-  //                   size: 50.sp,
-  //                   color: AppColors.primary,
-  //                 ),
-  //               ),
-  //               SizedBox(height: 30.h),
-  //               ShaderMask(
-  //                 shaderCallback: (bounds) => LinearGradient(
-  //                   colors: [
-  //                     AppColors.primary,
-  //                     AppColors.primary.withAlpha(179)
-  //                   ],
-  //                 ).createShader(bounds),
-  //                 child: Text(
-  //                   context.translate('register'),
-  //                   textAlign: TextAlign.center,
-  //                   style: TextStyle(
-  //                     fontSize: 26.sp,
-  //                     fontWeight: FontWeight.w800,
-  //                     color: AppColors.white,
-  //                   ),
-  //                 ),
-  //               ),
-  //               SizedBox(height: 16.h),
-  //               Text(
-  //                 context.translate('auth_required_before_order'),
-  //                 textAlign: TextAlign.center,
-  //                 style: TextStyle(
-  //                   fontSize: 14.sp,
-  //                   fontWeight: FontWeight.w400,
-  //                   color: Theme.of(context).brightness == Brightness.dark
-  //                       ? AppColors.white.withOpacity(0.8)
-  //                       : AppColors.black.withAlpha(179)
-  //                   height: 1.6,
-  //                 ),
-  //               ),
-  //               SizedBox(height: 45.h),
-  //               Container(
-  //                 width: double.infinity,
-  //                 height: 55.h,
-  //                 decoration: BoxDecoration(
-  //                   gradient: LinearGradient(
-  //                     colors: [
-  //                       AppColors.primary,
-  //                       AppColors.primary.withOpacity(0.8),
-  //                     ],
-  //                   ),
-  //                   borderRadius: BorderRadius.circular(15.r),
-  //                   boxShadow: [
-  //                     BoxShadow(
-  //                       color: AppColors.primary.withAlpha(77)
-  //                       blurRadius: 15,
-  //                       offset: const Offset(0, 5),
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 child: Material(
-  //                   color: Colors.transparent,
-  //                   child: InkWell(
-  //                     borderRadius: BorderRadius.circular(15.r),
-  //                     onTap: () {
-  //                       Navigator.pop(context);
-  //                       context.push(Routes.login);
-  //                     },
-  //                     child: Center(
-  //                       child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.center,
-  //                         children: [
-  //                           Icon(
-  //                             Icons.login_rounded,
-  //                             color: AppColors.white,
-  //                             size: 22.sp,
-  //                           ),
-  //                           SizedBox(width: 10.w),
-  //                           Text(
-  //                             context.translate('enter'),
-  //                             style: TextStyle(
-  //                               fontSize: 16.sp,
-  //                               fontWeight: FontWeight.w600,
-  //                               color: AppColors.white,
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //               SizedBox(height: 14.h),
-  //               Container(
-  //                 width: double.infinity,
-  //                 height: 55.h,
-  //                 decoration: BoxDecoration(
-  //                   color: Colors.transparent,
-  //                   borderRadius: BorderRadius.circular(15.r),
-  //                   border: Border.all(
-  //                     color: AppColors.primary.withAlpha(77)
-  //                     width: 1.5,
-  //                   ),
-  //                 ),
-  //                 child: Material(
-  //                   color: Colors.transparent,
-  //                   child: InkWell(
-  //                     borderRadius: BorderRadius.circular(15.r),
-  //                     onTap: () {
-  //                       Navigator.pop(context);
-  //                     },
-  //                     child: Center(
-  //                       child: Text(
-  //                         context.translate('cancel'),
-  //                         style: TextStyle(
-  //                           fontSize: 16.sp,
-  //                           fontWeight: FontWeight.w600,
-  //                           color: AppColors.primary,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  Widget _buildPricingSection(bool isDark, bool isTablet, bool isLandscape) {
-    double subtotal = calculateSubtotal();
+  Widget _buildPricingSection(
+    bool isDark,
+    bool isTablet,
+    bool isLandscape,
+    List cartItems,
+  ) {
+    double subtotal = calculateSubtotal(cartItems);
     double vat = subtotal * 0.05;
     double tip = double.tryParse(tipController.text) ?? 0.0;
     double total = subtotal + vat + tip - (isCouponApplied ? 10.0 : 0.0);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         _priceRow(
           context.translate('cartSubtotal'),
@@ -697,11 +592,14 @@ class _CartPageState extends State<CartPage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-              color: isDark ? Colors.white70 : Colors.black87,
+          Flexible(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: isDark ? Colors.white70 : Colors.black87,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           Text(
@@ -719,6 +617,7 @@ class _CartPageState extends State<CartPage>
   Widget _buildCouponSection(bool isDark, bool isTablet) {
     if (isTablet) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: controllerPromo,
@@ -771,9 +670,7 @@ class _CartPageState extends State<CartPage>
               ),
             ),
           ),
-          SizedBox(
-            width: 10.w,
-          ),
+          SizedBox(width: 10.w),
           TextButtonApp(
             textColor: AppColors.white,
             width: 100,

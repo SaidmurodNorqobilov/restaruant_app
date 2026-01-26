@@ -22,17 +22,21 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(
         title: context.translate('orders'),
       ),
       body: BlocProvider(
-        create: (context) => OrdersBloc(
+        create: (context) =>
+        OrdersBloc(
           orderRepository: OrderRepository(
             client: ApiClient(),
           ),
-        )..add(OrdersLoading()),
+        )
+          ..add(OrdersLoading()),
         child: BlocBuilder<OrdersBloc, OrdersState>(
           builder: (context, state) {
             if (state.status == Status.loading) {
@@ -45,7 +49,7 @@ class _OrderPageState extends State<OrderPage> {
                       height: 80.w,
                       decoration: BoxDecoration(
                         color: AppColors.primary.withAlpha(21)
-,
+                        ,
                         shape: BoxShape.circle,
                       ),
                       child: Stack(
@@ -154,7 +158,8 @@ class _OrderPageState extends State<OrderPage> {
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     itemCount: state.orders.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: 12.h),
                     itemBuilder: (context, index) {
                       final order = state.orders[index];
                       return InkWell(
@@ -175,7 +180,7 @@ class _OrderPageState extends State<OrderPage> {
                                   ? AppColors.borderColor.withAlpha(51)
 
                                   : AppColors.borderColor.withAlpha(77)
-,
+                              ,
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -192,13 +197,13 @@ class _OrderPageState extends State<OrderPage> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       Icon(
                                         order.orderType.toLowerCase() ==
-                                                'delivery'
+                                            'delivery'
                                             ? Icons.delivery_dining
                                             : Icons.table_restaurant,
                                         size: 18.sp,
@@ -207,7 +212,7 @@ class _OrderPageState extends State<OrderPage> {
                                       SizedBox(width: 6.w),
                                       Text(
                                         order.orderType.toLowerCase() ==
-                                                'delivery'
+                                            'delivery'
                                             ? 'Yetkazib berish'
                                             : order.tipTable ?? 'Stol',
                                         style: TextStyle(
@@ -215,8 +220,8 @@ class _OrderPageState extends State<OrderPage> {
                                           fontSize: 14.sp,
                                           color: isDark
                                               ? AppColors.white.withOpacity(
-                                                  0.8,
-                                                )
+                                            0.8,
+                                          )
                                               : Colors.grey[700],
                                         ),
                                       ),
@@ -231,7 +236,7 @@ class _OrderPageState extends State<OrderPage> {
                                       color: _getStatusColor(
                                         order.status,
                                       ).withAlpha(21)
-,
+                                      ,
                                       borderRadius: BorderRadius.circular(
                                         20.r,
                                       ),
@@ -288,16 +293,16 @@ class _OrderPageState extends State<OrderPage> {
                                     ? AppColors.borderColor.withAlpha(21)
 
                                     : AppColors.borderColor.withAlpha(51)
-,
+                                ,
                               ),
                               SizedBox(height: 12.h),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'To\'lov usuli',
@@ -313,7 +318,7 @@ class _OrderPageState extends State<OrderPage> {
                                         children: [
                                           Icon(
                                             order.paymentMethod.toLowerCase() ==
-                                                    'online'
+                                                'online'
                                                 ? Icons.credit_card
                                                 : Icons.money,
                                             size: 16.sp,
@@ -324,7 +329,7 @@ class _OrderPageState extends State<OrderPage> {
                                           ),
                                           Text(
                                             order.paymentMethod.toLowerCase() ==
-                                                    'online'
+                                                'online'
                                                 ? 'Online'
                                                 : 'Naqd',
                                             style: TextStyle(
@@ -384,7 +389,7 @@ class _OrderPageState extends State<OrderPage> {
       final num = double.parse(price);
       return num.toStringAsFixed(0).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (Match m) => '${m[1]} ',
+            (Match m) => '${m[1]} ',
       );
     } catch (e) {
       return price;

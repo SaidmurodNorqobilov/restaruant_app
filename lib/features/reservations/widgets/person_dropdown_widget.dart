@@ -21,8 +21,6 @@ class PersonDropDownWidget extends StatefulWidget {
 }
 
 class _PersonDropDownWidgetState extends State<PersonDropDownWidget> {
-
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -73,6 +71,7 @@ class _PersonDropDownWidgetState extends State<PersonDropDownWidget> {
     );
   }
 }
+
 class PersonOption {
   final int value;
   final String label;

@@ -39,7 +39,9 @@ class CustomReservationField extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: isDark ? AppColors.white.withOpacity(0.9) : AppColors.textColor,
+            color: isDark
+                ? AppColors.white.withOpacity(0.9)
+                : AppColors.textColor,
           ),
         ),
         SizedBox(height: 8.h),
@@ -65,7 +67,10 @@ class CustomReservationField extends StatelessWidget {
             fillColor: isDark
                 ? Colors.white.withOpacity(0.05)
                 : AppColors.backgroundLightColor.withOpacity(0.5),
-            contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 16.w),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: 15.h,
+              horizontal: 16.w,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
@@ -76,11 +81,17 @@ class CustomReservationField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: AppColors.primary.withOpacity(0.5), width: 1.5),
+              borderSide: BorderSide(
+                color: AppColors.primary.withOpacity(0.5),
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: BorderSide(color: Colors.red.withOpacity(0.5), width: 1),
+              borderSide: BorderSide(
+                color: Colors.red.withOpacity(0.5),
+                width: 1,
+              ),
             ),
           ),
         ),

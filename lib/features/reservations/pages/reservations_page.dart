@@ -1,22 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
+    as picker;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:restaurantapp/core/client.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/data/repositories/reservations_repository.dart';
-import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
 import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_bloc.dart';
 import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_state.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/widgets/app_bar_home.dart';
-import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
-    as picker;
 import 'package:restaurantapp/features/reservations/managers/reservation_bloc.dart';
 import 'package:restaurantapp/features/reservations/managers/reservation_state.dart';
+import 'package:restaurantapp/features/reservations/widgets/reservation_submit_button.dart';
 import '../../../core/utils/status.dart';
+import '../widgets/validated_text_field_widget.dart';
 import 'my_reservation_page.dart';
 
 class ReservationsPage extends StatefulWidget {
@@ -35,6 +36,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
   final TextEditingController specialController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    phoneNumberController.text = '+998';
+  }
+
+  @override
   void dispose() {
     nameController.dispose();
     emailController.dispose();
@@ -44,382 +51,80 @@ class _ReservationsPageState extends State<ReservationsPage> {
     super.dispose();
   }
 
-  bool isValidEmail(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  String? _validateName(String name) {
+    if (name.isEmpty) {
+      return 'Ism kiriting';
+    }
+    if (name.length < 3) {
+      return 'Ism kamida 3 ta belgidan iborat bo\'lishi kerak';
+    }
+    if (!RegExp(r'^[a-zA-Zа-яА-ЯёЁ\s]+$').hasMatch(name)) {
+      return 'Ism faqat harflardan iborat bo\'lishi kerak';
+    }
+    return null;
   }
 
-  void _showSuccessDialog(BuildContext context, bool isDark) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark
-                    ? [
-                        AppColors.darkAppBar,
-                        AppColors.black.withAlpha(230),
-                      ]
-                    : [
-                        AppColors.white,
-                        AppColors.white.withOpacity(0.95),
-                      ],
-              ),
-              borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(
-                color: AppColors.primary.withAlpha(77),
-                width: 1.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withAlpha(51),
-                  blurRadius: 30,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 80.w,
-                  height: 80.h,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primary.withAlpha(179),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withAlpha(77),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.check_circle_outline,
-                    size: 50.sp,
-                    color: AppColors.white,
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                Text(
-                  'Muvaffaqiyatli!',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.white : AppColors.textColor,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  'Buyurtmangiz qabul qilindi',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.white.withAlpha(179)
-                        : AppColors.textColor.withAlpha(179),
-                    height: 1.5,
-                  ),
-                ),
-                SizedBox(height: 32.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 50.h,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: AppColors.primary.withAlpha(77),
-                            width: 1.5,
-                          ),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(12.r),
-                            onTap: () => Navigator.pop(dialogContext),
-                            child: Center(
-                              child: Text(
-                                'Yopish',
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Container(
-                        height: 50.h,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primary,
-                              AppColors.primary.withOpacity(0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(12.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primary.withAlpha(77),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(12.r),
-                            onTap: () {
-                              Navigator.pop(dialogContext);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MyReservationsPage(),
-                                ),
-                              );
-                            },
-                            child: Center(
-                              child: Text(
-                                'Ko\'rish',
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+  String? _validateEmail(String email) {
+    if (email.isEmpty) {
+      return 'Email kiriting';
+    }
+
+    if (!email.contains('@')) {
+      return 'Email @ belgisini o\'z ichiga olishi kerak';
+    }
+
+    String username = email.split('@')[0];
+    if (username.length < 5) {
+      return 'Email nomi kamida 5 ta belgidan iborat bo\'lishi kerak';
+    }
+
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+      return 'Faqat @gmail.com manzillar qabul qilinadi';
+    }
+
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]{5,}@gmail\.com$');
+    if (!emailRegex.hasMatch(email.toLowerCase())) {
+      return 'Email formati noto\'g\'ri';
+    }
+
+    return null;
   }
 
-  void _showLoginDialog(BuildContext context, bool isDark, bool isTablet) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (modalContext) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          height: isTablet
-              ? MediaQuery.of(context).size.height * 0.65
-              : MediaQuery.of(context).size.height * 0.55,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [
-                      AppColors.black.withAlpha(230),
-                      AppColors.black.withOpacity(0.8),
-                    ]
-                  : [
-                      AppColors.white.withAlpha(230),
-                      AppColors.white.withOpacity(0.8),
-                    ],
-            ),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.r),
-              topRight: Radius.circular(30.r),
-            ),
-            border: Border.all(
-              color: Colors.white.withAlpha(51),
-              width: 1.5.w,
-            ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 50.w,
-                  height: 5.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withAlpha(128),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-                SizedBox(height: 35.h),
-                Container(
-                  width: 100.w,
-                  height: 100.h,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primary.withAlpha(51),
-                        AppColors.primary.withOpacity(0.05),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.primary.withAlpha(77),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withAlpha(51),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.person_outline_rounded,
-                    size: 50.sp,
-                    color: AppColors.primary,
-                  ),
-                ),
-                SizedBox(height: 30.h),
-                ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [
-                      AppColors.primary,
-                      AppColors.primary.withAlpha(179),
-                    ],
-                  ).createShader(bounds),
-                  child: Text(
-                    'Ro\'yxatdan o\'ting',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26.sp,
-                      fontWeight: FontWeight.w800,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16.h),
-                Text(
-                  'Bron qilishdan oldin tizimga kirishingiz yoki ro\'yxatdan o\'tishingiz kerak',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: isDark
-                        ? AppColors.white.withOpacity(0.8)
-                        : AppColors.black.withAlpha(179),
-                    height: 1.6,
-                  ),
-                ),
-                SizedBox(height: 45.h),
-                Container(
-                  width: double.infinity,
-                  height: 55.h,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primary.withOpacity(0.8),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(15.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withAlpha(77),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15.r),
-                      onTap: () => Navigator.pop(modalContext),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.login_rounded,
-                              color: AppColors.white,
-                              size: 22.sp,
-                            ),
-                            SizedBox(width: 10.w),
-                            Text(
-                              'Kirish',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 14.h),
-                Container(
-                  width: double.infinity,
-                  height: 55.h,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(15.r),
-                    border: Border.all(
-                      color: AppColors.primary.withAlpha(77),
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15.r),
-                      onTap: () => Navigator.pop(modalContext),
-                      child: Center(
-                        child: Text(
-                          'Bekor qilish',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+  String? _validatePhoneNumber(String phone) {
+    if (phone.isEmpty || phone == '+998') {
+      return 'Telefon raqam kiriting';
+    }
+
+    if (!phone.startsWith('+998')) {
+      return 'Telefon raqam +998 bilan boshlanishi kerak';
+    }
+
+    String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
+
+    if (cleanPhone.length != 13) {
+      return 'Telefon raqam to\'liq emas (+998XXXXXXXXX)';
+    }
+
+    String operatorCode = cleanPhone.substring(4, 6);
+    List<String> validCodes = [
+      '90',
+      '91',
+      '93',
+      '94',
+      '95',
+      '97',
+      '98',
+      '99',
+      '33',
+      '88',
+      '77',
+    ];
+
+    if (!validCodes.contains(operatorCode)) {
+      return 'Noto\'g\'ri operator kodi';
+    }
+
+    return null;
   }
 
   @override
@@ -444,11 +149,10 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   if (state.status == Status.success) {
                     nameController.clear();
                     emailController.clear();
-                    phoneNumberController.clear();
+                    phoneNumberController.text = '+998';
                     reservationTimeController.clear();
                     specialController.clear();
                     setState(() => currentPerson = 3);
-                    _showSuccessDialog(context, isDark);
                   } else if (state.status == Status.error) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -526,22 +230,45 @@ class _ReservationsPageState extends State<ReservationsPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextAndTextField(
+                          ValidatedTextField(
                             controller: nameController,
                             text: context.translate('name'),
                             hintText: context.translate('inputName'),
+                            validator: _validateName,
                           ),
                           SizedBox(height: 15.h),
-                          TextAndTextField(
+                          ValidatedTextField(
                             controller: emailController,
                             text: 'Email',
-                            hintText: context.translate('email'),
+                            hintText: 'example@gmail.com',
+                            validator: _validateEmail,
+                            keyboardType: TextInputType.emailAddress,
                           ),
                           SizedBox(height: 15.h),
-                          TextAndTextField(
+                          ValidatedTextField(
                             controller: phoneNumberController,
                             text: context.translate('phoneNumber'),
-                            hintText: context.translate('inputNumber'),
+                            hintText: '+998901234567',
+                            validator: _validatePhoneNumber,
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'[\d+]'),
+                              ),
+                              LengthLimitingTextInputFormatter(13),
+                              TextInputFormatter.withFunction((
+                                oldValue,
+                                newValue,
+                              ) {
+                                if (newValue.text.isEmpty) {
+                                  return const TextEditingValue(text: '+998');
+                                }
+                                if (!newValue.text.startsWith('+998')) {
+                                  return oldValue;
+                                }
+                                return newValue;
+                              }),
+                            ],
                           ),
                           SizedBox(height: 15.h),
                           Text(
@@ -563,14 +290,16 @@ class _ReservationsPageState extends State<ReservationsPage> {
                               borderRadius: BorderRadius.circular(100.r),
                               color: isDark
                                   ? Colors.blueGrey
-                                  : AppColors.backgroundLightColor,
+                                  : AppColors.lightDivider,
                             ),
                             child: Row(
                               children: [
-                                const Icon(
+                                 Icon(
                                   Icons.person_outline,
                                   size: 20,
-                                  color: AppColors.white,
+                                  color: isDark
+                                      ? AppColors.white
+                                      : AppColors.textColor,
                                 ),
                                 SizedBox(width: 8.w),
                                 Expanded(
@@ -579,7 +308,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                       isExpanded: true,
                                       dropdownColor: isDark
                                           ? AppColors.darkAppBar
-                                          : AppColors.primary,
+                                          : AppColors.lightDivider,
                                       value: currentPerson,
                                       onChanged: (value) => setState(
                                         () => currentPerson = value!,
@@ -592,7 +321,10 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                                 person.label,
                                                 style: TextStyle(
                                                   fontSize: 14.sp,
-                                                  color: AppColors.white,
+                                                  color: isDark
+                                                      ? AppColors.white
+                                                      : AppColors.textColor,
+                                                  fontWeight: FontWeight.w500,
                                                 ),
                                               ),
                                             ),
@@ -633,7 +365,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                               );
                             },
                             child: AbsorbPointer(
-                              child: TextAndTextField(
+                              child: ValidatedTextField(
                                 controller: reservationTimeController,
                                 text: context.translate('reservationTime'),
                                 hintText: context.translate('enterTime'),
@@ -641,74 +373,27 @@ class _ReservationsPageState extends State<ReservationsPage> {
                             ),
                           ),
                           SizedBox(height: 15.h),
-                          TextAndTextField(
+                          ValidatedTextField(
                             controller: specialController,
                             text: context.translate('specialNote'),
                             hintText: context.translate('specialNote'),
+                            maxLines: 3,
                           ),
                           SizedBox(height: 15.h),
                         ],
                       ),
                     ),
                     SizedBox(height: 30.h),
-                    Center(
-                      child: TextButtonApp(
-                        width: 272,
-                        height: 50,
-                        onPressed: () {
-                          if (userState.user == null) {
-                            _showLoginDialog(context, isDark, isTablet);
-                          } else {
-                            if (nameController.text.isEmpty ||
-                                emailController.text.isEmpty ||
-                                phoneNumberController.text.isEmpty ||
-                                reservationTimeController.text.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  showCloseIcon: true,
-                                  content: Text(
-                                    'Iltimos, barcha maydonlarni to\'ldiring',
-                                  ),
-                                  backgroundColor: AppColors.primary,
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                              return;
-                            }
-                            if (!isValidEmail(emailController.text)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Haqiqiy email manzili kiriting!',
-                                  ),
-                                  backgroundColor: AppColors.primary,
-                                  behavior: SnackBarBehavior.floating,
-                                  showCloseIcon: true,
-                                ),
-                              );
-                              return;
-                            }
-                            context.read<ReservationBloc>().add(
-                              AddReservationEvent(
-                                name: nameController.text,
-                                email: emailController.text,
-                                phoneNumber: phoneNumberController.text,
-                                numberOfGuests: currentPerson,
-                                reservationTime: reservationTimeController.text,
-                                specialNote: specialController.text,
-                                isActive: true,
-                              ),
-                            );
-                          }
-                        },
-                        text: state.status == Status.loading
-                            ? 'Yuborilmoqda...'
-                            : context.translate('submit'),
-                        textColor: AppColors.white,
-                        buttonColor: state.status == Status.loading
-                            ? AppColors.primary.withOpacity(0.6)
-                            : AppColors.primary,
-                      ),
+                    ReservationSubmitButton(
+                      nameController: nameController,
+                      emailController: emailController,
+                      phoneNumberController: phoneNumberController,
+                      reservationTimeController: reservationTimeController,
+                      specialController: specialController,
+                      currentPerson: currentPerson,
+                      isDark: isDark,
+                      isTablet: isTablet,
+                      userState: userState,
                     ),
                     SizedBox(height: 20.h),
                   ],

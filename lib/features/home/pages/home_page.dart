@@ -52,7 +52,12 @@ class _HomePageState extends State<HomePage> {
     'Freshly baked...',
     'Test description',
   ];
-  final List<double> promotionsPrice = [35000.00, 30000.00, 79000.00, 110000.00];
+  final List<double> promotionsPrice = [
+    35000.00,
+    30000.00,
+    79000.00,
+    110000.00,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +122,6 @@ class _HomePageState extends State<HomePage> {
                           state.categories.isEmpty) {
                         return _buildError(catSectionHeight, isDark);
                       }
-
                       if (!_isImagesPreCached && state.categories.isNotEmpty) {
                         _precacheImages(state.categories);
                       }
@@ -206,8 +210,7 @@ class _HomePageState extends State<HomePage> {
                                                       child: Icon(
                                                         Icons.fastfood,
                                                         color: AppColors.primary
-                                                            .withAlpha(77)
-,
+                                                            .withAlpha(77),
                                                         size: 28.sp,
                                                       ),
                                                     ),
@@ -240,7 +243,9 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                       ),
                                     ),
-                                    SizedBox(height: 8.h),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 4.w,
@@ -415,8 +420,7 @@ class _HomePageState extends State<HomePage> {
         child: Icon(
           Icons.error_outline,
           size: 40.sp,
-          color: Colors.red.withAlpha(128)
-,
+          color: Colors.red.withAlpha(128),
         ),
       ),
     );

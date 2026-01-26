@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurantapp/features/reservations/managers/reservation_state.dart';
 import '../../../core/utils/status.dart';
 import '../../../data/repositories/reservations_repository.dart';
+
 part 'reservation_event.dart';
 
 class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
@@ -24,7 +25,7 @@ class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
     final result = await _repository.addReservation(
       name: event.name,
       email: event.email,
-      phoneNumber: event.phoneNumber,
+      phone: event.phone,
       numberOfGuests: event.numberOfGuests,
       reservationTime: event.reservationTime,
       specialNote: event.specialNote,
@@ -73,7 +74,7 @@ class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
       id: event.id,
       name: event.name,
       email: event.email,
-      phoneNumber: event.phoneNumber,
+      phone: event.phone,
       numberOfGuests: event.numberOfGuests,
       reservationTime: event.reservationTime,
       specialNote: event.specialNote,

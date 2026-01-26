@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -46,7 +47,7 @@ class _LocationPageState extends State<LocationPage> {
                 visible: true,
                 headingEnabled: true,
               );
-              await _moveToCurrentLocation();
+              await _initializeLocation();
             },
             onCameraPositionChanged: (position, reason, finished) {
               setState(() {
@@ -85,8 +86,7 @@ class _LocationPageState extends State<LocationPage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withAlpha(21)
-,
+                    color: Colors.black.withAlpha(21),
                     blurRadius: 10,
                     offset: const Offset(0, 5),
                   ),
@@ -104,8 +104,8 @@ class _LocationPageState extends State<LocationPage> {
                         Text(
                           'Yetkazib berish manzili',
                           style: TextStyle(
-                              fontSize: 12,
-                              color: isDark ? AppColors.white : Colors.grey
+                            fontSize: 12,
+                            color: isDark ? AppColors.white : Colors.grey,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -152,22 +152,48 @@ class _LocationPageState extends State<LocationPage> {
               ),
               child: isLoading
                   ? const SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
-                ),
-              )
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
                   : const Text(
-                'Shu yerga yetkazish',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+                      'Shu yerga yetkazish',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _initializeLocation() async {
+    final prefs = await SharedPreferences.getInstance();
+    final double? lat = prefs.getDouble('saved_lat');
+    final double? lng = prefs.getDouble('saved_lng');
+
+    if (lat != null && lng != null) {
+      await mapController.moveCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: Point(latitude: lat, longitude: lng),
+            zoom: 17,
+          ),
+        ),
+        animation: const MapAnimation(
+          type: MapAnimationType.smooth,
+          duration: 1,
+        ),
+      );
+    } else {
+      await _moveToCurrentLocation();
+    }
   }
 
   Future<void> _moveToCurrentLocation() async {
@@ -197,7 +223,7 @@ class _LocationPageState extends State<LocationPage> {
         );
       }
     } catch (e) {
-      debugPrint('Location error: $e');
+      debugPrint('Manzil tanlashda xatolik');
     } finally {
       if (mounted) {
         setState(() => isLoading = false);
@@ -224,18 +250,27 @@ class _LocationPageState extends State<LocationPage> {
       }
     } catch (e) {
       setState(() {
-        selectedAddress = "${point.latitude.toStringAsFixed(4)}, ${point.longitude.toStringAsFixed(4)}";
+        selectedAddress =
+            "${point.latitude.toStringAsFixed(4)}, ${point.longitude.toStringAsFixed(4)}";
       });
     }
   }
 
-  void _confirmLocation() {
+  Future<void> _confirmLocation() async {
     if (cameraPosition != null) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setDouble('saved_lat', cameraPosition!.latitude);
+      await prefs.setDouble('saved_lng', cameraPosition!.longitude);
+      await prefs.setString('saved_address', selectedAddress);
+
       Navigator.pop(context, {
         'address': selectedAddress,
         'lat': cameraPosition!.latitude,
         'lng': cameraPosition!.longitude,
       });
+      print('Selected Address: $selectedAddress');
+      print('Selected Latitude: ${cameraPosition!.latitude}');
+      print('Selected Longitude: ${cameraPosition!.longitude}');
     }
   }
 }

@@ -1,0 +1,12 @@
+part of 'cart_bloc.dart';
+
+sealed class CartEvent {}
+
+final class CartLoading extends CartEvent {}
+
+final class CartUpdate extends CartEvent {
+  final int itemId;
+  final int quantity;
+
+  CartUpdate({required this.itemId, required this.quantity});
+}

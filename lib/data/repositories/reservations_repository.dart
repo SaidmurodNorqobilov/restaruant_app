@@ -21,7 +21,7 @@ class ReservationRepository {
               .toList();
           return Result.ok(reservations);
         } catch (e) {
-          return Result.error(Exception("Parsing xatosi: $e"));
+          return Result.error(Exception("Ma'lumotlarni o'qishda xatolik: $e"));
         }
       },
     );
@@ -30,7 +30,7 @@ class ReservationRepository {
   Future<Result<Map<String, dynamic>>> addReservation({
     required String name,
     required String email,
-    required String phoneNumber,
+    required String phone,
     required int numberOfGuests,
     required String reservationTime,
     required String specialNote,
@@ -41,7 +41,7 @@ class ReservationRepository {
       data: {
         "name": name,
         "email": email,
-        "phone_number": phoneNumber,
+        "phone": phone,
         "number_of_guests": numberOfGuests,
         "reservation_time": reservationTime,
         "special_note": specialNote,
@@ -55,7 +55,7 @@ class ReservationRepository {
     required int id,
     required String name,
     required String email,
-    required String phoneNumber,
+    required String phone,
     required int numberOfGuests,
     required String reservationTime,
     required String specialNote,
@@ -66,7 +66,7 @@ class ReservationRepository {
       data: {
         "name": name,
         "email": email,
-        "phone_number": phoneNumber,
+        "phone": phone,
         "number_of_guests": numberOfGuests,
         "reservation_time": reservationTime,
         "special_note": specialNote,
@@ -75,12 +75,11 @@ class ReservationRepository {
     );
     return response;
   }
-  Future<Result<Map<String, dynamic>>> cancelReservation({
-    required int id,
-  }) async {
+
+  Future<Result<Map<String, dynamic>>> cancelReservation({required int id}) async {
     final response = await _client.get<Map<String, dynamic>>(
       '/products/cancel_bron_table/$id/',
-        );
+    );
     return response;
   }
 }

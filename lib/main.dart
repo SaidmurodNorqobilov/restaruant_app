@@ -14,7 +14,7 @@ import 'features/common/manager/langBloc/language_state.dart';
 import 'features/common/pages/no_internet_screen.dart';
 
 void main() async {
-  // await YandexMapkit.initialize(apiKey: 'SIZNING_YANDEX_API_KEY');
+  // await YandexMapkit.initialize(apiKey: 'YANDEX_API_KEY');
   WidgetsFlutterBinding.ensureInitialized();
   // await YandexMapkit.initialize(
   //   apiKey: 'd8509166-c9f8-4bd8-b2fc-d076071d93b3',

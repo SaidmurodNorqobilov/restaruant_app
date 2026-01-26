@@ -5,7 +5,7 @@ abstract class ReservationEvent {}
 class AddReservationEvent extends ReservationEvent {
   final String name;
   final String email;
-  final String phoneNumber;
+  final String phone;
   final int numberOfGuests;
   final String reservationTime;
   final String specialNote;
@@ -14,7 +14,7 @@ class AddReservationEvent extends ReservationEvent {
   AddReservationEvent({
     required this.name,
     required this.email,
-    required this.phoneNumber,
+    required this.phone,
     required this.numberOfGuests,
     required this.reservationTime,
     required this.specialNote,
@@ -28,7 +28,7 @@ class UpdateReservationEvent extends ReservationEvent {
   final int id;
   final String name;
   final String email;
-  final String phoneNumber;
+  final String phone;
   final int numberOfGuests;
   final String reservationTime;
   final String specialNote;
@@ -38,7 +38,7 @@ class UpdateReservationEvent extends ReservationEvent {
     required this.id,
     required this.name,
     required this.email,
-    required this.phoneNumber,
+    required this.phone,
     required this.numberOfGuests,
     required this.reservationTime,
     required this.specialNote,

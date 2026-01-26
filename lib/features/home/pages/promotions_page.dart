@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/client.dart';
-import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/status.dart';
 import 'package:restaurantapp/data/repositories/category_repositories.dart';
@@ -50,8 +49,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                           width: 80.w,
                           height: 80.w,
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withAlpha(21)
-,
+                            color: AppColors.primary.withAlpha(21),
                             shape: BoxShape.circle,
                           ),
                           child: Stack(
@@ -83,7 +81,6 @@ class _PromotionsPageState extends State<PromotionsPage> {
                             fontWeight: FontWeight.w500,
                             color: isDark
                                 ? AppColors.white.withAlpha(179)
-
                                 : AppColors.black.withOpacity(0.6),
                           ),
                         ),
@@ -92,9 +89,8 @@ class _PromotionsPageState extends State<PromotionsPage> {
                   );
                 }
 
-
                 if (state.status == Status.error && state.products.isEmpty) {
-                  return Center(child: Text( "Xatolik yuz berdi"));
+                  return Center(child: Text("Xatolik yuz berdi"));
                 }
 
                 return ListView.builder(
@@ -109,8 +105,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 14.h),
                       child: GestureDetector(
-                        onTap: () {
-                        },
+                        onTap: () {},
                         child: Container(
                           decoration: BoxDecoration(
                             color: isDark

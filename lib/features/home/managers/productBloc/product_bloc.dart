@@ -34,7 +34,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final result = await _repository.addOrderItem(
         productId: event.productId,
         quantity: event.quantity,
-        orderId: event.orderId,
       );
 
       result.fold(

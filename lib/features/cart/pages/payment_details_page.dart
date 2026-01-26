@@ -52,7 +52,9 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(title: 'To\'lov ma\'lumotlari'),
       body: SingleChildScrollView(
@@ -69,7 +71,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                     colors: [
                       AppColors.primary,
                       AppColors.primary.withAlpha(179)
-,
+                      ,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -78,7 +80,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.primary.withAlpha(77)
-,
+                      ,
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -418,9 +420,10 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const SuccessPage(
+                              builder: (context) =>
+                              const SuccessPage(
                                 message:
-                                    "To'lovingiz muvaffaqiyatli amalga oshirildi",
+                                "To'lovingiz muvaffaqiyatli amalga oshirildi",
                                 appbarTitle: 'To\'lov tasdiqlandi',
                               ),
                             ),

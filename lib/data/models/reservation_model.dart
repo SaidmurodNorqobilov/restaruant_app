@@ -2,7 +2,7 @@ class ReservationModel {
   final int id;
   final String name;
   final String email;
-  final String phoneNumber;
+  final String phone;
   final int numberOfGuests;
   final String reservationTime;
   final String specialNote;
@@ -12,7 +12,7 @@ class ReservationModel {
     required this.id,
     required this.name,
     required this.email,
-    required this.phoneNumber,
+    required this.phone,
     required this.numberOfGuests,
     required this.reservationTime,
     required this.specialNote,
@@ -21,14 +21,14 @@ class ReservationModel {
 
   factory ReservationModel.fromJson(Map<String, dynamic> json) {
     return ReservationModel(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      phoneNumber: json['phone'],
-      numberOfGuests: json['number_of_guests'],
-      reservationTime: json['reservation_time'],
-      specialNote: json['special_note'],
-      isActive: json['is_active'],
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      numberOfGuests: json['number_of_guests'] ?? 0,
+      reservationTime: json['reservation_time'] ?? '',
+      specialNote: json['special_note'] ?? '',
+      isActive: json['is_active'] ?? false,
     );
   }
 }

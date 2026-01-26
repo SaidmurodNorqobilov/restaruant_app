@@ -1,0 +1,50 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:restaurantapp/core/utils/status.dart';
+import 'package:restaurantapp/features/accaunt/managers/locationBloc/location_event.dart';
+import 'package:restaurantapp/features/accaunt/managers/locationBloc/location_state.dart';
+import '../../../../data/repositories/location_repository.dart';
+
+class LocationBloc extends Bloc<LocationEvent, LocationState> {
+  final LocationRepository _repository;
+
+  LocationBloc({required LocationRepository repository})
+      : _repository = repository,
+        super(LocationState.initial()) {
+    on<LocationLoading>(_onLocationLoading);
+    // on<SaveLocationEvent>(_onSaveLocation);
+  }
+
+  Future<void> _onLocationLoading(
+      LocationLoading event,
+      Emitter<LocationState> emit,
+      ) async {
+    emit(state.copyWith(
+      lat: event.lat,
+      lng: event.lng,
+      address: event.address,
+    ));
+  }
+
+  Future<void> _onSaveLocation(
+      // SaveLocationEvent event,
+      Emitter<LocationState> emit,
+      ) async {
+    emit(state.copyWith(status: Status.loading));
+
+    final result = await _repository.addLocation(
+      address: state.address,
+      lat: state.lat,
+      lng: state.lng,
+    );
+
+    result.fold(
+          (error) => emit(state.copyWith(
+        status: Status.error,
+        errorMessage: error.toString(),
+      )),
+          (response) => emit(state.copyWith(
+        status: Status.success,
+      )),
+    );
+  }
+}

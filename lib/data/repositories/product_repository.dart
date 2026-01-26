@@ -8,12 +8,16 @@ class ProductRepository {
   ProductRepository({required ApiClient client}) : _client = client;
 
   Future<Result<List<ProductModel>>> getProducts() async {
-    final response = await _client.get<List<dynamic>>('/products/get_all_products/');
+    final response = await _client.get<List<dynamic>>(
+      '/products/get_all_products/',
+    );
     return response.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) => Result.error(error),
+      (data) {
         try {
-          final products = data.map((item) => ProductModel.fromJson(item)).toList();
+          final products = data
+              .map((item) => ProductModel.fromJson(item))
+              .toList();
           return Result.ok(products);
         } catch (e) {
           return Result.error(Exception("Parsing error: $e"));
@@ -25,24 +29,26 @@ class ProductRepository {
   Future<Result<Map<String, dynamic>>> addOrderItem({
     required int productId,
     required int quantity,
-    required int orderId,
   }) async {
     final response = await _client.post<Map<String, dynamic>>(
-      '/products/add_order_item/',
+      '/products/add_or_get_basket/',
       data: {
-        "order_id": orderId,
-        "product_id": productId,
+        "product": productId,
         "quantity": quantity,
       },
     );
 
     return response.fold(
-          (error) => Result.error(error),
-          (data) => Result.ok(data),
+      (error) => Result.error(error),
+      (data) => Result.ok(data),
     );
   }
 
-  Future<Result<void>> updateLocation(String address, double lat, double lng) async {
+  Future<Result<void>> updateLocation(
+    String address,
+    double lat,
+    double lng,
+  ) async {
     final response = await _client.patch<Map<String, dynamic>>(
       '/accounts/update_profile/',
       data: {
@@ -51,6 +57,9 @@ class ProductRepository {
         "longitude": lng,
       },
     );
-    return response.fold((error) => Result.error(error), (_) => Result.ok(null));
+    return response.fold(
+      (error) => Result.error(error),
+      (_) => Result.ok(null),
+    );
   }
 }
