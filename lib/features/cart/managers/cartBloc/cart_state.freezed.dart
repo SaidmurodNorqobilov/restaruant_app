@@ -22,6 +22,7 @@ mixin _$CartState {
   List<CartModel>? get cart => throw _privateConstructorUsedError;
   Map<String, dynamic>? get updatedCartResponse =>
       throw _privateConstructorUsedError;
+  int? get itemId => throw _privateConstructorUsedError;
   double? get totalPrice => throw _privateConstructorUsedError;
 
   /// Create a copy of CartState
@@ -41,6 +42,7 @@ abstract class $CartStateCopyWith<$Res> {
     String? errorMessage,
     List<CartModel>? cart,
     Map<String, dynamic>? updatedCartResponse,
+    int? itemId,
     double? totalPrice,
   });
 }
@@ -64,6 +66,7 @@ class _$CartStateCopyWithImpl<$Res, $Val extends CartState>
     Object? errorMessage = freezed,
     Object? cart = freezed,
     Object? updatedCartResponse = freezed,
+    Object? itemId = freezed,
     Object? totalPrice = freezed,
   }) {
     return _then(
@@ -84,6 +87,10 @@ class _$CartStateCopyWithImpl<$Res, $Val extends CartState>
                 ? _value.updatedCartResponse
                 : updatedCartResponse // ignore: cast_nullable_to_non_nullable
                       as Map<String, dynamic>?,
+            itemId: freezed == itemId
+                ? _value.itemId
+                : itemId // ignore: cast_nullable_to_non_nullable
+                      as int?,
             totalPrice: freezed == totalPrice
                 ? _value.totalPrice
                 : totalPrice // ignore: cast_nullable_to_non_nullable
@@ -108,6 +115,7 @@ abstract class _$$CartStateImplCopyWith<$Res>
     String? errorMessage,
     List<CartModel>? cart,
     Map<String, dynamic>? updatedCartResponse,
+    int? itemId,
     double? totalPrice,
   });
 }
@@ -130,6 +138,7 @@ class __$$CartStateImplCopyWithImpl<$Res>
     Object? errorMessage = freezed,
     Object? cart = freezed,
     Object? updatedCartResponse = freezed,
+    Object? itemId = freezed,
     Object? totalPrice = freezed,
   }) {
     return _then(
@@ -150,6 +159,10 @@ class __$$CartStateImplCopyWithImpl<$Res>
             ? _value._updatedCartResponse
             : updatedCartResponse // ignore: cast_nullable_to_non_nullable
                   as Map<String, dynamic>?,
+        itemId: freezed == itemId
+            ? _value.itemId
+            : itemId // ignore: cast_nullable_to_non_nullable
+                  as int?,
         totalPrice: freezed == totalPrice
             ? _value.totalPrice
             : totalPrice // ignore: cast_nullable_to_non_nullable
@@ -167,6 +180,7 @@ class _$CartStateImpl implements _CartState {
     this.errorMessage,
     final List<CartModel>? cart,
     final Map<String, dynamic>? updatedCartResponse,
+    this.itemId,
     this.totalPrice,
   }) : _cart = cart,
        _updatedCartResponse = updatedCartResponse;
@@ -197,11 +211,13 @@ class _$CartStateImpl implements _CartState {
   }
 
   @override
+  final int? itemId;
+  @override
   final double? totalPrice;
 
   @override
   String toString() {
-    return 'CartState(status: $status, errorMessage: $errorMessage, cart: $cart, updatedCartResponse: $updatedCartResponse, totalPrice: $totalPrice)';
+    return 'CartState(status: $status, errorMessage: $errorMessage, cart: $cart, updatedCartResponse: $updatedCartResponse, itemId: $itemId, totalPrice: $totalPrice)';
   }
 
   @override
@@ -217,6 +233,7 @@ class _$CartStateImpl implements _CartState {
               other._updatedCartResponse,
               _updatedCartResponse,
             ) &&
+            (identical(other.itemId, itemId) || other.itemId == itemId) &&
             (identical(other.totalPrice, totalPrice) ||
                 other.totalPrice == totalPrice));
   }
@@ -228,6 +245,7 @@ class _$CartStateImpl implements _CartState {
     errorMessage,
     const DeepCollectionEquality().hash(_cart),
     const DeepCollectionEquality().hash(_updatedCartResponse),
+    itemId,
     totalPrice,
   );
 
@@ -246,6 +264,7 @@ abstract class _CartState implements CartState {
     final String? errorMessage,
     final List<CartModel>? cart,
     final Map<String, dynamic>? updatedCartResponse,
+    final int? itemId,
     final double? totalPrice,
   }) = _$CartStateImpl;
 
@@ -257,6 +276,8 @@ abstract class _CartState implements CartState {
   List<CartModel>? get cart;
   @override
   Map<String, dynamic>? get updatedCartResponse;
+  @override
+  int? get itemId;
   @override
   double? get totalPrice;
 

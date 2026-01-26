@@ -18,13 +18,15 @@ class LoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth >= 600;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: isTablet ? 100.w : 80.w,
-            height: isTablet ? 100.w : 80.w,
+            width: isTablet ? 50.w : 80.w,
+            height: isTablet ? 50.w : 80.w,
             decoration: BoxDecoration(
               color: AppColors.primary.withAlpha(26),
               shape: BoxShape.circle,
@@ -44,7 +46,7 @@ class LoadingState extends StatelessWidget {
                 ),
                 Icon(
                   icon,
-                  size: isTablet ? 35.sp : 28.sp,
+                  size: isTablet ? 25.sp : 28.sp,
                   color: AppColors.primary,
                 ),
               ],

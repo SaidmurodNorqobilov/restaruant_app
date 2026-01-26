@@ -24,6 +24,7 @@ import 'package:restaurantapp/features/onboarding/pages/onboarding_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/splash_page.dart';
 import 'package:restaurantapp/features/onboarding/pages/welcome_page.dart';
 import 'package:restaurantapp/features/home/pages/home_page.dart';
+import 'package:restaurantapp/features/reservations/pages/temporarily_reservation.dart';
 import '../../data/models/category_model.dart';
 import '../../features/accaunt/pages/location_page.dart';
 import '../../features/common/widgets/bottom_navigation_bar_app.dart';
@@ -92,7 +93,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: Routes.reservations,
-              builder: (context, state) => const ReservationsPage(),
+              builder: (context, state) => const TemporarilyReservation(),
             ),
           ],
         ),
@@ -179,6 +180,10 @@ final router = GoRouter(
     GoRoute(
       path: Routes.myReservations,
       builder: (context, state) => ReservationsPage(),
+    ),
+    GoRoute(
+      path: Routes.temporarilyReservation,
+      builder: (context, state) => const TemporarilyReservation(),
     ),
   ],
 );

@@ -7,21 +7,23 @@ class LocationRepository {
   LocationRepository({required ApiClient client}) : _client = client;
 
   Future<Result<Map<String, dynamic>>> addLocation({
-    required String address,
+    required int orderId,
+    // required String address,
     required double lat,
     required double lng,
   }) async {
     final response = await _client.post<Map<String, dynamic>>(
       '/products/add_order_location/',
       data: {
-        "address": address,
+        "order": orderId,
+        // "address": address,
         "latitude": lat,
         "longitude": lng,
       },
     );
     return response.fold(
-          (error) => Result.error(error),
-          (data) => Result.ok(data),
+      (error) => Result.error(error),
+      (data) => Result.ok(data),
     );
   }
 }

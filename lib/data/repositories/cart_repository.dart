@@ -49,7 +49,7 @@ class CartRepository {
 
   Future<Result<void>> deleteCartItem(int itemId) async {
     final response = await _client.delete(
-      '/products/delete_order_item/$itemId/',
+      '/products/delete_basket/$itemId/',
     );
 
     return response.fold(

@@ -10,3 +10,11 @@ final class CartUpdate extends CartEvent {
 
   CartUpdate({required this.itemId, required this.quantity});
 }
+
+final class DeleteCartItem extends CartEvent {
+  final int itemId;
+
+  DeleteCartItem({required this.itemId});
+}
+
+

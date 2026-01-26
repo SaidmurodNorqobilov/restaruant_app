@@ -78,12 +78,11 @@ final blocProviderMain = <SingleChildWidget>[
   BlocProvider(
     create: (context) => CartBloc(
       repository: context.read<CartRepository>(),
-    )..add(CartLoading()),
+    ),
   ),
   BlocProvider<ProductBloc>(
     create: (context) => ProductBloc(
       repository: context.read<ProductRepository>(),
     ),
   ),
-
 ];

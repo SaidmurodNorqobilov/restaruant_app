@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/utils/status.dart';
 import '../../../../data/repositories/cart_repository.dart';
 import 'cart_state.dart';
-
 part 'cart_event.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
@@ -13,8 +12,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       super(CartState.initial()) {
     on<CartLoading>(_onCartLoading);
     on<CartUpdate>(_onCartUpdate);
-  }
+    on<DeleteCartItem>((event, emit) {
+      print("Mahsulot o'chirilmoqda: ${event.itemId}");
 
+    });
+  }
   Future<void> _onCartLoading(
     CartLoading event,
     Emitter<CartState> emit,
@@ -60,6 +62,22 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         );
         add(CartLoading());
       },
+    );
+  }
+  Future<void> deleteCartItem(int itemId) async {
+    emit(state.copyWith(status: Status.loading));
+
+    final result = await _repository.deleteCartItem(itemId);
+    result.fold(
+      (error) => emit(
+        state.copyWith(status: Status.error, errorMessage: error.toString()),
+      ),
+      (_) => emit(
+        state.copyWith(
+          status: Status.success,
+          cart: state.cart?.where((item) => item.id != itemId).toList(),
+        ),
+      ),
     );
   }
 }

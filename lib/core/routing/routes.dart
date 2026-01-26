@@ -25,4 +25,7 @@ class Routes {
   static const editProfile = '/editProfile';
   static const location = '/location';
   static const myReservations = '/myReservations';
+
+  // bu vaqtincha qachondir reservation qo'shilsa buni uchiraman
+  static const temporarilyReservation = '/temporarilyReservation';
 }

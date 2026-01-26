@@ -12,6 +12,7 @@ import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 import '../../../core/network/user_service.dart';
 import '../../../core/utils/colors.dart';
+import '../../common/widgets/common_state_widgets.dart';
 import '../managers/userBloc/user_profile_bloc.dart';
 import '../managers/userBloc/user_profile_state.dart';
 
@@ -368,52 +369,56 @@ class _AccountPageState extends State<AccountPage> {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
       builder: (context, state) {
         if (state.status == Status.loading) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: isTablet ? 100.w : 80.w,
-                  height: isTablet ? 100.w : 80.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withAlpha(21),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        width: isTablet ? 75.w : 60.w,
-                        height: isTablet ? 75.w : 60.w,
-                        child: CircularProgressIndicator(
-                          strokeWidth: isTablet ? 4 : 3,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.primary,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.restaurant_menu,
-                        size: isTablet ? 35.sp : 28.sp,
-                        color: AppColors.primary,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: isTablet ? 30.h : 24.h),
-                Text(
-                  'Ma\'lumotlar yuklanmoqda...',
-                  style: TextStyle(
-                    fontSize: isTablet ? 18.sp : 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: isDark
-                        ? AppColors.white.withAlpha(179)
-                        : AppColors.black.withOpacity(0.6),
-                  ),
-                ),
-              ],
-            ),
+          return LoadingState(
+            isDark: isDark,
+            isTablet: isTablet,
           );
+          // return Center(
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Container(
+          //         width: isTablet ? 100.w : 80.w,
+          //         height: isTablet ? 100.w : 80.w,
+          //         decoration: BoxDecoration(
+          //           color: AppColors.primary.withAlpha(21),
+          //           shape: BoxShape.circle,
+          //         ),
+          //         child: Stack(
+          //           alignment: Alignment.center,
+          //           children: [
+          //             SizedBox(
+          //               width: isTablet ? 75.w : 60.w,
+          //               height: isTablet ? 75.w : 60.w,
+          //               child: CircularProgressIndicator(
+          //                 strokeWidth: isTablet ? 4 : 3,
+          //                 valueColor: AlwaysStoppedAnimation<Color>(
+          //                   AppColors.primary,
+          //                 ),
+          //               ),
+          //             ),
+          //             Icon(
+          //               Icons.restaurant_menu,
+          //               size: isTablet ? 35.sp : 28.sp,
+          //               color: AppColors.primary,
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //       SizedBox(height: isTablet ? 30.h : 24.h),
+          //       Text(
+          //         'Ma\'lumotlar yuklanmoqda...',
+          //         style: TextStyle(
+          //           fontSize: isTablet ? 18.sp : 16.sp,
+          //           fontWeight: FontWeight.w500,
+          //           color: isDark
+          //               ? AppColors.white.withAlpha(179)
+          //               : AppColors.black.withOpacity(0.6),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // );
         }
 
         if (state.user == null) {

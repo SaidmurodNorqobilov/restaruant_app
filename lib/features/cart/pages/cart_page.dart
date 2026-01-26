@@ -17,6 +17,7 @@ import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 
 import '../../../core/utils/icons.dart';
 import '../../accaunt/managers/userBloc/user_profile_state.dart';
+import '../../home/widgets/container_row.dart';
 import '../widgets/auth_profile_empty_widget.dart';
 import '../widgets/empty_cart_widgets.dart';
 
@@ -48,6 +49,7 @@ class _CartPageState extends State<CartPage>
   String selectedTable = 'Table 1';
   bool isCouponApplied = false;
   bool _isSearching = false;
+  List _filteredCartItems = [];
 
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _CartPageState extends State<CartPage>
     tipController.addListener(() {
       if (mounted) setState(() {});
     });
+    controllerSearch.addListener(_filterCartItems);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -66,10 +69,31 @@ class _CartPageState extends State<CartPage>
   void dispose() {
     tipController.removeListener(() {});
     tipController.dispose();
+    controllerSearch.removeListener(_filterCartItems);
+    controllerSearch.dispose();
     _animationController.dispose();
     controllerPromo.dispose();
-    controllerSearch.dispose();
     super.dispose();
+  }
+
+  void _filterCartItems() {
+    final cartState = context.read<CartBloc>().state;
+    final allItems = cartState.cart ?? [];
+
+    if (controllerSearch.text.isEmpty) {
+      setState(() {
+        _filteredCartItems = allItems;
+      });
+      return;
+    }
+
+    final searchQuery = controllerSearch.text.toLowerCase();
+    setState(() {
+      _filteredCartItems = allItems.where((item) {
+        final productName = (item.product?.name ?? '').toLowerCase();
+        return productName.contains(searchQuery);
+      }).toList();
+    });
   }
 
   double calculateSubtotal(List cartItems) {
@@ -145,7 +169,7 @@ class _CartPageState extends State<CartPage>
                           style: const TextStyle(color: Colors.white),
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
-                            hintText: 'Search...',
+                            hintText: context.translate('search'),
                             hintStyle: TextStyle(
                               color: AppColors.white.withAlpha(179),
                             ),
@@ -219,9 +243,20 @@ class _CartPageState extends State<CartPage>
                 );
               }
 
-              final cartItems = cartState.cart ?? [];
+              final allCartItems = cartState.cart ?? [];
 
-              if (cartItems.isEmpty) {
+              // Initialize filtered items if empty
+              if (_filteredCartItems.isEmpty &&
+                  allCartItems.isNotEmpty &&
+                  controllerSearch.text.isEmpty) {
+                _filteredCartItems = allCartItems;
+              }
+
+              final displayItems = controllerSearch.text.isEmpty
+                  ? allCartItems
+                  : _filteredCartItems;
+
+              if (allCartItems.isEmpty) {
                 return const EmptyCartState();
               }
 
@@ -236,7 +271,8 @@ class _CartPageState extends State<CartPage>
                             isTablet,
                             isDark,
                             true,
-                            cartItems,
+                            displayItems,
+                            allCartItems,
                           ),
                         ),
                         VerticalDivider(
@@ -249,13 +285,17 @@ class _CartPageState extends State<CartPage>
                             isTablet,
                             isDark,
                             true,
-                            cartItems,
+                            allCartItems,
                           ),
                         ),
                       ],
                     );
                   }
                   return RefreshIndicator(
+                    backgroundColor: isDark
+                        ? AppColors.darkAppBar
+                        : AppColors.primary,
+                    color: AppColors.white,
                     onRefresh: () async {
                       context.read<CartBloc>().add(
                         CartLoading(),
@@ -268,10 +308,16 @@ class _CartPageState extends State<CartPage>
                             isTablet,
                             isDark,
                             false,
-                            cartItems,
+                            displayItems,
+                            allCartItems,
                           ),
                         ),
-                        _buildBottomSection(isTablet, isDark, false, cartItems),
+                        _buildBottomSection(
+                          isTablet,
+                          isDark,
+                          false,
+                          allCartItems,
+                        ),
                       ],
                     ),
                   );
@@ -288,16 +334,36 @@ class _CartPageState extends State<CartPage>
     bool isTablet,
     bool isDark,
     bool isLandscape,
-    List cartItems,
+    List displayItems,
+    List allCartItems,
   ) {
-    if (cartItems.isEmpty) {
-      return const EmptyCartState();
+    if (displayItems.isEmpty && controllerSearch.text.isNotEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off_rounded,
+              size: 64.sp,
+              color: isDark ? Colors.white38 : Colors.grey[400],
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              context.translate('no_results_found'),
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: isDark ? Colors.white70 : Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      );
     }
 
     return ListView.separated(
       key: const PageStorageKey('cart_list'),
       physics: const BouncingScrollPhysics(),
-      itemCount: cartItems.length + 1,
+      itemCount: displayItems.length + 1,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       separatorBuilder: (context, index) {
         if (index == 0) return const SizedBox.shrink();
@@ -308,7 +374,9 @@ class _CartPageState extends State<CartPage>
           return Padding(
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: Text(
-              '${cartItems.length} ${context.translate('itemsInCart')}',
+              controllerSearch.text.isEmpty
+                  ? '${allCartItems.length} ${context.translate('itemsInCart')}'
+                  : '${displayItems.length} Elementlar topildi',
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w700,
@@ -319,22 +387,21 @@ class _CartPageState extends State<CartPage>
         }
 
         final actualIndex = index - 1;
-        if (actualIndex < 0 || actualIndex >= cartItems.length) {
+        if (actualIndex < 0 || actualIndex >= displayItems.length) {
           return const SizedBox.shrink();
         }
 
-        final item = cartItems[actualIndex];
+        final item = displayItems[actualIndex];
         if (item == null) {
           return const SizedBox.shrink();
         }
 
         return _buildCartItem(
           key: ValueKey('cart_item_${item.id ?? actualIndex}'),
-          index: actualIndex,
+          item: item,
           isLandscape: isLandscape,
           isDark: isDark,
           isTablet: isTablet,
-          cartItems: cartItems,
         );
       },
     );
@@ -342,17 +409,11 @@ class _CartPageState extends State<CartPage>
 
   Widget _buildCartItem({
     Key? key,
-    required int index,
+    required dynamic item,
     required bool isLandscape,
     required bool isDark,
     required bool isTablet,
-    required List cartItems,
   }) {
-    if (index < 0 || index >= cartItems.length) {
-      return const SizedBox.shrink();
-    }
-
-    final item = cartItems[index];
     if (item == null) {
       return const SizedBox.shrink();
     }
@@ -362,105 +423,190 @@ class _CartPageState extends State<CartPage>
     final int itemQuantity = item.quantity ?? 1;
     final int itemId = item.id ?? 0;
 
-    return Container(
-      key: key,
-      height: isLandscape ? 72.h : 82.h,
-      margin: EdgeInsets.symmetric(vertical: 4.h),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkAppBar : Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(12.r),
-            ),
-            child: SizedBox(
-              width: (isTablet ? 60.0 : 85.0).w,
-              height: double.infinity,
-              child: (imageUrl != null && imageUrl.isNotEmpty)
-                  ? Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          _buildPlaceholderIcon(isDark),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.w,
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state.status == Status.loading) {
+          return LoadingState(
+            isDark: isDark,
+          );
+        }
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(10.r),
+          onLongPress: () {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              builder: (BuildContext modalContext) => Container(
+                height: 200.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkAppBar : Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(20.w),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Mahsulotni o'chirmoqchimisiz ?",
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white : AppColors.textColor,
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.borderColor,
+                                ),
+                                borderRadius: BorderRadius.circular(30.r)
+                              ),
+                              child: TextButtonApp(
+                                onPressed: () {
+                                  Navigator.pop(modalContext);
+                                },
+                                text: context.translate('cancel'),
+                                textColor: isDark ? AppColors.white : AppColors.textColor,
+                                buttonColor: isDark ? AppColors.darkAppBar : AppColors.white,
+                              ),
+                            ),
                           ),
-                        );
-                      },
-                    )
-                  : _buildPlaceholderIcon(isDark),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    product?.name ?? 'Unknown',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: isTablet ? 12.sp : 14.sp,
-                      color: isDark ? Colors.white : AppColors.textColor,
-                    ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: TextButtonApp(
+                              onPressed: () {
+                                Navigator.pop(modalContext);
+                                context.read<CartBloc>().add(
+                                  DeleteCartItem(itemId: itemId),
+                                );
+                              },
+                              text: context.translate('delete'),
+                              textColor: AppColors.white,
+                              buttonColor: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "${(item.price ?? 0.0).toStringAsFixed(0)} SO'M",
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+                ),
               ),
+            );
+          },
+          child: Container(
+            key: key,
+            height: isLandscape ? 72.h : 82.h,
+            margin: EdgeInsets.symmetric(vertical: 4.h),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkAppBar : Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.horizontal(
+                    left: Radius.circular(12.r),
+                  ),
+                  child: SizedBox(
+                    width: (isTablet ? 60.0 : 85.0).w,
+                    height: double.infinity,
+                    child: (imageUrl != null && imageUrl.isNotEmpty)
+                        ? Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                _buildPlaceholderIcon(isDark),
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.w,
+                                ),
+                              );
+                            },
+                          )
+                        : _buildPlaceholderIcon(isDark),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          product?.name ?? 'Unknown',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: isTablet ? 12.sp : 14.sp,
+                            color: isDark ? Colors.white : AppColors.textColor,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          "${(item.price ?? 0.0).toStringAsFixed(0)} SO'M",
+                          style: const TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: CounterRow(
+                      count: itemQuantity,
+                      onIncrement: () {
+                        if (itemId > 0) {
+                          context.read<CartBloc>().add(
+                            CartUpdate(
+                              itemId: itemId,
+                              quantity: itemQuantity + 1,
+                            ),
+                          );
+                        }
+                      },
+                      onDecrement: () {
+                        if (itemQuantity > 1 && itemId > 0) {
+                          context.read<CartBloc>().add(
+                            CartUpdate(
+                              itemId: itemId,
+                              quantity: itemQuantity - 1,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 8.w),
-          //   child: CounterRow(
-          //     count: itemQuantity,
-          //     onIncrement: () {
-          //       if (itemId > 0) {
-          //         context.read<CartBloc>().add(
-          //           CartUpdate(
-          //             itemId: itemId,
-          //             quantity: itemQuantity + 1,
-          //           ),
-          //         );
-          //       }
-          //     },
-          //     onDecrement: () {
-          //       if (itemQuantity > 1 && itemId > 0) {
-          //         context.read<CartBloc>().add(
-          //           CartUpdate(
-          //             itemId: itemId,
-          //             quantity: itemQuantity - 1,
-          //           ),
-          //         );
-          //       }
-          //     },
-          //   ),
-          // ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -508,10 +654,6 @@ class _CartPageState extends State<CartPage>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildCouponSection(isDark, isTablet),
-              SizedBox(height: 12.h),
-              _buildTipButton(isDark, isTablet),
-              SizedBox(height: 12.h),
               _buildPricingSection(isDark, isTablet, isLandscape, cartItems),
               SizedBox(height: 16.h),
               SizedBox(
@@ -610,185 +752,6 @@ class _CartPageState extends State<CartPage>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildCouponSection(bool isDark, bool isTablet) {
-    if (isTablet) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: controllerPromo,
-            decoration: InputDecoration(
-              hintText: context.translate('enterCouponCode'),
-              filled: true,
-              fillColor: isDark ? Colors.white10 : Colors.grey[100],
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16.w,
-                vertical: 12.h,
-              ),
-            ),
-          ),
-          SizedBox(height: 10.h),
-          SizedBox(
-            width: double.infinity,
-            child: TextButtonApp(
-              textColor: AppColors.white,
-              onPressed: () {
-                if (mounted) setState(() => isCouponApplied = true);
-              },
-              text: context.translate('applyCoupon'),
-              buttonColor: AppColors.primary,
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: controllerPromo,
-              decoration: InputDecoration(
-                hintText: context.translate('enterCouponCode'),
-                filled: true,
-                fillColor: isDark ? Colors.white10 : Colors.grey[100],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                  vertical: 12.h,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          TextButtonApp(
-            textColor: AppColors.white,
-            width: 100,
-            onPressed: () {
-              if (mounted) setState(() => isCouponApplied = true);
-            },
-            text: context.translate('applyCoupon'),
-            buttonColor: AppColors.primary,
-          ),
-        ],
-      );
-    }
-  }
-
-  Widget _buildTipButton(bool isDark, bool isTablet) {
-    return RepaintBoundary(
-      child: AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, _) {
-          final color = Color.lerp(
-            AppColors.primary,
-            Colors.orange,
-            _animationController.value,
-          )!;
-          return InkWell(
-            onTap: () => _showTipBottomSheet(context, isTablet),
-            borderRadius: BorderRadius.circular(12.r),
-            child: Container(
-              height: 48.h,
-              decoration: BoxDecoration(
-                border: Border.all(color: color.withOpacity(0.6), width: 1.5),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.volunteer_activism, color: color),
-                  SizedBox(width: 10.w),
-                  Text(
-                    context.translate('tipWaiter'),
-                    style: TextStyle(color: color, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _showTipBottomSheet(BuildContext context, bool isTablet) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: isDark ? AppColors.darkAppBar : Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
-      ),
-      builder: (context) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          24.w,
-          16.h,
-          24.w,
-          MediaQuery.of(context).viewInsets.bottom + 24.h,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            SizedBox(height: 24.h),
-            DropdownButtonFormField<String>(
-              dropdownColor: isDark ? AppColors.darkAppBar : Colors.white,
-              value: selectedTable,
-              decoration: InputDecoration(
-                labelText: context.translate('selectTable'),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-              items: tableList
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-              onChanged: (val) {
-                if (mounted && val != null) {
-                  setState(() => selectedTable = val);
-                }
-              },
-            ),
-            SizedBox(height: 16.h),
-            TextAndTextField(
-              controller: tipController,
-              text: context.translate('Pricing'),
-              hintText: 'SO\'M 10.00',
-            ),
-            SizedBox(height: 24.h),
-            SizedBox(
-              width: double.infinity,
-              child: TextButtonApp(
-                onPressed: () {
-                  if (mounted) setState(() {});
-                  Navigator.pop(context);
-                },
-                text: context.translate('applyCoupon'),
-                buttonColor: AppColors.primary,
-                textColor: AppColors.white,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

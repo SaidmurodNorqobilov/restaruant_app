@@ -16,8 +16,8 @@ class CartModel {
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
       id: json['id'] ?? 0,
-      orderId: json['order_id'] ?? 0,
-      product: CartProduct.fromJson(json['product_id'] ?? {}),
+      orderId: json['basket'] ?? 0,
+      product: CartProduct.fromJson(json['product'] ?? {}),
       quantity: json['quantity'] ?? 0,
       price: double.tryParse(json['price']?.toString() ?? '0') ?? 0.0,
     );
@@ -38,7 +38,7 @@ class CartProduct {
   factory CartProduct.fromJson(Map<String, dynamic> json) {
     return CartProduct(
       id: json['id'] ?? 0,
-      name: json['name'] ?? 'No Name',
+      name: json['name'] ?? 'Nomsiz mahsulot',
       image: json['image'],
     );
   }

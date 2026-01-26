@@ -21,7 +21,8 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     emit(state.copyWith(
       lat: event.lat,
       lng: event.lng,
-      address: event.address,
+      // address: event.address,
+      orderId: event.orderId,
     ));
   }
 
@@ -32,7 +33,8 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
     emit(state.copyWith(status: Status.loading));
 
     final result = await _repository.addLocation(
-      address: state.address,
+      orderId: state.orderId,
+      // address: state.address,
       lat: state.lat,
       lng: state.lng,
     );

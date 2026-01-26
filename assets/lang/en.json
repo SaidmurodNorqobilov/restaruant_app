@@ -21,6 +21,7 @@
   "exit" : "Exit",
   "enter" : "Enter",
   "cancel" : "Cancel",
+  "delete" : "Delete",
   "exits" : "Are you sure you want to log out?",
   "language" : "Language",
 

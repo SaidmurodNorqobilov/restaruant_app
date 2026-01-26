@@ -17,9 +17,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$LocationState {
+  int get orderId => throw _privateConstructorUsedError;
   double get lat => throw _privateConstructorUsedError;
-  double get lng => throw _privateConstructorUsedError;
-  String get address => throw _privateConstructorUsedError;
+  double get lng =>
+      throw _privateConstructorUsedError; // required String address,
   Status get status => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
@@ -38,9 +39,9 @@ abstract class $LocationStateCopyWith<$Res> {
   ) = _$LocationStateCopyWithImpl<$Res, LocationState>;
   @useResult
   $Res call({
+    int orderId,
     double lat,
     double lng,
-    String address,
     Status status,
     String? errorMessage,
   });
@@ -61,14 +62,18 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? orderId = null,
     Object? lat = null,
     Object? lng = null,
-    Object? address = null,
     Object? status = null,
     Object? errorMessage = freezed,
   }) {
     return _then(
       _value.copyWith(
+            orderId: null == orderId
+                ? _value.orderId
+                : orderId // ignore: cast_nullable_to_non_nullable
+                      as int,
             lat: null == lat
                 ? _value.lat
                 : lat // ignore: cast_nullable_to_non_nullable
@@ -77,10 +82,6 @@ class _$LocationStateCopyWithImpl<$Res, $Val extends LocationState>
                 ? _value.lng
                 : lng // ignore: cast_nullable_to_non_nullable
                       as double,
-            address: null == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String,
             status: null == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
@@ -105,9 +106,9 @@ abstract class _$$LocationStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
+    int orderId,
     double lat,
     double lng,
-    String address,
     Status status,
     String? errorMessage,
   });
@@ -127,14 +128,18 @@ class __$$LocationStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? orderId = null,
     Object? lat = null,
     Object? lng = null,
-    Object? address = null,
     Object? status = null,
     Object? errorMessage = freezed,
   }) {
     return _then(
       _$LocationStateImpl(
+        orderId: null == orderId
+            ? _value.orderId
+            : orderId // ignore: cast_nullable_to_non_nullable
+                  as int,
         lat: null == lat
             ? _value.lat
             : lat // ignore: cast_nullable_to_non_nullable
@@ -143,10 +148,6 @@ class __$$LocationStateImplCopyWithImpl<$Res>
             ? _value.lng
             : lng // ignore: cast_nullable_to_non_nullable
                   as double,
-        address: null == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String,
         status: null == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
@@ -164,19 +165,20 @@ class __$$LocationStateImplCopyWithImpl<$Res>
 
 class _$LocationStateImpl implements _LocationState {
   const _$LocationStateImpl({
+    required this.orderId,
     required this.lat,
     required this.lng,
-    required this.address,
     required this.status,
     this.errorMessage,
   });
 
   @override
+  final int orderId;
+  @override
   final double lat;
   @override
   final double lng;
-  @override
-  final String address;
+  // required String address,
   @override
   final Status status;
   @override
@@ -184,7 +186,7 @@ class _$LocationStateImpl implements _LocationState {
 
   @override
   String toString() {
-    return 'LocationState(lat: $lat, lng: $lng, address: $address, status: $status, errorMessage: $errorMessage)';
+    return 'LocationState(orderId: $orderId, lat: $lat, lng: $lng, status: $status, errorMessage: $errorMessage)';
   }
 
   @override
@@ -192,9 +194,9 @@ class _$LocationStateImpl implements _LocationState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$LocationStateImpl &&
+            (identical(other.orderId, orderId) || other.orderId == orderId) &&
             (identical(other.lat, lat) || other.lat == lat) &&
             (identical(other.lng, lng) || other.lng == lng) &&
-            (identical(other.address, address) || other.address == address) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
@@ -202,7 +204,7 @@ class _$LocationStateImpl implements _LocationState {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, lat, lng, address, status, errorMessage);
+      Object.hash(runtimeType, orderId, lat, lng, status, errorMessage);
 
   /// Create a copy of LocationState
   /// with the given fields replaced by the non-null parameter values.
@@ -215,19 +217,19 @@ class _$LocationStateImpl implements _LocationState {
 
 abstract class _LocationState implements LocationState {
   const factory _LocationState({
+    required final int orderId,
     required final double lat,
     required final double lng,
-    required final String address,
     required final Status status,
     final String? errorMessage,
   }) = _$LocationStateImpl;
 
   @override
+  int get orderId;
+  @override
   double get lat;
   @override
-  double get lng;
-  @override
-  String get address;
+  double get lng; // required String address,
   @override
   Status get status;
   @override

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/status.dart';
+import 'package:restaurantapp/features/common/widgets/common_state_widgets.dart';
 import 'package:restaurantapp/features/home/managers/categoriesBloc/categories_state.dart';
 import 'package:restaurantapp/features/home/widgets/recipe_widgets.dart';
 import '../../../core/client.dart';
@@ -15,6 +16,7 @@ import '../managers/categoriesBloc/categories_bloc.dart';
 
 class CategoriesPage extends StatefulWidget {
   final int categoryId;
+
   const CategoriesPage({super.key, required this.categoryId});
 
   @override
@@ -59,140 +61,150 @@ class _CategoriesPageState extends State<CategoriesPage> {
         body: BlocBuilder<CategoriesBLoc, CategoriesState>(
           builder: (context, state) {
             if (state.status == Status.loading) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: isTablet ? 100.w : 80.w,
-                      height: isTablet ? 100.w : 80.w,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(21)
-,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          SizedBox(
-                            width: isTablet ? 75.w : 60.w,
-                            height: isTablet ? 75.w : 60.w,
-                            child: CircularProgressIndicator(
-                              strokeWidth: isTablet ? 4 : 3,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.primary,
-                              ),
-                            ),
-                          ),
-                          Icon(
-                            Icons.restaurant_menu,
-                            size: isTablet ? 35.sp : 28.sp,
-                            color: AppColors.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: isTablet ? 30.h : 24.h),
-                    Text(
-                      'Mahsulotlar yuklanmoqda...',
-                      style: TextStyle(
-                        fontSize: isTablet ? 18.sp : 16.sp,
-                        fontWeight: FontWeight.w500,
-                        color: isDark
-                            ? AppColors.white.withAlpha(179)
-
-                            : AppColors.black.withOpacity(0.6),
-                      ),
-                    ),
-                  ],
-                ),
+              return LoadingState(
+                isDark: isDark,
+                isTablet: isTablet,
               );
+
+
+              // return Center(
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Container(
+              //         width: isTablet ? 100.w : 80.w,
+              //         height: isTablet ? 100.w : 80.w,
+              //         decoration: BoxDecoration(
+              //           color: AppColors.primary.withAlpha(21),
+              //           shape: BoxShape.circle,
+              //         ),
+              //         child: Stack(
+              //           alignment: Alignment.center,
+              //           children: [
+              //             SizedBox(
+              //               width: isTablet ? 75.w : 60.w,
+              //               height: isTablet ? 75.w : 60.w,
+              //               child: CircularProgressIndicator(
+              //                 strokeWidth: isTablet ? 4 : 3,
+              //                 valueColor: AlwaysStoppedAnimation<Color>(
+              //                   AppColors.primary,
+              //                 ),
+              //               ),
+              //             ),
+              //             Icon(
+              //               Icons.restaurant_menu,
+              //               size: isTablet ? 35.sp : 28.sp,
+              //               color: AppColors.primary,
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //       SizedBox(height: isTablet ? 30.h : 24.h),
+              //       Text(
+              //         'Mahsulotlar yuklanmoqda...',
+              //         style: TextStyle(
+              //           fontSize: isTablet ? 18.sp : 16.sp,
+              //           fontWeight: FontWeight.w500,
+              //           color: isDark
+              //               ? AppColors.white.withAlpha(179)
+              //               : AppColors.black.withOpacity(0.6),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // );
             }
 
             if (state.status == Status.error) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(isTablet ? 40.w : 32.w),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: isTablet ? 120.w : 100.w,
-                        height: isTablet ? 120.w : 100.w,
-                        decoration: BoxDecoration(
-                          color: AppColors.red.withAlpha(21)
-,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.error_outline_rounded,
-                          size: isTablet ? 60.sp : 50.sp,
-                          color: AppColors.red,
-                        ),
-                      ),
-                      SizedBox(height: isTablet ? 30.h : 24.h),
-                      Text(
-                        'Xatolik yuz berdi',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: isTablet ? 24.sp : 20.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.white : AppColors.black,
-                        ),
-                      ),
-                      SizedBox(height: isTablet ? 16.h : 12.h),
-                      Text(
-                        'Mahsulotlarni yuklashda muammo yuz berdi.\nKeyinroq qaytadan urinib ko\'ring.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: isTablet ? 16.sp : 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: isDark
-                              ? AppColors.white.withAlpha(179)
-
-                              : AppColors.black.withOpacity(0.6),
-                          height: 1.5,
-                        ),
-                      ),
-                      SizedBox(height: isTablet ? 40.h : 32.h),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            _isImagesPreCached = false;
-                          });
-                          context.read<CategoriesBLoc>().add(
-                            CategoryGetId(widget.categoryId),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: isTablet ? 40.w : 32.w,
-                            vertical: isTablet ? 18.h : 16.h,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          elevation: 0,
-                        ),
-                        icon: Icon(
-                          Icons.refresh_rounded,
-                          size: isTablet ? 24.sp : 20.sp,
-                          color: AppColors.white,
-                        ),
-                        label: Text(
-                          'Qayta urinish',
-                          style: TextStyle(
-                            fontSize: isTablet ? 18.sp : 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              return ErrorState(
+                isDark: isDark,
+                onRetry: () {
+                  setState(() {});
+                },
               );
+              //               return Center(
+              //                 child: Padding(
+              //                   padding: EdgeInsets.all(isTablet ? 40.w : 32.w),
+              //                   child: Column(
+              //                     mainAxisAlignment: MainAxisAlignment.center,
+              //                     children: [
+              //                       Container(
+              //                         width: isTablet ? 120.w : 100.w,
+              //                         height: isTablet ? 120.w : 100.w,
+              //                         decoration: BoxDecoration(
+              //                           color: AppColors.red.withAlpha(21)
+              // ,
+              //                           shape: BoxShape.circle,
+              //                         ),
+              //                         child: Icon(
+              //                           Icons.error_outline_rounded,
+              //                           size: isTablet ? 60.sp : 50.sp,
+              //                           color: AppColors.red,
+              //                         ),
+              //                       ),
+              //                       SizedBox(height: isTablet ? 30.h : 24.h),
+              //                       Text(
+              //                         'Xatolik yuz berdi',
+              //                         textAlign: TextAlign.center,
+              //                         style: TextStyle(
+              //                           fontSize: isTablet ? 24.sp : 20.sp,
+              //                           fontWeight: FontWeight.w700,
+              //                           color: isDark ? AppColors.white : AppColors.black,
+              //                         ),
+              //                       ),
+              //                       SizedBox(height: isTablet ? 16.h : 12.h),
+              //                       Text(
+              //                         'Mahsulotlarni yuklashda muammo yuz berdi.\nKeyinroq qaytadan urinib ko\'ring.',
+              //                         textAlign: TextAlign.center,
+              //                         style: TextStyle(
+              //                           fontSize: isTablet ? 16.sp : 14.sp,
+              //                           fontWeight: FontWeight.w400,
+              //                           color: isDark
+              //                               ? AppColors.white.withAlpha(179)
+              //
+              //                               : AppColors.black.withOpacity(0.6),
+              //                           height: 1.5,
+              //                         ),
+              //                       ),
+              //                       SizedBox(height: isTablet ? 40.h : 32.h),
+              //                       ElevatedButton.icon(
+              //                         onPressed: () {
+              //                           setState(() {
+              //                             _isImagesPreCached = false;
+              //                           });
+              //                           context.read<CategoriesBLoc>().add(
+              //                             CategoryGetId(widget.categoryId),
+              //                           );
+              //                         },
+              //                         style: ElevatedButton.styleFrom(
+              //                           backgroundColor: AppColors.primary,
+              //                           padding: EdgeInsets.symmetric(
+              //                             horizontal: isTablet ? 40.w : 32.w,
+              //                             vertical: isTablet ? 18.h : 16.h,
+              //                           ),
+              //                           shape: RoundedRectangleBorder(
+              //                             borderRadius: BorderRadius.circular(12.r),
+              //                           ),
+              //                           elevation: 0,
+              //                         ),
+              //                         icon: Icon(
+              //                           Icons.refresh_rounded,
+              //                           size: isTablet ? 24.sp : 20.sp,
+              //                           color: AppColors.white,
+              //                         ),
+              //                         label: Text(
+              //                           'Qayta urinish',
+              //                           style: TextStyle(
+              //                             fontSize: isTablet ? 18.sp : 16.sp,
+              //                             fontWeight: FontWeight.w600,
+              //                             color: AppColors.white,
+              //                           ),
+              //                         ),
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 ),
+              //               );
             }
 
             if (state.products.isEmpty) {
@@ -210,8 +222,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              AppColors.primary.withAlpha(21)
-,
+                              AppColors.primary.withAlpha(21),
                               AppColors.primary.withOpacity(0.05),
                             ],
                           ),
@@ -242,7 +253,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           fontWeight: FontWeight.w400,
                           color: isDark
                               ? AppColors.white.withAlpha(179)
-
                               : AppColors.black.withOpacity(0.6),
                           height: 1.5,
                         ),

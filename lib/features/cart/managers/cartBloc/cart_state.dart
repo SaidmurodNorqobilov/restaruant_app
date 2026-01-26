@@ -12,6 +12,7 @@ class CartState with _$CartState {
     String? errorMessage,
     List<CartModel>? cart,
     Map<String, dynamic>? updatedCartResponse,
+    int? itemId,
     double? totalPrice,
   }) = _CartState;
 
@@ -20,6 +21,7 @@ class CartState with _$CartState {
     errorMessage: null,
     cart: [],
     updatedCartResponse: null,
+    itemId: 0,
     totalPrice: 0.0,
   );
 }

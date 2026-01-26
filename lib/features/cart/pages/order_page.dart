@@ -149,6 +149,10 @@ class _OrderPageState extends State<OrderPage> {
                 );
               }
               return RefreshIndicator(
+                backgroundColor: isDark
+                    ? AppColors.darkAppBar
+                    : AppColors.primary,
+                color: AppColors.white,
                 onRefresh: () async {
                   context.read<OrdersBloc>().add(OrdersLoading());
                 },
