@@ -31,7 +31,9 @@ class ProfileRepository {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final user = UserProfileModel.fromJson(response.data as Map<String, dynamic>);
+        final user = UserProfileModel.fromJson(
+          response.data as Map<String, dynamic>,
+        );
         return Result.ok(user);
       } else {
         final errorData = response.data;

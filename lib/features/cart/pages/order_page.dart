@@ -128,7 +128,11 @@ class _OrderPageState extends State<OrderPage> {
                   context.read<OrdersBloc>().add(OrdersLoading());
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  padding: EdgeInsets.only(
+                    left: 16.w,
+                    right: 16.w,
+                    bottom: MediaQuery.of(context).padding.bottom + 17.h,
+                  ),
                   child: ListView.separated(
                     physics: const AlwaysScrollableScrollPhysics(
                       parent: BouncingScrollPhysics(),

@@ -87,6 +87,7 @@ class UserService {
     userDataChanged.value++;
   }
 
+
   static Future<String> getFullName() async {
     final userData = await getUserData();
     final firstName = userData['firstName'] ?? '';

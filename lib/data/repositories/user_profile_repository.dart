@@ -9,11 +9,13 @@ class UserProfileRepository {
   UserProfileRepository({required ApiClient client}) : _client = client;
 
   Future<Result<UserProfileModel>> getUserProfile() async {
-    final result = await _client.get<Map<String, dynamic>>('/accounts/get_my_profile/');
+    final result = await _client.get<Map<String, dynamic>>(
+      '/accounts/get_my_profile/',
+    );
 
     return result.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) => Result.error(error),
+      (data) {
         try {
           return Result.ok(UserProfileModel.fromJson(data));
         } catch (e) {
@@ -23,7 +25,9 @@ class UserProfileRepository {
     );
   }
 
-  Future<Result<UserProfileModel>> patchUserProfile(UserProfilePostModel profile) async {
+  Future<Result<UserProfileModel>> patchUserProfile(
+    UserProfilePostModel profile,
+  ) async {
     final Map<String, dynamic> map = profile.toJson();
 
     if (profile.imageFile != null) {
@@ -47,8 +51,8 @@ class UserProfileRepository {
     );
 
     return result.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) => Result.error(error),
+      (data) {
         try {
           print('Received from server: $data');
           return Result.ok(UserProfileModel.fromJson(data));

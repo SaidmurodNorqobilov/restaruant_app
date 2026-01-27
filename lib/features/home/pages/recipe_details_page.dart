@@ -255,27 +255,27 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                                 SizedBox(height: 24.h),
                                 BlocConsumer<ProductBloc, ProductState>(
                                   listener: (context, state) {
-                                    if (state.status == Status.success) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                            "Savatga muvaffaqiyatli qo'shildi!",
-                                          ),
-                                          backgroundColor: Colors.green,
-                                        ),
-                                      );
-                                    } else if (state.status == Status.error) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text("Xatolik yuz berdi"),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      );
-                                    }
+                                    // if (state.status == Status.success) {
+                                    //   // ScaffoldMessenger.of(
+                                    //   //   context,
+                                    //   // ).showSnackBar(
+                                    //   //   const SnackBar(
+                                    //   //     content: Text(
+                                    //   //       "Savatga muvaffaqiyatli qo'shildi!",
+                                    //   //     ),
+                                    //   //     backgroundColor: Colors.green,
+                                    //   //   ),
+                                    //   // );
+                                    // } else if (state.status == Status.error) {
+                                    //   ScaffoldMessenger.of(
+                                    //     context,
+                                    //   ).showSnackBar(
+                                    //     SnackBar(
+                                    //       content: Text("Xatolik yuz berdi"),
+                                    //       backgroundColor: Colors.red,
+                                    //     ),
+                                    //   );
+                                    // }
                                   },
                                   builder: (context, state) {
                                     return TextButtonApp(
@@ -569,14 +569,22 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
               ),
             ),
             SizedBox(height: 12.h),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Continue Shopping',
-                style: TextStyle(
-                  color: isDark ? Colors.white70 : Colors.black54,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
+            Container(
+              width: double.infinity,
+              height: 50.h,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Continue Shopping',
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),

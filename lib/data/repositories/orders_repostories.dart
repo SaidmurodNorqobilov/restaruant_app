@@ -13,8 +13,8 @@ class OrderRepository {
     );
 
     return result.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) => Result.error(error),
+      (data) {
         try {
           final orders = data
               .map((x) => OrderModel.fromJson(x as Map<String, dynamic>))
@@ -34,8 +34,8 @@ class OrderRepository {
       '/products/cancel_order_for_user/$orderId/',
     );
     return result.fold(
-          (error) => Result.error(error),
-          (data) => Result.ok(data),
+      (error) => Result.error(error),
+      (data) => Result.ok(data),
     );
   }
 
@@ -44,8 +44,8 @@ class OrderRepository {
       '/products/add_order/',
     );
     return result.fold(
-          (error) => Result.error(error),
-          (data) => Result.ok(data),
+      (error) => Result.error(error),
+      (data) => Result.ok(data),
     );
   }
 }

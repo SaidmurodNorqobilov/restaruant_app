@@ -8,6 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/core/utils/status.dart';
+import 'package:restaurantapp/features/accaunt/widgets/custom_menu_item_widget.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 import '../../../core/network/user_service.dart';
@@ -17,6 +18,8 @@ import '../../auth/managers/authCubit/auth_state.dart';
 import '../../common/widgets/common_state_widgets.dart';
 import '../managers/userBloc/user_profile_bloc.dart';
 import '../managers/userBloc/user_profile_state.dart';
+import '../widgets/logout_dialog_widget.dart';
+import '../widgets/qr_cashback_dialog_widget.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -136,263 +139,6 @@ class _AccountPageState extends State<AccountPage> {
     }
   }
 
-  void _showQRCashbackDialog(
-    BuildContext context,
-    bool isDark,
-    bool isTablet,
-    dynamic user,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withAlpha(128),
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.85,
-          padding: EdgeInsets.symmetric(
-            horizontal: isTablet ? 32.w : 24.w,
-            vertical: isTablet ? 28.h : 20.h,
-          ),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.darkAppBar : AppColors.white,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(30.r),
-            ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  width: 50.w,
-                  height: 5.h,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-                SizedBox(height: isTablet ? 25.h : 20.h),
-                ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [
-                      AppColors.primary,
-                      AppColors.primary.withAlpha(179),
-                    ],
-                  ).createShader(bounds),
-                  child: Text(
-                    'Mening QR Kodim',
-                    style: TextStyle(
-                      fontSize: isTablet ? 28.sp : 24.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: isTablet ? 14.h : 10.h,
-                ),
-                Text(
-                  'Kassirga ushbu QR kodni ko\'rsating',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: isTablet ? 16.sp : 14.sp,
-                    color: isDark ? Colors.white70 : Colors.grey[600],
-                  ),
-                ),
-                SizedBox(height: isTablet ? 38.h : 30.h),
-                Container(
-                  padding: EdgeInsets.all(isTablet ? 28.w : 24.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(24.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withAlpha(51),
-                        blurRadius: 30,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(isTablet ? 22.w : 18.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: QrImageView(
-                          data: 'USER_${user.id ?? 'unknown'}',
-                          version: QrVersions.auto,
-                          size: isTablet ? 240 : 250,
-                          backgroundColor: AppColors.white,
-                          eyeStyle: QrEyeStyle(
-                            eyeShape: QrEyeShape.square,
-                            color: AppColors.primary,
-                          ),
-                          dataModuleStyle: QrDataModuleStyle(
-                            dataModuleShape: QrDataModuleShape.square,
-                            color: AppColors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: isTablet ? 28.h : 22.h),
-                      // Container(
-                      //   padding: EdgeInsets.symmetric(
-                      //     horizontal: isTablet ? 24.w : 20.w,
-                      //     vertical: isTablet ? 16.h : 12.h,
-                      //   ),
-                      //   decoration: BoxDecoration(
-                      //     color: isDark
-                      //         ? AppColors.primary.withOpacity(0.15)
-                      //         : AppColors.primary.withAlpha(21)
-                      //     borderRadius: BorderRadius.circular(12.r),
-                      //     border: Border.all(
-                      //       color: AppColors.primary.withAlpha(77)
-                      //       width: 1.5,
-                      //     ),
-                      //   ),
-                      //   child: Column(
-                      //     children: [
-                      //       Text(
-                      //         'Sizning ID raqamingiz',
-                      //         style: TextStyle(
-                      //           fontSize: isTablet ? 15.sp : 13.sp,
-                      //           color: isDark ? Colors.white70 : Colors.grey[700],
-                      //           fontWeight: FontWeight.w500,
-                      //         ),
-                      //       ),
-                      //       SizedBox(height: 6.h),
-                      //       Text(
-                      //         'USER${user.id ?? 'N/A'}',
-                      //         style: TextStyle(
-                      //           fontSize: isTablet ? 26.sp : 22.sp,
-                      //           fontWeight: FontWeight.w700,
-                      //           color: AppColors.primary,
-                      //           letterSpacing: 2,
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: isTablet ? 28.h : 22.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isTablet ? 28.w : 24.w,
-                    vertical: isTablet ? 18.h : 14.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withAlpha(21),
-                    borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(
-                      color: AppColors.primary.withAlpha(77),
-                      width: 2,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.account_balance_wallet_rounded,
-                            color: AppColors.primary,
-                            size: isTablet ? 26.sp : 22.sp,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            'Mening balansim',
-                            style: TextStyle(
-                              fontSize: isTablet ? 16.sp : 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: isDark ? Colors.white70 : Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        '0 coins',
-                        style: TextStyle(
-                          fontSize: isTablet ? 32.sp : 28.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: isTablet ? 28.h : 22.h,
-                ),
-                Text(
-                  'Kassada to\'lov qilgandan keyin\nbu QR kodni ko\'rsating',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: isTablet ? 17.sp : 15.sp,
-                    color: isDark ? Colors.white70 : Colors.grey[600],
-                    height: 1.5,
-                  ),
-                ),
-                SizedBox(height: isTablet ? 32.h : 26.h),
-                Container(
-                  padding: EdgeInsets.all(isTablet ? 18.w : 14.w),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.green.withOpacity(0.15)
-                        : Colors.green.withAlpha(21),
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: Colors.green.withAlpha(77),
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: Colors.green,
-                        size: isTablet ? 26.sp : 22.sp,
-                      ),
-                      SizedBox(width: isTablet ? 14.w : 12.w),
-                      Expanded(
-                        child: Text(
-                          'Har bir xarid uchun 5% cashback coinlar sifatida hisobingizga tushadi',
-                          style: TextStyle(
-                            fontSize: isTablet ? 15.sp : 13.sp,
-                            color: isDark ? Colors.white70 : Colors.grey[700],
-                            height: 1.4,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: isTablet ? 32.h : 26.h),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    'Yopish',
-                    style: TextStyle(
-                      fontSize: isTablet ? 17.sp : 15.sp,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -407,118 +153,10 @@ class _AccountPageState extends State<AccountPage> {
             isDark: isDark,
             isTablet: isTablet,
           );
-          // return Center(
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Container(
-          //         width: isTablet ? 100.w : 80.w,
-          //         height: isTablet ? 100.w : 80.w,
-          //         decoration: BoxDecoration(
-          //           color: AppColors.primary.withAlpha(21),
-          //           shape: BoxShape.circle,
-          //         ),
-          //         child: Stack(
-          //           alignment: Alignment.center,
-          //           children: [
-          //             SizedBox(
-          //               width: isTablet ? 75.w : 60.w,
-          //               height: isTablet ? 75.w : 60.w,
-          //               child: CircularProgressIndicator(
-          //                 strokeWidth: isTablet ? 4 : 3,
-          //                 valueColor: AlwaysStoppedAnimation<Color>(
-          //                   AppColors.primary,
-          //                 ),
-          //               ),
-          //             ),
-          //             Icon(
-          //               Icons.restaurant_menu,
-          //               size: isTablet ? 35.sp : 28.sp,
-          //               color: AppColors.primary,
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       SizedBox(height: isTablet ? 30.h : 24.h),
-          //       Text(
-          //         'Ma\'lumotlar yuklanmoqda...',
-          //         style: TextStyle(
-          //           fontSize: isTablet ? 18.sp : 16.sp,
-          //           fontWeight: FontWeight.w500,
-          //           color: isDark
-          //               ? AppColors.white.withAlpha(179)
-          //               : AppColors.black.withOpacity(0.6),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // );
         }
-
         if (state.user == null) {
-          return Scaffold(
-            body: Center(
-              child: Padding(
-                padding: EdgeInsets.all(isTablet ? 32.w : 24.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: isTablet ? 140.w : 120.w,
-                      height: isTablet ? 140.h : 120.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(21),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.person_outline_rounded,
-                        size: isTablet ? 70.sp : 60.sp,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizedBox(height: isTablet ? 38.h : 30.h),
-                    Text(
-                      'Ma\'lumot kiritilmagan',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: isTablet ? 28.sp : 24.sp,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.white : AppColors.black,
-                      ),
-                    ),
-                    SizedBox(height: isTablet ? 16.h : 12.h),
-                    Text(
-                      'Profilingizni to\'ldirish uchun tizimga kiring yoki ro\'yxatdan o\'ting',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: isTablet ? 16.sp : 14.sp,
-                        fontWeight: FontWeight.w400,
-                        color: isDark
-                            ? AppColors.white.withAlpha(179)
-                            : AppColors.black.withOpacity(0.6),
-                        height: 1.5,
-                      ),
-                    ),
-                    SizedBox(height: isTablet ? 48.h : 40.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: TextButtonApp(
-                        onPressed: () {
-                          context.push(Routes.login);
-                        },
-                        text: 'Kirish',
-                        textColor: AppColors.white,
-                        buttonColor: AppColors.primary,
-                        height: isTablet ? 58 : 50,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
+          return UserNullWidget();
         }
-
         final user = state.user!;
         final fullName = '${user.firstName} ${user.lastName}'.trim();
         final phone = user.phone;
@@ -694,8 +332,7 @@ class _AccountPageState extends State<AccountPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.edit_outlined,
                           title: context.translate('editProfile'),
                           subtitle: context.translate('personEdit'),
@@ -705,8 +342,7 @@ class _AccountPageState extends State<AccountPage> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 16.h : 12.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.receipt_long_outlined,
                           title: context.translate('orders'),
                           subtitle: context.translate('orderHistory'),
@@ -716,8 +352,7 @@ class _AccountPageState extends State<AccountPage> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 16.h : 12.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.location_on,
                           title: context.translate('location'),
                           subtitle: context.translate('inputLocation'),
@@ -727,8 +362,7 @@ class _AccountPageState extends State<AccountPage> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 16.h : 12.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.money_off_outlined,
                           title: context.translate('refund'),
                           subtitle: context.translate('cancelRefund'),
@@ -738,8 +372,7 @@ class _AccountPageState extends State<AccountPage> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 16.h : 12.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.info_outline,
                           title: context.translate('about'),
                           subtitle: context.translate('appAbout'),
@@ -749,8 +382,7 @@ class _AccountPageState extends State<AccountPage> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 16.h : 12.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.description_outlined,
                           title: context.translate('terms'),
                           subtitle: context.translate('terms'),
@@ -760,29 +392,31 @@ class _AccountPageState extends State<AccountPage> {
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 16.h : 12.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.qr_code_2,
                           title: "QR Cashback",
                           subtitle: context.translate('qrCashback'),
-                          onTap: () => _showQRCashbackDialog(
-                            context,
-                            isDark,
-                            isTablet,
-                            user,
+                          onTap: () => QRCashbackDialog.show(
+                            context: context,
+                            isDark: isDark,
+                            isTablet: isTablet,
+                            user: user,
                           ),
                           isDark: isDark,
                           color: AppColors.orange,
                           isTablet: isTablet,
                         ),
                         SizedBox(height: isTablet ? 28.h : 20.h),
-                        _buildMenuItem(
-                          context: context,
+                        CustomMenuItem(
                           icon: Icons.logout_rounded,
                           title: 'Chiqish',
                           subtitle: context.translate('exitAccount'),
-                          onTap: () =>
-                              _showLogoutDialog(context, isDark, isTablet),
+                          onTap: () => LogoutDialog.show(
+                            context: context,
+                            isDark: isDark,
+                            isTablet: isTablet,
+                            onLogout: _logout,
+                          ),
                           isDark: isDark,
                           color: AppColors.red,
                           isDestructive: true,
@@ -797,259 +431,6 @@ class _AccountPageState extends State<AccountPage> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildMenuItem({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    required bool isDark,
-    required Color color,
-    required bool isTablet,
-    bool isDestructive = false,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
-      child: Container(
-        padding: EdgeInsets.all(isTablet ? 10.w : 16.w),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkAppBar : AppColors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: isDark
-                ? AppColors.borderColor.withAlpha(21)
-                : AppColors.borderColor.withAlpha(51),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: isTablet ? 26.w : 48.w,
-              height: isTablet ? 26.w : 48.w,
-              decoration: BoxDecoration(
-                color: color.withAlpha(21),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: isTablet ? 18.sp : 24.sp,
-              ),
-            ),
-            SizedBox(width: isTablet ? 20.w : 16.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: isTablet ? 14.sp : 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: isDestructive
-                          ? AppColors.red
-                          : (isDark ? AppColors.white : AppColors.textColor),
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: isTablet ? 12.sp : 13.sp,
-                      fontWeight: FontWeight.w400,
-                      color: isDark ? Colors.white60 : Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: isTablet ? 15.sp : 18.sp,
-              color: isDark ? Colors.white38 : Colors.grey[400],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showLogoutDialog(BuildContext context, bool isDark, bool isTablet) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withAlpha(128),
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: isTablet ? 32.w : 24.w,
-              vertical: isTablet ? 28.h : 20.h,
-            ),
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.darkAppBar : AppColors.white,
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(30.r),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 50.w,
-                  height: 5.h,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-                SizedBox(height: isTablet ? 35.h : 30.h),
-                Container(
-                  width: isTablet ? 95.w : 80.w,
-                  height: isTablet ? 95.h : 80.h,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.primary.withAlpha(77),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withAlpha(51),
-                        blurRadius: 20,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.person_outline_rounded,
-                    size: isTablet ? 60.sp : 50.sp,
-                    color: AppColors.primary,
-                  ),
-                ),
-                SizedBox(height: isTablet ? 35.h : 30.h),
-                ShaderMask(
-                  shaderCallback: (bounds) => LinearGradient(
-                    colors: [
-                      AppColors.primary,
-                      AppColors.primary.withAlpha(179),
-                    ],
-                  ).createShader(bounds),
-                  child: Text(
-                    context.translate('exits'),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: isTablet ? 28.sp : 24.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(height: isTablet ? 50.h : 45.h),
-                Container(
-                  width: double.infinity,
-                  height: isTablet ? 62.h : 55.h,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primary.withOpacity(0.8),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(15.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withAlpha(77),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15.r),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _logout();
-                      },
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.login_rounded,
-                              color: AppColors.white,
-                              size: isTablet ? 26.sp : 22.sp,
-                            ),
-                            SizedBox(width: isTablet ? 12.w : 10.w),
-                            Text(
-                              context.translate('exit'),
-                              style: TextStyle(
-                                fontSize: isTablet ? 18.sp : 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: isTablet ? 16.h : 14.h),
-                Container(
-                  width: double.infinity,
-                  height: isTablet ? 62.h : 55.h,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(15.r),
-                    border: Border.all(
-                      color: AppColors.primary.withAlpha(77),
-                      width: 1.5,
-                    ),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(15.r),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Center(
-                        child: Text(
-                          context.translate('cancel'),
-                          style: TextStyle(
-                            fontSize: isTablet ? 18.sp : 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

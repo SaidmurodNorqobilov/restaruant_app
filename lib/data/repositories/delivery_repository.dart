@@ -1,3 +1,1 @@
-class DeliveryRepository{
-
-}
+class DeliveryRepository {}

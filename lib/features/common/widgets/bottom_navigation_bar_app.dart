@@ -21,7 +21,6 @@ class BottomNavigationBarApp extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final currentIndex = navigationShell.currentIndex;
     final isTablet = MediaQuery.of(context).size.width > 600;
-
     return ClipRRect(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(25.r),
@@ -38,9 +37,7 @@ class BottomNavigationBarApp extends StatelessWidget {
               top: BorderSide(
                 color: isDark
                     ? Colors.white.withAlpha(21)
-
-                    : Colors.black.withAlpha(21)
-,
+                    : Colors.black.withAlpha(21),
                 width: 0.5,
               ),
             ),

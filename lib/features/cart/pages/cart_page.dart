@@ -10,15 +10,19 @@ import 'package:restaurantapp/core/utils/status.dart';
 import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_bloc.dart';
 import 'package:restaurantapp/features/cart/managers/cartBloc/cart_bloc.dart';
 import 'package:restaurantapp/features/cart/managers/cartBloc/cart_state.dart';
+import 'package:restaurantapp/features/cart/widgets/cart_appbar_widget.dart';
+import 'package:restaurantapp/features/cart/widgets/cart_item_widget.dart';
 import 'package:restaurantapp/features/common/widgets/common_state_widgets.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
 import 'package:restaurantapp/features/menu/pages/menu_page.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 import '../../../core/utils/icons.dart';
+import '../../../data/repositories/cart_repository.dart';
 import '../../accaunt/managers/userBloc/user_profile_state.dart';
 import '../../home/widgets/container_row.dart';
 import '../widgets/auth_profile_empty_widget.dart';
 import '../widgets/empty_cart_widgets.dart';
+import '../widgets/placeholer_icon.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -113,124 +117,10 @@ class _CartPageState extends State<CartPage>
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
-        titleSpacing: 0,
-        title: Stack(
-          alignment: Alignment.centerLeft,
-          children: [
-            AnimatedSlide(
-              offset: _isSearching ? const Offset(-1.2, 0) : Offset.zero,
-              duration: const Duration(milliseconds: 350),
-              curve: Curves.easeInOutCubic,
-              child: AnimatedOpacity(
-                opacity: _isSearching ? 0.0 : 1.0,
-                duration: const Duration(milliseconds: 200),
-                child: Text(
-                  context.translate("cart"),
-                  key: const ValueKey('TitleText'),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
-            AnimatedSlide(
-              offset: _isSearching ? Offset.zero : const Offset(1.2, 0),
-              duration: const Duration(milliseconds: 350),
-              curve: Curves.easeInOutCubic,
-              child: AnimatedOpacity(
-                opacity: _isSearching ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 250),
-                child: Container(
-                  key: const ValueKey('SearchField'),
-                  height: 40.h,
-                  margin: EdgeInsets.only(right: 15.w),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.blueGrey.shade700
-                        : AppColors.orangeSearch,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: const Icon(Icons.search, color: Colors.white),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: controllerSearch,
-                          autofocus: _isSearching,
-                          style: const TextStyle(color: Colors.white),
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                            hintText: context.translate('search'),
-                            hintStyle: TextStyle(
-                              color: AppColors.white.withAlpha(179),
-                            ),
-                            border: InputBorder.none,
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          // InkWell(
-          //   onTap: () {
-          //     context.push(Routes.menu);
-          //   },
-          //   child: Text(
-          //     "Menyu tanlash",
-          //     style: TextStyle(
-          //       fontSize: 15.sp,
-          //       fontWeight: FontWeight.w500,
-          //       color: AppColors.white,
-          //     ),
-          //   ),
-          // ),
-          InkWell(
-            borderRadius: BorderRadius.circular(100.r),
-            onTap: () {
-              if (mounted) {
-                setState(() {
-                  _isSearching = !_isSearching;
-                  if (!_isSearching) {
-                    controllerSearch.clear();
-                  }
-                });
-              }
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              child: AnimatedCrossFade(
-                duration: const Duration(milliseconds: 300),
-                firstChild: SvgPicture.asset(
-                  AppIcons.search,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                secondChild: const Icon(Icons.close, color: Colors.white),
-                crossFadeState: _isSearching
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-              ),
-            ),
-          ),
-        ],
+      appBar: AnimatedSearchAppBar(
+        isDark: isDark,
+        title: context.translate('cart'),
+        searchController: controllerSearch,
       ),
       drawer: const DrawerWidgets(),
       body: BlocBuilder<UserProfileBloc, UserProfileState>(
@@ -440,197 +330,16 @@ class _CartPageState extends State<CartPage>
           );
         }
 
-        return InkWell(
-          borderRadius: BorderRadius.circular(10.r),
-          onLongPress: () {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              builder: (BuildContext modalContext) => Container(
-                height: 200.h,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkAppBar : Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.r),
-                    topRight: Radius.circular(20.r),
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Mahsulotni o'chirmoqchimisiz ?",
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.white : AppColors.textColor,
-                        ),
-                      ),
-                      SizedBox(height: 30.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.borderColor,
-                                ),
-                                borderRadius: BorderRadius.circular(30.r),
-                              ),
-                              child: TextButtonApp(
-                                onPressed: () {
-                                  Navigator.pop(modalContext);
-                                },
-                                text: context.translate('cancel'),
-                                textColor: isDark
-                                    ? AppColors.white
-                                    : AppColors.textColor,
-                                buttonColor: isDark
-                                    ? AppColors.darkAppBar
-                                    : AppColors.white,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 12.w),
-                          Expanded(
-                            child: TextButtonApp(
-                              onPressed: () {
-                                Navigator.pop(modalContext);
-                                context.read<CartBloc>().add(
-                                  DeleteCartItem(itemId: itemId),
-                                );
-                              },
-                              text: context.translate('delete'),
-                              textColor: AppColors.white,
-                              buttonColor: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-          child: Container(
-            key: key,
-            height: isLandscape ? 72.h : 82.h,
-            margin: EdgeInsets.symmetric(vertical: 4.h),
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.darkAppBar : Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.horizontal(
-                    left: Radius.circular(12.r),
-                  ),
-                  child: SizedBox(
-                    width: (isTablet ? 60.0 : 85.0).w,
-                    height: double.infinity,
-                    child: (imageUrl != null && imageUrl.isNotEmpty)
-                        ? Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                _buildPlaceholderIcon(isDark),
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.w,
-                                ),
-                              );
-                            },
-                          )
-                        : _buildPlaceholderIcon(isDark),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          product?.name ?? 'Unknown',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: isTablet ? 12.sp : 14.sp,
-                            color: isDark ? Colors.white : AppColors.textColor,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "${(item.price ?? 0.0).toStringAsFixed(0)} SO'M",
-                          style: const TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: CounterRow(
-                      count: itemQuantity,
-                      onIncrement: () {
-                        if (itemId > 0) {
-                          context.read<CartBloc>().add(
-                            CartUpdate(
-                              itemId: itemId,
-                              quantity: itemQuantity + 1,
-                            ),
-                          );
-                        }
-                      },
-                      onDecrement: () {
-                        if (itemQuantity > 1 && itemId > 0) {
-                          context.read<CartBloc>().add(
-                            CartUpdate(
-                              itemId: itemId,
-                              quantity: itemQuantity - 1,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return CartItemWidget(
+          item: item,
+          product: product,
+          itemQuantity: itemQuantity,
+          itemId: itemId,
+          isDark: isDark,
+          isTablet: isTablet,
+          isLandscape: isLandscape,
         );
       },
-    );
-  }
-
-  Widget _buildPlaceholderIcon(bool isDark) {
-    return Container(
-      color: isDark ? Colors.white10 : Colors.grey[200],
-      child: Icon(
-        Icons.fastfood_rounded,
-        color: isDark ? Colors.white30 : Colors.grey[400],
-        size: 30.r,
-      ),
     );
   }
 

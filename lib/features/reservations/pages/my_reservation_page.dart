@@ -33,7 +33,7 @@ class _MyReservationsPageState extends State<MyReservationsPage> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isTablet = screenWidth >= 600;
     return Scaffold(
-      appBar: AppBarWidgets(title: 'Mening Bronlarim'),
+      appBar: AppBarWidgets(title: 'Mening Bronlarim',),
       body: RefreshIndicator(
         backgroundColor: isDark ? AppColors.darkAppBar : AppColors.primary,
         color: AppColors.white,

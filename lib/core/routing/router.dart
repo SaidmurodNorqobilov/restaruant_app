@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
+import 'package:restaurantapp/features/Reservations/pages/my_reservation_page.dart';
 import 'package:restaurantapp/features/Reservations/pages/reservations_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/about_page.dart';
 import 'package:restaurantapp/features/accaunt/pages/account_page.dart';
@@ -93,7 +94,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: Routes.reservations,
-              builder: (context, state) => const TemporarilyReservation(),
+              builder: (context, state) => const ReservationsPage(),
             ),
           ],
         ),
@@ -179,7 +180,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: Routes.myReservations,
-      builder: (context, state) => ReservationsPage(),
+      builder: (context, state) => const MyReservationsPage(),
     ),
     GoRoute(
       path: Routes.temporarilyReservation,

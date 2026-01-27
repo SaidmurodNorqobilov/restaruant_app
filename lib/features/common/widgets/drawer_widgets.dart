@@ -11,6 +11,7 @@ import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/features/common/manager/themeBloc/theme_bloc.dart';
 import 'package:restaurantapp/features/common/manager/themeBloc/theme_event.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../manager/langBloc/language_bloc.dart';
 import '../manager/langBloc/language_event.dart';
 import '../manager/langBloc/language_state.dart';
@@ -20,9 +21,14 @@ class DrawerWidgets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     final bool isTablet = screenWidth >= 600;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
     return BlocBuilder<LanguageBloc, LanguageState>(
       builder: (context, langState) {
         return Drawer(
@@ -35,7 +41,7 @@ class DrawerWidgets extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               Container(
-                height: isTablet ?  screenWidth -500 : screenWidth - 100,
+                height: isTablet ? screenWidth - 500 : screenWidth - 100,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -92,7 +98,18 @@ class DrawerWidgets extends StatelessWidget {
                           ],
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            // final Uri url = Uri.parse('https://pub.dev');
+                            // if (await canLaunchUrl (url)
+                            // ) {
+                            // await launchUrl(
+                            // url,
+                            // mode: LaunchMode.externalApplication,
+                            // );
+                            // } else {
+                            // throw 'Sayt ochilmadi';
+                            // }
+                          },
                           icon: Icon(
                             Icons.language,
                             color: AppColors.primary,
@@ -125,13 +142,13 @@ class DrawerWidgets extends StatelessWidget {
                 onPressed: () => context.push(Routes.promotions, extra: 1),
                 isDark: isDark,
               ),
-              _drawerItem(
-                context,
-                icon: FontAwesomeIcons.receipt,
-                text: context.translate('orders'),
-                onPressed: () => context.push(Routes.order),
-                isDark: isDark,
-              ),
+              // _drawerItem(
+              //   context,
+              //   icon: FontAwesomeIcons.receipt,
+              //   text: context.translate('orders'),
+              //   onPressed: () => context.push(Routes.order),
+              //   isDark: isDark,
+              // ),
               const Divider(),
               _drawerItem(
                 context,
@@ -249,39 +266,42 @@ class DrawerWidgets extends StatelessWidget {
                         color: isDark
                             ? Colors.black26
                             : Colors.grey.withAlpha(51)
-,
+                        ,
                         blurRadius: isTablet ? 12 : 8,
                         offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                  styleBuilder: (value) => ToggleStyle(
-                    backgroundColor: value
-                        ? const Color(0xFF1E293B)
-                        : const Color(0xFFE3F2FD),
-                  ),
-                  iconBuilder: (value) => value
-                      ? Icon(
-                          Icons.nightlight_round,
-                          color: Colors.amber,
-                          size: iconSize,
-                        )
-                      : Icon(
-                          Icons.wb_sunny,
-                          color: Colors.orange,
-                          size: iconSize,
-                        ),
-                  textBuilder: (value) => FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      value ? 'Dark' : 'Light',
-                      style: TextStyle(
-                        color: value ? Colors.white : Colors.black87,
-                        fontSize: textSize,
-                        fontWeight: FontWeight.w700,
+                  styleBuilder: (value) =>
+                      ToggleStyle(
+                        backgroundColor: value
+                            ? const Color(0xFF1E293B)
+                            : const Color(0xFFE3F2FD),
                       ),
-                    ),
+                  iconBuilder: (value) =>
+                  value
+                      ? Icon(
+                    Icons.nightlight_round,
+                    color: Colors.amber,
+                    size: iconSize,
+                  )
+                      : Icon(
+                    Icons.wb_sunny,
+                    color: Colors.orange,
+                    size: iconSize,
                   ),
+                  textBuilder: (value) =>
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          value ? 'Dark' : 'Light',
+                          style: TextStyle(
+                            color: value ? Colors.white : Colors.black87,
+                            fontSize: textSize,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
                   onChanged: (value) {
                     context.read<ThemeBloc>().add(ThemeToggled());
                   },
@@ -331,14 +351,16 @@ class DrawerWidgets extends StatelessWidget {
     );
   }
 
-  Widget _drawerItem(
-    BuildContext context, {
+  Widget _drawerItem(BuildContext context, {
     required IconData icon,
     required String text,
     required VoidCallback onPressed,
     required bool isDark,
   }) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     final bool isTablet = screenWidth >= 600;
     return ListTile(
       leading: Icon(icon, color: AppColors.primary),

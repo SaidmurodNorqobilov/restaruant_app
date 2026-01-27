@@ -13,11 +13,14 @@ class ReservationRepository {
     );
 
     return response.fold(
-          (error) => Result.error(error),
-          (data) {
+      (error) => Result.error(error),
+      (data) {
         try {
           final reservations = data
-              .map((json) => ReservationModel.fromJson(json as Map<String, dynamic>))
+              .map(
+                (json) =>
+                    ReservationModel.fromJson(json as Map<String, dynamic>),
+              )
               .toList();
           return Result.ok(reservations);
         } catch (e) {
@@ -76,7 +79,9 @@ class ReservationRepository {
     return response;
   }
 
-  Future<Result<Map<String, dynamic>>> cancelReservation({required int id}) async {
+  Future<Result<Map<String, dynamic>>> cancelReservation({
+    required int id,
+  }) async {
     final response = await _client.get<Map<String, dynamic>>(
       '/products/cancel_bron_table/$id/',
     );

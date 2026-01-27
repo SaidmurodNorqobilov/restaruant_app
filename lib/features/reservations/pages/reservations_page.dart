@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart'
     as picker;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/client.dart';
+import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/data/repositories/reservations_repository.dart';
@@ -141,10 +143,15 @@ class _ReservationsPageState extends State<ReservationsPage> {
             physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics(),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: 24.w,
+              vertical: 20.h,
+            ),
             child: BlocProvider(
               create: (context) => ReservationBloc(
-                repository: ReservationRepository(client: ApiClient()),
+                repository: ReservationRepository(
+                  client: ApiClient(),
+                ),
               ),
               child: BlocConsumer<ReservationBloc, ReservationState>(
                 listener: (context, state) {
@@ -186,13 +193,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                         ),
                         TextButton.icon(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const MyReservationsPage(),
-                              ),
-                            );
+                            context.push(Routes.myReservations);
                           },
                           icon: Icon(
                             Icons.list_alt,

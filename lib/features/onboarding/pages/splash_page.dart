@@ -104,7 +104,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         context.go(Routes.home);
         return;
       }
-      final bool hasSeenOnboarding = await OnboardingService.hasSeenOnboarding();
+      final bool hasSeenOnboarding =
+          await OnboardingService.hasSeenOnboarding();
 
       if (!hasSeenOnboarding) {
         context.go(Routes.onboarding);

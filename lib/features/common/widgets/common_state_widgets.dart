@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+
+import '../../../core/routing/routes.dart';
+import '../../onboarding/widgets/text_button_app.dart';
 
 class LoadingState extends StatelessWidget {
   final bool isDark;
@@ -267,6 +271,87 @@ class ErrorState extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class UserNullWidget extends StatefulWidget {
+  const UserNullWidget({super.key});
+
+  @override
+  State<UserNullWidget> createState() => _UserNullWidgetState();
+}
+
+class _UserNullWidgetState extends State<UserNullWidget> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth >= 600;
+
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(isTablet ? 32.w : 24.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: isTablet ? 140.w : 120.w,
+                height: isTablet ? 140.h : 120.h,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withAlpha(21),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  size: isTablet ? 70.sp : 60.sp,
+                  color: AppColors.primary,
+                ),
+              ),
+              SizedBox(height: isTablet ? 38.h : 30.h),
+              Text(
+                'Ma\'lumot kiritilmagan',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: isTablet ? 28.sp : 24.sp,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? AppColors.white : AppColors.black,
+                ),
+              ),
+              SizedBox(height: isTablet ? 16.h : 12.h),
+              Text(
+                'Profilingizni to\'ldirish uchun tizimga kiring yoki ro\'yxatdan o\'ting',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: isTablet ? 16.sp : 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: isDark
+                      ? AppColors.white.withAlpha(179)
+                      : AppColors.black.withOpacity(0.6),
+                  height: 1.5,
+                ),
+              ),
+              SizedBox(height: isTablet ? 48.h : 40.h),
+              SizedBox(
+                width: double.infinity,
+                child: TextButtonApp(
+                  onPressed: () {
+                    context.push(Routes.login);
+                  },
+                  text: 'Kirish',
+                  textColor: AppColors.white,
+                  buttonColor: AppColors.primary,
+                  height: isTablet ? 58 : 50,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
