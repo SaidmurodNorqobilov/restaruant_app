@@ -85,29 +85,14 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   Future<void> _startAnimations() async {
     try {
       _backgroundController.forward();
-      await Future.delayed(
-        const Duration(milliseconds: 300),
-      );
+      await Future.delayed(const Duration(milliseconds: 300));
       _logoController.forward();
-      await Future.delayed(
-        const Duration(milliseconds: 600),
-      );
+      await Future.delayed(const Duration(milliseconds: 600));
       _textController.forward();
 
-      await Future.delayed(
-        const Duration(milliseconds: 2500),
-      );
+      await Future.delayed(const Duration(milliseconds: 2500));
 
       if (!mounted) return;
-
-      final bool hasSeenOnboarding =
-          await OnboardingService.hasSeenOnboarding();
-
-      if (!hasSeenOnboarding) {
-        context.go(Routes.onboarding);
-        return;
-      }
-
       final String? token = await AuthStorage.getToken().timeout(
         const Duration(seconds: 2),
         onTimeout: () => null,
@@ -117,14 +102,17 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
       if (token != null && token.isNotEmpty) {
         context.go(Routes.home);
+        return;
+      }
+      final bool hasSeenOnboarding = await OnboardingService.hasSeenOnboarding();
+
+      if (!hasSeenOnboarding) {
+        context.go(Routes.onboarding);
       } else {
         context.go(Routes.welcome);
       }
     } catch (e) {
-      if (mounted)
-        context.go(
-          Routes.welcome,
-        );
+      if (mounted) context.go(Routes.welcome);
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
+import 'package:restaurantapp/core/utils/onboarding_service.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
 
 class OnboardingPage extends StatelessWidget {
@@ -38,8 +39,7 @@ class OnboardingPage extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 13.sp,
-                    color: AppColors.white.withAlpha(230)
-,
+                    color: AppColors.white.withAlpha(230),
                   ),
                 ),
               ],
@@ -80,8 +80,11 @@ class OnboardingPage extends StatelessWidget {
                   right: 0,
                   child: Center(
                     child: TextButtonApp(
-                      onPressed: () {
-                        context.push(Routes.welcome);
+                      onPressed: () async {
+                        await OnboardingService.setOnboardingSeen();
+                        if (context.mounted) {
+                          context.push(Routes.welcome);
+                        }
                       },
                       width: 207,
                       height: 45,
