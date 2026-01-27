@@ -38,7 +38,7 @@ class RecipeWidgets extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            flex: 6,
+            flex:  6,
             child: Stack(
               children: [
                 Positioned.fill(

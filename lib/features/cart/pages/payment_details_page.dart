@@ -52,9 +52,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(title: 'To\'lov ma\'lumotlari'),
       body: SingleChildScrollView(
@@ -70,8 +68,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   gradient: LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withAlpha(179)
-                      ,
+                      AppColors.primary.withAlpha(179),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -79,8 +76,7 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withAlpha(77)
-                      ,
+                      color: AppColors.primary.withAlpha(77),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -131,18 +127,22 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                               'KARTA EGASI',
                               style: TextStyle(
                                 fontSize: 10.sp,
-                                color: Colors.white70,
+                                color: AppColors.white,
                               ),
                             ),
                             SizedBox(height: 4.h),
-                            Text(
-                              nameController.text.isEmpty
-                                  ? 'ISM FAMILIYA'
-                                  : nameController.text.toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                            SizedBox(
+                              width: 240.w,
+                              child: Text(
+                                nameController.text.isEmpty
+                                    ? 'ISM FAMILIYA'
+                                    : nameController.text.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
@@ -197,6 +197,9 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                       controller: nameController,
                       decoration: InputDecoration(
                         labelText: 'Karta egasi',
+                        labelStyle: TextStyle(
+                          color: isDark ? AppColors.white : AppColors.textColor,
+                        ),
                         hintText: 'Ism Familiya',
                         prefixIcon: Icon(
                           Icons.person_outline,
@@ -210,7 +213,6 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           borderSide: BorderSide(
                             color: isDark
                                 ? AppColors.borderColor.withAlpha(51)
-
                                 : AppColors.borderColor,
                           ),
                         ),
@@ -230,15 +232,24 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                         }
                         return null;
                       },
+                      cursorColor: isDark
+                          ? AppColors.white
+                          : AppColors.textColor,
                     ),
                     SizedBox(height: 16.h),
                     TextFormField(
+                      cursorColor: isDark
+                          ? AppColors.white
+                          : AppColors.textColor,
                       style: TextStyle(
                         color: isDark ? AppColors.white : AppColors.textColor,
                       ),
                       controller: cardNumberController,
                       decoration: InputDecoration(
                         labelText: 'Karta raqami',
+                        labelStyle: TextStyle(
+                          color: isDark ? AppColors.white : AppColors.textColor,
+                        ),
                         hintText: '**** **** **** ****',
                         prefixIcon: Icon(
                           Icons.credit_card,
@@ -252,7 +263,6 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           borderSide: BorderSide(
                             color: isDark
                                 ? AppColors.borderColor.withAlpha(51)
-
                                 : AppColors.borderColor,
                           ),
                         ),
@@ -287,6 +297,9 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            cursorColor: isDark
+                                ? AppColors.white
+                                : AppColors.textColor,
                             style: TextStyle(
                               color: isDark
                                   ? AppColors.white
@@ -295,6 +308,11 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                             controller: expiryDateController,
                             decoration: InputDecoration(
                               labelText: 'Amal qilish muddati',
+                              labelStyle: TextStyle(
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
+                              ),
                               hintText: 'MM/YY',
                               prefixIcon: Icon(
                                 Icons.calendar_today,
@@ -308,7 +326,6 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                                 borderSide: BorderSide(
                                   color: isDark
                                       ? AppColors.borderColor.withAlpha(51)
-
                                       : AppColors.borderColor,
                                 ),
                               ),
@@ -353,6 +370,9 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                         SizedBox(width: 16.w),
                         Expanded(
                           child: TextFormField(
+                            cursorColor: isDark
+                                ? AppColors.white
+                                : AppColors.textColor,
                             controller: cvcController,
                             style: TextStyle(
                               color: isDark
@@ -361,6 +381,11 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                             ),
                             decoration: InputDecoration(
                               labelText: 'CVV/CVC',
+                              labelStyle: TextStyle(
+                                color: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
+                              ),
                               hintText: '***',
                               hintStyle: TextStyle(
                                 color: isDark
@@ -379,7 +404,6 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                                 borderSide: BorderSide(
                                   color: isDark
                                       ? AppColors.borderColor.withAlpha(51)
-
                                       : AppColors.borderColor,
                                 ),
                               ),
@@ -420,10 +444,9 @@ class _PaymentDetailsPageState extends State<PaymentDetailsPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                              const SuccessPage(
+                              builder: (context) => const SuccessPage(
                                 message:
-                                "To'lovingiz muvaffaqiyatli amalga oshirildi",
+                                    "To'lovingiz muvaffaqiyatli amalga oshirildi",
                                 appbarTitle: 'To\'lov tasdiqlandi',
                               ),
                             ),

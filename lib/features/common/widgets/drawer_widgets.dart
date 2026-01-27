@@ -35,7 +35,7 @@ class DrawerWidgets extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               Container(
-                height: 290.h,
+                height: isTablet ?  screenWidth -500 : screenWidth - 100,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(

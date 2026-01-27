@@ -187,8 +187,7 @@ class _HomePageState extends State<HomePage> {
                                           100.r,
                                         ),
                                         child:
-                                            category.image != null &&
-                                                category.image
+                                            category.image
                                                     .toString()
                                                     .isNotEmpty
                                             ? CachedNetworkImage(

@@ -306,8 +306,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 horizontalPadding,
                 isTablet ? 140.h : 120.h,
               ),
-              physics: const BouncingScrollPhysics(),
-              itemCount: state.products.length,
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),                itemCount: state.products.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: isTablet ? 20.w : 15.w,

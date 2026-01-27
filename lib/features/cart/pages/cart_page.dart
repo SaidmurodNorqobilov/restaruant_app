@@ -7,14 +7,13 @@ import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/colors.dart';
 import 'package:restaurantapp/core/utils/localization_extension.dart';
 import 'package:restaurantapp/core/utils/status.dart';
-import 'package:restaurantapp/features/Reservations/widgets/text_and_text_field.dart';
 import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_bloc.dart';
 import 'package:restaurantapp/features/cart/managers/cartBloc/cart_bloc.dart';
 import 'package:restaurantapp/features/cart/managers/cartBloc/cart_state.dart';
 import 'package:restaurantapp/features/common/widgets/common_state_widgets.dart';
 import 'package:restaurantapp/features/common/widgets/drawer_widgets.dart';
+import 'package:restaurantapp/features/menu/pages/menu_page.dart';
 import 'package:restaurantapp/features/onboarding/widgets/text_button_app.dart';
-
 import '../../../core/utils/icons.dart';
 import '../../accaunt/managers/userBloc/user_profile_state.dart';
 import '../../home/widgets/container_row.dart';
@@ -54,6 +53,8 @@ class _CartPageState extends State<CartPage>
   @override
   void initState() {
     super.initState();
+    setState(() {});
+    context.read<CartBloc>().add(CartLoading());
     tipController.addListener(() {
       if (mounted) setState(() {});
     });
@@ -62,7 +63,6 @@ class _CartPageState extends State<CartPage>
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat();
-    context.read<CartBloc>().add(CartLoading());
   }
 
   @override
@@ -187,6 +187,19 @@ class _CartPageState extends State<CartPage>
           ],
         ),
         actions: [
+          // InkWell(
+          //   onTap: () {
+          //     context.push(Routes.menu);
+          //   },
+          //   child: Text(
+          //     "Menyu tanlash",
+          //     style: TextStyle(
+          //       fontSize: 15.sp,
+          //       fontWeight: FontWeight.w500,
+          //       color: AppColors.white,
+          //     ),
+          //   ),
+          // ),
           InkWell(
             borderRadius: BorderRadius.circular(100.r),
             onTap: () {
@@ -225,7 +238,6 @@ class _CartPageState extends State<CartPage>
           if (userState.status == Status.error || userState.user == null) {
             return const UnauthenticatedCartState();
           }
-
           return BlocBuilder<CartBloc, CartState>(
             builder: (context, cartState) {
               if (cartState.status == Status.initial ||
@@ -242,16 +254,12 @@ class _CartPageState extends State<CartPage>
                   },
                 );
               }
-
               final allCartItems = cartState.cart ?? [];
-
-              // Initialize filtered items if empty
               if (_filteredCartItems.isEmpty &&
                   allCartItems.isNotEmpty &&
                   controllerSearch.text.isEmpty) {
                 _filteredCartItems = allCartItems;
               }
-
               final displayItems = controllerSearch.text.isEmpty
                   ? allCartItems
                   : _filteredCartItems;
@@ -259,7 +267,6 @@ class _CartPageState extends State<CartPage>
               if (allCartItems.isEmpty) {
                 return const EmptyCartState();
               }
-
               return LayoutBuilder(
                 builder: (context, constraints) {
                   if (isLandscape || (isTablet && constraints.maxWidth > 700)) {
@@ -362,7 +369,9 @@ class _CartPageState extends State<CartPage>
 
     return ListView.separated(
       key: const PageStorageKey('cart_list'),
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(
+        parent: BouncingScrollPhysics(),
+      ),
       itemCount: displayItems.length + 1,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       separatorBuilder: (context, index) {
@@ -469,15 +478,19 @@ class _CartPageState extends State<CartPage>
                                 border: Border.all(
                                   color: AppColors.borderColor,
                                 ),
-                                borderRadius: BorderRadius.circular(30.r)
+                                borderRadius: BorderRadius.circular(30.r),
                               ),
                               child: TextButtonApp(
                                 onPressed: () {
                                   Navigator.pop(modalContext);
                                 },
                                 text: context.translate('cancel'),
-                                textColor: isDark ? AppColors.white : AppColors.textColor,
-                                buttonColor: isDark ? AppColors.darkAppBar : AppColors.white,
+                                textColor: isDark
+                                    ? AppColors.white
+                                    : AppColors.textColor,
+                                buttonColor: isDark
+                                    ? AppColors.darkAppBar
+                                    : AppColors.white,
                               ),
                             ),
                           ),
@@ -693,6 +706,9 @@ class _CartPageState extends State<CartPage>
           'SO\'M ${subtotal.toStringAsFixed(2)}',
           isDark,
         ),
+        Divider(
+          color: AppColors.borderColor,
+        ),
         _priceRow(
           "${context.translate('vat')} (5%)",
           'SO\'M ${vat.toStringAsFixed(2)}',
@@ -711,7 +727,9 @@ class _CartPageState extends State<CartPage>
             isDark,
             color: Colors.green,
           ),
-        const Divider(),
+        Divider(
+          color: AppColors.borderColor,
+        ),
         _priceRow(
           context.translate('total'),
           'SO\'M ${total.toStringAsFixed(2)}',

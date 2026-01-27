@@ -19,6 +19,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$OrdersState {
   Status get status => throw _privateConstructorUsedError;
   List<OrderModel> get orders => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get cancelOrder => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of OrdersState
@@ -35,7 +36,12 @@ abstract class $OrdersStateCopyWith<$Res> {
     $Res Function(OrdersState) then,
   ) = _$OrdersStateCopyWithImpl<$Res, OrdersState>;
   @useResult
-  $Res call({Status status, List<OrderModel> orders, String? errorMessage});
+  $Res call({
+    Status status,
+    List<OrderModel> orders,
+    Map<String, dynamic>? cancelOrder,
+    String? errorMessage,
+  });
 }
 
 /// @nodoc
@@ -55,6 +61,7 @@ class _$OrdersStateCopyWithImpl<$Res, $Val extends OrdersState>
   $Res call({
     Object? status = null,
     Object? orders = null,
+    Object? cancelOrder = freezed,
     Object? errorMessage = freezed,
   }) {
     return _then(
@@ -67,6 +74,10 @@ class _$OrdersStateCopyWithImpl<$Res, $Val extends OrdersState>
                 ? _value.orders
                 : orders // ignore: cast_nullable_to_non_nullable
                       as List<OrderModel>,
+            cancelOrder: freezed == cancelOrder
+                ? _value.cancelOrder
+                : cancelOrder // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
             errorMessage: freezed == errorMessage
                 ? _value.errorMessage
                 : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -86,7 +97,12 @@ abstract class _$$OrdersStateImplCopyWith<$Res>
   ) = __$$OrdersStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Status status, List<OrderModel> orders, String? errorMessage});
+  $Res call({
+    Status status,
+    List<OrderModel> orders,
+    Map<String, dynamic>? cancelOrder,
+    String? errorMessage,
+  });
 }
 
 /// @nodoc
@@ -105,6 +121,7 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
     Object? orders = null,
+    Object? cancelOrder = freezed,
     Object? errorMessage = freezed,
   }) {
     return _then(
@@ -117,6 +134,10 @@ class __$$OrdersStateImplCopyWithImpl<$Res>
             ? _value._orders
             : orders // ignore: cast_nullable_to_non_nullable
                   as List<OrderModel>,
+        cancelOrder: freezed == cancelOrder
+            ? _value._cancelOrder
+            : cancelOrder // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
         errorMessage: freezed == errorMessage
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -132,8 +153,10 @@ class _$OrdersStateImpl implements _OrdersState {
   const _$OrdersStateImpl({
     required this.status,
     required final List<OrderModel> orders,
+    final Map<String, dynamic>? cancelOrder,
     this.errorMessage,
-  }) : _orders = orders;
+  }) : _orders = orders,
+       _cancelOrder = cancelOrder;
 
   @override
   final Status status;
@@ -145,12 +168,22 @@ class _$OrdersStateImpl implements _OrdersState {
     return EqualUnmodifiableListView(_orders);
   }
 
+  final Map<String, dynamic>? _cancelOrder;
+  @override
+  Map<String, dynamic>? get cancelOrder {
+    final value = _cancelOrder;
+    if (value == null) return null;
+    if (_cancelOrder is EqualUnmodifiableMapView) return _cancelOrder;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
   @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'OrdersState(status: $status, orders: $orders, errorMessage: $errorMessage)';
+    return 'OrdersState(status: $status, orders: $orders, cancelOrder: $cancelOrder, errorMessage: $errorMessage)';
   }
 
   @override
@@ -160,6 +193,10 @@ class _$OrdersStateImpl implements _OrdersState {
             other is _$OrdersStateImpl &&
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality().equals(other._orders, _orders) &&
+            const DeepCollectionEquality().equals(
+              other._cancelOrder,
+              _cancelOrder,
+            ) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -169,6 +206,7 @@ class _$OrdersStateImpl implements _OrdersState {
     runtimeType,
     status,
     const DeepCollectionEquality().hash(_orders),
+    const DeepCollectionEquality().hash(_cancelOrder),
     errorMessage,
   );
 
@@ -185,6 +223,7 @@ abstract class _OrdersState implements OrdersState {
   const factory _OrdersState({
     required final Status status,
     required final List<OrderModel> orders,
+    final Map<String, dynamic>? cancelOrder,
     final String? errorMessage,
   }) = _$OrdersStateImpl;
 
@@ -192,6 +231,8 @@ abstract class _OrdersState implements OrdersState {
   Status get status;
   @override
   List<OrderModel> get orders;
+  @override
+  Map<String, dynamic>? get cancelOrder;
   @override
   String? get errorMessage;
 

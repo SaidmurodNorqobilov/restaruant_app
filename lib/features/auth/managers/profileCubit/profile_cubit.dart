@@ -7,7 +7,9 @@ import '../../../../data/repositories/profile_repositroy.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit({required ProfileRepository profileRepository})
     : _profileRepository = profileRepository,
-      super(ProfileState.initial());
+      super(
+        ProfileState.initial(),
+      );
 
   final ProfileRepository _profileRepository;
 

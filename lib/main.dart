@@ -37,7 +37,6 @@ void main() async {
 
 class IzgaraApp extends StatelessWidget {
   const IzgaraApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

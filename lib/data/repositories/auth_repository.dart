@@ -80,7 +80,6 @@ class AuthRepository {
           if (refreshToken != null && refreshToken.isNotEmpty) {
             await AuthStorage.saveRefreshToken(refreshToken);
           }
-
           return Result.ok({
             'access_token': accessToken,
             'refresh_token': refreshToken,
@@ -93,9 +92,34 @@ class AuthRepository {
     );
   }
 
-  Future<void> logout() async {
-    await AuthStorage.deleteToken();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove("access_token");
+  Future<Result<void>> logout() async {
+    try {
+      final token = await AuthStorage.getToken();
+
+      if (token != null && token.isNotEmpty) {
+        await _client.post(
+          '/accounts/logout/',
+          data: {},
+        );
+      }
+
+      await AuthStorage.clearAll();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      return Result.ok(null);
+    } catch (e) {
+      try {
+        await AuthStorage.clearAll();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear();
+      } catch (_) {}
+
+      return Result.error(Exception('Logout error: $e'));
+    }
+  }
+
+  Future<bool> isLoggedIn() async {
+    return await AuthStorage.isLoggedIn();
   }
 }

@@ -22,10 +22,30 @@ class OrderRepository {
           return Result.ok(orders);
         } catch (e) {
           return Result.error(
-            Exception("Buyurtmalarni o'qishda xatolik: $e"),
+            Exception("Buyurtmalarni o'qishda xatolik"),
           );
         }
       },
+    );
+  }
+
+  Future<Result<Map<String, dynamic>>> cancelOrder(int orderId) async {
+    final result = await _client.get<Map<String, dynamic>>(
+      '/products/cancel_order_for_user/$orderId/',
+    );
+    return result.fold(
+          (error) => Result.error(error),
+          (data) => Result.ok(data),
+    );
+  }
+
+  Future<Result<Map<String, dynamic>>> addOrder() async {
+    final result = await _client.get<Map<String, dynamic>>(
+      '/products/add_order/',
+    );
+    return result.fold(
+          (error) => Result.error(error),
+          (data) => Result.ok(data),
     );
   }
 }

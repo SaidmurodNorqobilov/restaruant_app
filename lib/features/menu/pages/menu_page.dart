@@ -104,8 +104,7 @@ class _MenuPageState extends State<MenuPage> {
                           decoration: InputDecoration(
                             hintText: 'Qidirish...',
                             hintStyle: TextStyle(
-                              color: AppColors.white.withAlpha(179)
-,
+                              color: AppColors.white.withAlpha(179),
                             ),
                             border: InputBorder.none,
                             isDense: true,
@@ -121,8 +120,7 @@ class _MenuPageState extends State<MenuPage> {
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
                             child: Icon(
                               Icons.clear,
-                              color: Colors.white.withAlpha(179)
-,
+                              color: Colors.white.withAlpha(179),
                               size: 20.sp,
                             ),
                           ),
@@ -190,8 +188,7 @@ class _MenuPageState extends State<MenuPage> {
                       width: 80.w,
                       height: 80.w,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(21)
-,
+                        color: AppColors.primary.withAlpha(21),
                         shape: BoxShape.circle,
                       ),
                       child: Stack(
@@ -223,7 +220,6 @@ class _MenuPageState extends State<MenuPage> {
                         fontWeight: FontWeight.w500,
                         color: isDark
                             ? AppColors.white.withAlpha(179)
-
                             : AppColors.black.withOpacity(0.6),
                       ),
                     ),
@@ -231,7 +227,6 @@ class _MenuPageState extends State<MenuPage> {
                 ),
               );
             }
-
             if (state.status == Status.error && state.categories.isEmpty) {
               return Center(
                 child: Text(
@@ -244,7 +239,6 @@ class _MenuPageState extends State<MenuPage> {
                 ),
               );
             }
-
             final filteredCategories = _searchQuery.isEmpty
                 ? state.categories
                 : state.categories.where((category) {
@@ -261,7 +255,9 @@ class _MenuPageState extends State<MenuPage> {
               child: filteredCategories.isEmpty
                   ? _buildEmptySearchResult(isDark)
                   : ListView.separated(
-                      physics: const BouncingScrollPhysics(),
+                      physics: const AlwaysScrollableScrollPhysics(
+                        parent: BouncingScrollPhysics(),
+                      ),
                       padding: EdgeInsets.symmetric(
                         horizontal: 19.w,
                         vertical: 15.h,
@@ -297,9 +293,7 @@ class _MenuPageState extends State<MenuPage> {
             size: 80.sp,
             color: isDark
                 ? Colors.white.withAlpha(77)
-
-                : Colors.grey.withAlpha(128)
-,
+                : Colors.grey.withAlpha(128),
           ),
           SizedBox(height: 16.h),
           Text(
@@ -309,7 +303,6 @@ class _MenuPageState extends State<MenuPage> {
               fontWeight: FontWeight.w600,
               color: isDark
                   ? AppColors.white.withAlpha(179)
-
                   : AppColors.black.withOpacity(0.6),
             ),
           ),
@@ -320,7 +313,6 @@ class _MenuPageState extends State<MenuPage> {
               fontSize: 14.sp,
               color: isDark
                   ? AppColors.white.withAlpha(128)
-
                   : AppColors.black.withOpacity(0.4),
             ),
           ),
@@ -354,8 +346,7 @@ class _MenuPageState extends State<MenuPage> {
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withAlpha(21)
-,
+                      color: AppColors.primary.withAlpha(21),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -371,8 +362,7 @@ class _MenuPageState extends State<MenuPage> {
                       color: isDark ? AppColors.darkAppBar : Colors.grey[100],
                       child: Icon(
                         Icons.fastfood,
-                        color: AppColors.primary.withAlpha(77)
-,
+                        color: AppColors.primary.withAlpha(77),
                         size: 28.sp,
                       ),
                     ),
@@ -467,8 +457,7 @@ class _MenuPageState extends State<MenuPage> {
               fontSize: 16.sp,
               fontWeight: FontWeight.w700,
               color: AppColors.primary,
-              backgroundColor: AppColors.primary.withAlpha(21)
-,
+              backgroundColor: AppColors.primary.withAlpha(21),
             ),
           ),
           TextSpan(

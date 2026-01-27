@@ -11,7 +11,6 @@ class CartRepository {
     final response = await _client.get<List<dynamic>>(
       '/products/get_all_my_basket_items/',
     );
-
     return response.fold(
       (error) => Result.error(error),
       (data) {
@@ -51,7 +50,6 @@ class CartRepository {
     final response = await _client.delete(
       '/products/delete_basket/$itemId/',
     );
-
     return response.fold(
       (error) => Result.error(error),
       (_) => Result.ok(null),

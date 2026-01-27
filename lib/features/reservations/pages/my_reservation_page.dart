@@ -75,9 +75,10 @@ class _MyReservationsPageState extends State<MyReservationsPage> {
                 ),
               );
             }
-
             return ListView.builder(
-              physics: BouncingScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics(),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
               itemCount: state.reservations!.length,
               itemBuilder: (context, index) {

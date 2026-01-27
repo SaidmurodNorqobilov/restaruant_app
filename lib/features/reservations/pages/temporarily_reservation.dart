@@ -137,7 +137,7 @@ class TemporarilyReservation extends StatelessWidget {
             Icon(
               icon,
               size: 32.sp,
-              color: AppColors.primary.withOpacity(0.5),
+              color: AppColors.primary,
             ),
             SizedBox(height: 8.h),
             Text(
@@ -146,8 +146,8 @@ class TemporarilyReservation extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 color: isDark
-                    ? Colors.white.withOpacity(0.5)
-                    : AppColors.textColor.withOpacity(0.5),
+                    ? Colors.white
+                    : AppColors.textColor,
               ),
             ),
           ],

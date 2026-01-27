@@ -11,6 +11,9 @@ import 'package:restaurantapp/data/repositories/orders_repostories.dart';
 import 'package:restaurantapp/features/cart/managers/orderBLoc/orders_bloc.dart';
 import 'package:restaurantapp/features/cart/managers/orderBLoc/orders_state.dart';
 import 'package:restaurantapp/features/common/widgets/appbar_widgets.dart';
+import 'package:restaurantapp/features/common/widgets/common_state_widgets.dart';
+
+import '../../onboarding/widgets/text_button_app.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({super.key});
@@ -22,21 +25,17 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme
-        .of(context)
-        .brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBarWidgets(
         title: context.translate('orders'),
       ),
       body: BlocProvider(
-        create: (context) =>
-        OrdersBloc(
+        create: (context) => OrdersBloc(
           orderRepository: OrderRepository(
             client: ApiClient(),
           ),
-        )
-          ..add(OrdersLoading()),
+        )..add(OrdersLoading()),
         child: BlocBuilder<OrdersBloc, OrdersState>(
           builder: (context, state) {
             if (state.status == Status.loading) {
@@ -48,8 +47,7 @@ class _OrderPageState extends State<OrderPage> {
                       width: 80.w,
                       height: 80.w,
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withAlpha(21)
-                        ,
+                        color: AppColors.primary.withAlpha(21),
                         shape: BoxShape.circle,
                       ),
                       child: Stack(
@@ -81,7 +79,6 @@ class _OrderPageState extends State<OrderPage> {
                         fontWeight: FontWeight.w500,
                         color: isDark
                             ? AppColors.white.withAlpha(179)
-
                             : AppColors.black.withOpacity(0.6),
                       ),
                     ),
@@ -91,37 +88,11 @@ class _OrderPageState extends State<OrderPage> {
             }
 
             if (state.status == Status.error) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64.sp,
-                      color: Colors.red.withOpacity(0.6),
-                    ),
-                    SizedBox(
-                      height: 16.h,
-                    ),
-                    Text(
-                      "Xatolik yuz berdi",
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.white : AppColors.textColor,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      state.errorMessage ?? "Iltimos, qaytadan urinib ko'ring",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              return ErrorState(
+                isDark: isDark,
+                onRetry: () {
+                  context.read<OrdersBloc>().add(OrdersLoading());
+                },
               );
             }
             if (state.status == Status.success) {
@@ -159,7 +130,9 @@ class _OrderPageState extends State<OrderPage> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     itemCount: state.orders.length,
                     separatorBuilder: (context, index) =>
@@ -168,6 +141,88 @@ class _OrderPageState extends State<OrderPage> {
                       final order = state.orders[index];
                       return InkWell(
                         borderRadius: BorderRadius.circular(12.r),
+                        onLongPress: () {
+                          showModalBottomSheet(
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext modalContext) => Container(
+                              height: 200.h,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? AppColors.darkAppBar
+                                    : Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.r),
+                                  topRight: Radius.circular(20.r),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(20.w),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Mahsulotni bekor qilmoqchimisiz ?",
+                                      style: TextStyle(
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: isDark
+                                            ? Colors.white
+                                            : AppColors.textColor,
+                                      ),
+                                    ),
+                                    SizedBox(height: 30.h),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColors.borderColor,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(30.r),
+                                            ),
+                                            child: TextButtonApp(
+                                              onPressed: () {
+                                                Navigator.pop(modalContext);
+                                              },
+                                              text: context.translate('cancel'),
+                                              textColor: isDark
+                                                  ? AppColors.white
+                                                  : AppColors.textColor,
+                                              buttonColor: isDark
+                                                  ? AppColors.darkAppBar
+                                                  : AppColors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 12.w),
+                                        Expanded(
+                                          child: TextButtonApp(
+                                            onPressed: () {
+                                              Navigator.pop(modalContext);
+                                              context.read<OrdersBloc>().add(
+                                                CancelOrderEvent(
+                                                  orderId: order.id,
+                                                ),
+                                              );
+                                            },
+                                            text: 'bekor qilish',
+                                            // text: context.translate('delete'),
+                                            textColor: AppColors.white,
+                                            buttonColor: AppColors.primary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                         onTap: () {
                           context.push(Routes.orderDetail);
                         },
@@ -175,16 +230,13 @@ class _OrderPageState extends State<OrderPage> {
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
                             color: isDark
-                                ? AppColors.black.withAlpha(77)
-
+                                ? AppColors.darkAppBar
                                 : AppColors.white,
                             borderRadius: BorderRadius.circular(12.r),
                             border: Border.all(
                               color: isDark
                                   ? AppColors.borderColor.withAlpha(51)
-
-                                  : AppColors.borderColor.withAlpha(77)
-                              ,
+                                  : AppColors.borderColor.withAlpha(77),
                             ),
                             boxShadow: [
                               BoxShadow(
@@ -201,13 +253,13 @@ class _OrderPageState extends State<OrderPage> {
                             children: [
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
                                       Icon(
                                         order.orderType.toLowerCase() ==
-                                            'delivery'
+                                                'delivery'
                                             ? Icons.delivery_dining
                                             : Icons.table_restaurant,
                                         size: 18.sp,
@@ -216,7 +268,7 @@ class _OrderPageState extends State<OrderPage> {
                                       SizedBox(width: 6.w),
                                       Text(
                                         order.orderType.toLowerCase() ==
-                                            'delivery'
+                                                'delivery'
                                             ? 'Yetkazib berish'
                                             : order.tipTable ?? 'Stol',
                                         style: TextStyle(
@@ -224,8 +276,8 @@ class _OrderPageState extends State<OrderPage> {
                                           fontSize: 14.sp,
                                           color: isDark
                                               ? AppColors.white.withOpacity(
-                                            0.8,
-                                          )
+                                                  0.8,
+                                                )
                                               : Colors.grey[700],
                                         ),
                                       ),
@@ -239,8 +291,7 @@ class _OrderPageState extends State<OrderPage> {
                                     decoration: BoxDecoration(
                                       color: _getStatusColor(
                                         order.status,
-                                      ).withAlpha(21)
-                                      ,
+                                      ).withAlpha(21),
                                       borderRadius: BorderRadius.circular(
                                         20.r,
                                       ),
@@ -295,18 +346,16 @@ class _OrderPageState extends State<OrderPage> {
                                 height: 1,
                                 color: isDark
                                     ? AppColors.borderColor.withAlpha(21)
-
-                                    : AppColors.borderColor.withAlpha(51)
-                                ,
+                                    : AppColors.borderColor.withAlpha(51),
                               ),
                               SizedBox(height: 12.h),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'To\'lov usuli',
@@ -322,7 +371,7 @@ class _OrderPageState extends State<OrderPage> {
                                         children: [
                                           Icon(
                                             order.paymentMethod.toLowerCase() ==
-                                                'online'
+                                                    'online'
                                                 ? Icons.credit_card
                                                 : Icons.money,
                                             size: 16.sp,
@@ -333,7 +382,7 @@ class _OrderPageState extends State<OrderPage> {
                                           ),
                                           Text(
                                             order.paymentMethod.toLowerCase() ==
-                                                'online'
+                                                    'online'
                                                 ? 'Online'
                                                 : 'Naqd',
                                             style: TextStyle(
@@ -393,7 +442,7 @@ class _OrderPageState extends State<OrderPage> {
       final num = double.parse(price);
       return num.toStringAsFixed(0).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (Match m) => '${m[1]} ',
+        (Match m) => '${m[1]} ',
       );
     } catch (e) {
       return price;

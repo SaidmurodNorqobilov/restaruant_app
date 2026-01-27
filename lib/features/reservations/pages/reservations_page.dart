@@ -138,7 +138,9 @@ class _ReservationsPageState extends State<ReservationsPage> {
       body: BlocBuilder<UserProfileBloc, UserProfileState>(
         builder: (context, userState) => SafeArea(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
             padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
             child: BlocProvider(
               create: (context) => ReservationBloc(
@@ -294,7 +296,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                             ),
                             child: Row(
                               children: [
-                                 Icon(
+                                Icon(
                                   Icons.person_outline,
                                   size: 20,
                                   color: isDark

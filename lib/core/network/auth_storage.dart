@@ -15,7 +15,6 @@ class AuthStorage {
 
   static Future<void> deleteToken() async {
     await _storage.delete(key: _tokenKey);
-    await _storage.delete(key: _refreshTokenKey);
   }
 
   static Future<void> saveRefreshToken(String token) async {
@@ -24,5 +23,19 @@ class AuthStorage {
 
   static Future<String?> getRefreshToken() async {
     return await _storage.read(key: _refreshTokenKey);
+  }
+
+  static Future<void> deleteRefreshToken() async {
+    await _storage.delete(key: _refreshTokenKey);
+  }
+
+  static Future<void> clearAll() async {
+    await _storage.delete(key: _tokenKey);
+    await _storage.delete(key: _refreshTokenKey);
+  }
+
+  static Future<bool> isLoggedIn() async {
+    final token = await getToken();
+    return token != null && token.isNotEmpty;
   }
 }

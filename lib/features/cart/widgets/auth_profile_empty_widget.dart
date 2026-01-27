@@ -142,10 +142,9 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
                   ],
                 ),
               ),
-
               SizedBox(height: isTablet ? 48.h : 40.h),
               Text(
-                context.translate('loginRequired') ?? 'Login Required',
+                "Ro'yxatdan o'tish kerak",
                 style: TextStyle(
                   fontSize: isTablet ? 32.sp : 26.sp,
                   fontWeight: FontWeight.w800,
@@ -157,20 +156,19 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
 
               SizedBox(height: isTablet ? 20.h : 16.h),
 
-              Text(
-                context.translate('loginDescription') ??
-                    'Please sign in to view your cart and place orders. Join us to enjoy our delicious menu!',
-                style: TextStyle(
-                  fontSize: isTablet ? 18.sp : 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: isDark
-                      ? AppColors.white.withOpacity(0.75)
-                      : AppColors.textColor.withOpacity(0.7),
-                  height: 1.6,
-                ),
-                textAlign: TextAlign.center,
-              ),
-
+              // Text(
+              //   context.translate('loginDescription') ??
+              //       'Please sign in to view your cart and place orders. Join us to enjoy our delicious menu!',
+              //   style: TextStyle(
+              //     fontSize: isTablet ? 18.sp : 16.sp,
+              //     fontWeight: FontWeight.w400,
+              //     color: isDark
+              //         ? AppColors.white.withOpacity(0.75)
+              //         : AppColors.textColor.withOpacity(0.7),
+              //     height: 1.6,
+              //   ),
+              //   textAlign: TextAlign.center,
+              // ),
               SizedBox(height: isTablet ? 56.h : 48.h),
               _buildFeatureList(isDark, isTablet),
               SizedBox(height: isTablet ? 56.h : 48.h),
@@ -183,7 +181,7 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
                       onPressed: () {
                         context.push(Routes.login);
                       },
-                      text: context.translate('signIn') ?? 'Sign In',
+                      text: context.translate('Kirish') ?? 'Sign In',
                       buttonColor: AppColors.primary,
                       textColor: Colors.white,
                     ),
@@ -191,33 +189,32 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
 
                   SizedBox(height: 16.h),
 
-                  SizedBox(
-                    width: isTablet ? 400.w : double.infinity,
-                    height: isTablet ? 60.h : 54.h,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        context.push(Routes.login);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          color: AppColors.primary,
-                          width: 2,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      child: Text(
-                        context.translate('createAccount') ?? 'Create Account',
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: isTablet ? 17.sp : 15.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ),
-
+                  // SizedBox(
+                  //   width: isTablet ? 400.w : double.infinity,
+                  //   height: isTablet ? 60.h : 54.h,
+                  //   child: OutlinedButton(
+                  //     onPressed: () {
+                  //       context.push(Routes.login);
+                  //     },
+                  //     style: OutlinedButton.styleFrom(
+                  //       side: BorderSide(
+                  //         color: AppColors.primary,
+                  //         width: 2,
+                  //       ),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(12.r),
+                  //       ),
+                  //     ),
+                  //     child: Text(
+                  //       context.translate('createAccount') ?? 'Create Account',
+                  //       style: TextStyle(
+                  //         color: AppColors.primary,
+                  //         fontSize: isTablet ? 17.sp : 15.sp,
+                  //         fontWeight: FontWeight.w700,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: 20.h),
                   TextButton.icon(
                     onPressed: () {
@@ -231,7 +228,8 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
                       size: isTablet ? 22.r : 20.r,
                     ),
                     label: Text(
-                      context.translate('continueAsGuest') ?? 'Continue as Guest',
+                      context.translate('continueAsGuest') ??
+                          'Continue as Guest',
                       style: TextStyle(
                         color: isDark
                             ? AppColors.white.withOpacity(0.7)
@@ -254,30 +252,25 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
     final features = [
       {
         'icon': Icons.shopping_bag_outlined,
-        'title': context.translate('easyOrdering') ?? 'Easy Ordering',
-        'description': context.translate('easyOrderingDesc') ??
-            'Quick and simple checkout process',
+        'title': 'Oson buyurtma berish',
+        'description': 'Buyurtma berish oson',
       },
       {
         'icon': Icons.history,
-        'title': context.translate('orderHistory') ?? 'Order History',
-        'description': context.translate('orderHistoryDesc') ??
-            'Track all your previous orders',
+        'title': 'Buyurtma tarixi',
+        'description': 'Barcha oldingi buyurtmalaringizni kuzatib boring',
       },
       {
         'icon': Icons.local_offer_outlined,
-        'title': context.translate('exclusiveOffers') ?? 'Exclusive Offers',
-        'description': context.translate('exclusiveOffersDesc') ??
-            'Get special discounts and deals',
+        'title': 'Eksklyuziv takliflar',
+        'description': "Maxsus chegirmalar va chegirmalarga ega bo'ling",
       },
     ];
 
     return Container(
       padding: EdgeInsets.all(isTablet ? 28.w : 20.w),
       decoration: BoxDecoration(
-        color: isDark
-            ? AppColors.darkAppBar.withOpacity(0.6)
-            : Colors.grey[50],
+        color: isDark ? AppColors.darkAppBar.withOpacity(0.6) : Colors.grey[50],
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: isDark
@@ -301,7 +294,9 @@ class _UnauthenticatedCartStateState extends State<UnauthenticatedCartState>
               ),
               if (index < features.length - 1)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: isTablet ? 20.h : 16.h),
+                  padding: EdgeInsets.symmetric(
+                    vertical: isTablet ? 20.h : 16.h,
+                  ),
                   child: Divider(
                     color: isDark
                         ? Colors.white.withOpacity(0.1)
