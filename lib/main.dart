@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:restaurantapp/core/routing/router.dart';
-import 'package:restaurantapp/core/utils/app_theme.dart';
+import 'package:restaurantapp/core/constants/app_theme.dart';
 import 'package:restaurantapp/core/network/connection_service.dart';
-import 'package:restaurantapp/features/common/manager/themeBloc/theme_bloc.dart';
-import 'package:restaurantapp/features/common/manager/themeBloc/theme_state.dart';
-import 'core/dependencies.dart';
-import 'features/common/manager/langBloc/language_bloc.dart';
-import 'features/common/manager/langBloc/language_state.dart';
-import 'features/common/pages/no_internet_screen.dart';
+import 'core/di/dependencies.dart';
+import 'core/localization/langBloc/language_bloc.dart';
+import 'core/localization/langBloc/language_state.dart';
+import 'core/localization/themeBloc/theme_bloc.dart';
+import 'core/localization/themeBloc/theme_state.dart';
+import 'features/home/data/models/product_item_model.dart';
+import 'features/onboarding/presentation/pages/no_internet_screen.dart';
 
 void main() async {
   // await YandexMapkit.initialize(apiKey: 'YANDEX_API_KEY');
@@ -19,11 +22,28 @@ void main() async {
   // await YandexMapkit.initialize(
   //   apiKey: 'd8509166-c9f8-4bd8-b2fc-d076071d93b3',
   // );
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  await SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
+  await Hive.initFlutter();
 
+  Hive.registerAdapter(
+    ProductItemModelAdapter(),
+  );
+  Hive.registerAdapter(
+    ProductModifierGroupModelAdapter(),
+  );
+  Hive.registerAdapter(
+    ModifiersModelAdapter(),
+  );
+
+  // Open Hive Box
+  await Hive.openBox<ProductItemModel>('cart_box');
+
+  await Hive.openBox<ProductItemModel>('cart_box');
   runApp(
     MultiRepositoryProvider(
       providers: repositoryProviderMain,

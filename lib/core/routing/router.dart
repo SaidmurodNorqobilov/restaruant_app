@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
-import 'package:restaurantapp/features/Reservations/pages/my_reservation_page.dart';
-import 'package:restaurantapp/features/Reservations/pages/reservations_page.dart';
-import 'package:restaurantapp/features/accaunt/pages/about_page.dart';
-import 'package:restaurantapp/features/accaunt/pages/account_page.dart';
-import 'package:restaurantapp/features/accaunt/pages/edit_profile_page.dart';
-import 'package:restaurantapp/features/accaunt/pages/refund_policy_page.dart';
-import 'package:restaurantapp/features/auth/pages/login_page.dart';
-import 'package:restaurantapp/features/auth/pages/otp_send_page.dart';
-import 'package:restaurantapp/features/auth/pages/profile_sign_page.dart';
-import 'package:restaurantapp/features/cart/pages/address_page.dart';
-import 'package:restaurantapp/features/cart/pages/cart_page.dart';
-import 'package:restaurantapp/features/cart/pages/checkout_page.dart';
-import 'package:restaurantapp/features/cart/pages/order_detail_page.dart';
-import 'package:restaurantapp/features/cart/pages/order_page.dart';
-import 'package:restaurantapp/features/cart/pages/payment_details_page.dart';
-import 'package:restaurantapp/features/home/pages/categories_page.dart';
-import 'package:restaurantapp/features/home/pages/promotions_page.dart';
-import 'package:restaurantapp/features/home/pages/recipe_details_page.dart';
-import 'package:restaurantapp/features/menu/pages/menu_page.dart';
-import 'package:restaurantapp/features/onboarding/pages/Preferences_page.dart';
-import 'package:restaurantapp/features/onboarding/pages/onboarding_page.dart';
-import 'package:restaurantapp/features/onboarding/pages/splash_page.dart';
-import 'package:restaurantapp/features/onboarding/pages/welcome_page.dart';
-import 'package:restaurantapp/features/home/pages/home_page.dart';
-import 'package:restaurantapp/features/reservations/pages/temporarily_reservation.dart';
-import '../../data/models/category_model.dart';
-import '../../features/accaunt/pages/location_page.dart';
-import '../../features/common/widgets/bottom_navigation_bar_app.dart';
+import '../../features/accaunt/presentation/pages/about_page.dart';
+import '../../features/accaunt/presentation/pages/account_page.dart';
+import '../../features/accaunt/presentation/pages/edit_profile_page.dart';
+import '../../features/accaunt/presentation/pages/location_page.dart';
+import '../../features/accaunt/presentation/pages/refund_policy_page.dart';
+import '../../features/cart/presentation/pages/address_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/cart/presentation/pages/checkout_page.dart';
+import '../../features/cart/presentation/pages/order_detail_page.dart';
+import '../../features/cart/presentation/pages/order_page.dart';
+import '../../features/cart/presentation/pages/payment_details_page.dart';
+import '../../features/home/data/models/category_model.dart';
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/otp_send_page.dart';
+import '../../features/auth/presentation/pages/profile_sign_page.dart';
+import '../../features/home/presentation/pages/categories_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/home/presentation/pages/recipe_details_page.dart';
+import '../../features/menu/presentation/pages/menu_page.dart';
+import '../../features/onboarding/presentation/pages/Preferences_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/onboarding/presentation/pages/splash_page.dart';
+import '../../features/onboarding/presentation/pages/welcome_page.dart';
+import '../../features/reservations/presentation/pages/my_reservation_page.dart';
+import '../../features/reservations/presentation/pages/temporarily_reservation.dart';
+import '../widgets/bottom_navigation_bar_app.dart';
 
 final router = GoRouter(
   initialLocation: Routes.splash,
@@ -56,8 +54,7 @@ final router = GoRouter(
     GoRoute(
       path: Routes.otpSms,
       builder: (context, state) {
-        final sessionId = state.extra as String? ?? '';
-        return OtpSendPage(sessionId: sessionId);
+        return OtpSendPage(phone: state.extra as String? ?? '');
       },
     ),
     GoRoute(
@@ -94,7 +91,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: Routes.reservations,
-              builder: (context, state) => const ReservationsPage(),
+              builder: (context, state) => const TemporarilyReservation(),
             ),
           ],
         ),
@@ -119,23 +116,23 @@ final router = GoRouter(
     GoRoute(
       path: Routes.categories,
       builder: (context, state) {
-        final categoryId = state.extra as int? ?? 0;
+        final categoryId = state.extra as String? ?? "";
         return CategoriesPage(
           categoryId: categoryId,
         );
       },
     ),
-    GoRoute(
-      path: Routes.promotions,
-      builder: (context, state) {
-        final id = state.extra as int? ?? 0;
-        return PromotionsPage(id: id);
-      },
-    ),
+    // GoRoute(
+    //   path: Routes.promotions,
+    //   builder: (context, state) {
+    //     final id = state.extra as String? ?? "";
+    //     return PromotionsPage(id: id);
+    //   },
+    // ),
     GoRoute(
       path: Routes.recipeDetails,
       builder: (context, state) {
-        final product = state.extra as ProductModel;
+        final product = state.extra as ProductModelItem;
 
         return RecipeDetailsPage(
           product: product,
