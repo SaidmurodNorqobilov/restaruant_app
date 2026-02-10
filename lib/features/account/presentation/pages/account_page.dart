@@ -298,6 +298,18 @@ class _AccountPageState extends State<AccountPage> {
                           SizedBox(
                             height: isTablet ? 8.h : 6.h,
                           ),
+                          if (fullName == null || fullName.isEmpty)
+                            Text(
+                              fullName.isNotEmpty ? fullName : 'Foydalanuvchi',
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: isTablet ? 12.sp : 22.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.white,
+                              ),
+                            ),
                           Text(
                             fullName.isNotEmpty ? fullName : 'Foydalanuvchi',
                             maxLines: 2,
@@ -321,7 +333,7 @@ class _AccountPageState extends State<AccountPage> {
                                 ),
                                 SizedBox(width: isTablet ? 8.w : 6.w),
                                 Text(
-                                  phone,
+                                  "+${phone}",
                                   style: TextStyle(
                                     fontSize: isTablet ? 9.sp : 15.sp,
                                     fontWeight: FontWeight.w500,
@@ -361,7 +373,7 @@ class _AccountPageState extends State<AccountPage> {
                           icon: Icons.receipt_long_outlined,
                           title: context.translate('orders'),
                           subtitle: context.translate('orderHistory'),
-                          onTap: () => context.push(Routes.order),
+                          onTap: () => context.push(Routes.orders),
                           isDark: isDark,
                           color: Colors.orange,
                           isTablet: isTablet,
@@ -371,7 +383,7 @@ class _AccountPageState extends State<AccountPage> {
                           icon: Icons.location_on,
                           title: context.translate('location'),
                           subtitle: context.translate('inputLocation'),
-                          onTap: () => context.push(Routes.location),
+                          onTap: () => context.push(Routes.myLocations),
                           isDark: isDark,
                           color: Colors.lightBlue,
                           isTablet: isTablet,

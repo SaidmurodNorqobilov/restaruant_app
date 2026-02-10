@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
-import '../../features/accaunt/presentation/pages/about_page.dart';
-import '../../features/accaunt/presentation/pages/account_page.dart';
-import '../../features/accaunt/presentation/pages/edit_profile_page.dart';
-import '../../features/accaunt/presentation/pages/location_page.dart';
-import '../../features/accaunt/presentation/pages/refund_policy_page.dart';
+import '../../features/account/presentation/pages/about_page.dart';
+import '../../features/account/presentation/pages/account_page.dart';
+import '../../features/account/presentation/pages/edit_profile_page.dart';
+import '../../features/account/presentation/pages/location_page.dart';
+import '../../features/account/presentation/pages/my_locations_page.dart';
+import '../../features/account/presentation/pages/refund_policy_page.dart';
 import '../../features/cart/presentation/pages/address_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/cart/presentation/pages/checkout_page.dart';
@@ -160,8 +161,8 @@ final router = GoRouter(
       builder: (context, state) => const PaymentDetailsPage(),
     ),
     GoRoute(
-      path: Routes.order,
-      builder: (context, state) => const OrderPage(),
+      path: Routes.orders,
+      builder: (context, state) => const OrdersPage(),
     ),
     GoRoute(
       path: Routes.orderDetail,
@@ -182,6 +183,10 @@ final router = GoRouter(
     GoRoute(
       path: Routes.temporarilyReservation,
       builder: (context, state) => const TemporarilyReservation(),
+    ),
+    GoRoute(
+      path: Routes.myLocations,
+      builder: (context, state) => const MyLocationsPage(),
     ),
   ],
 );

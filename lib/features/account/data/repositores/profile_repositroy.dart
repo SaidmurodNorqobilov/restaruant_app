@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:restaurantapp/features/accaunt/data/models/user_profile_model.dart';
 import '../../../../core/network/client.dart';
 import '../../../../core/error/result.dart';
+import '../models/user_profile_model.dart';
 
 class ProfileRepository {
   final ApiClient _client;

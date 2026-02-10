@@ -8,8 +8,8 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
   LanguageBloc()
     : super(
         LanguageState(
-          languageCode: 'en',
-          localization: AppLocalization('en'),
+          languageCode: 'uz',
+          localization: AppLocalization('uz'),
         ),
       ) {
     on<LanguageLoaded>(_onLanguageLoaded);
@@ -21,7 +21,7 @@ class LanguageBloc extends Bloc<LanguageEvent, LanguageState> {
     Emitter<LanguageState> emit,
   ) async {
     final prefs = await SharedPreferences.getInstance();
-    final savedLang = prefs.getString('language') ?? 'en';
+    final savedLang = prefs.getString('language') ?? 'uz';
     final localization = AppLocalization(savedLang);
     await localization.load();
 

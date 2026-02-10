@@ -63,7 +63,7 @@ class ProductModelItem {
   final int sortOrder;
   final bool isActive;
   final String categoryId;
-  final int coin;
+  final double coin;
 
   ProductModelItem({
     required this.id,
@@ -93,7 +93,7 @@ class ProductModelItem {
       sortOrder: json['sort_order'] ?? 0,
       isActive: json['is_active'] ?? false,
       categoryId: json['category_id']?.toString() ?? '',
-      coin: json['coin_price'] ?? 0,
+      coin: double.tryParse(json['coin_price']?.toString() ?? '0') ?? 0.0,
     );
   }
 }

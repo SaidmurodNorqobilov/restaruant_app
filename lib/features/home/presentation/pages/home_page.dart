@@ -10,7 +10,7 @@ import 'package:restaurantapp/core/constants/app_colors.dart';
 import 'package:restaurantapp/core/utils/status.dart';
 import 'package:restaurantapp/features/home/data/repositories/category_repositories.dart';
 import '../../../../core/widgets/drawer_widgets.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_bloc.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_bloc.dart';
 import '../bloc/categoriesBloc/categories_bloc.dart';
 import '../bloc/categoriesBloc/categories_state.dart';
 import '../widgets/home_page_appbar.dart';
@@ -25,7 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController controllerSearch = TextEditingController();
-  final String baseUrl = "https://atsrestaurant.pythonanywhere.com";
+  // final String baseUrl = "http://45.138.158.158:3003";
   bool _isImagesPreCached = false;
 
   @override
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                                             category.image.toString().isNotEmpty
                                             ? CachedNetworkImage(
                                                 imageUrl:
-                                                    "$baseUrl${category.image}",
+                                                    category.image,
                                                 fit: BoxFit.cover,
                                                 memCacheHeight: 200,
                                                 memCacheWidth: 200,
@@ -307,7 +307,7 @@ class _HomePageState extends State<HomePage> {
       await Future.wait(
         categories.map(
           (category) => precacheImage(
-            CachedNetworkImageProvider("$baseUrl${category.image}"),
+            CachedNetworkImageProvider("${category.image}"),
             context,
           ),
         ),

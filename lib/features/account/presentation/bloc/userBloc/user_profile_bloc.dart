@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:restaurantapp/features/accaunt/presentation/bloc/userBloc/user_profile_state.dart';
-import 'package:restaurantapp/features/accaunt/data/repositores/user_profile_repository.dart';
-import 'package:restaurantapp/features/accaunt/data/models/user_profile_model.dart';
 import 'package:restaurantapp/core/utils/status.dart';
+import 'package:restaurantapp/features/account/presentation/bloc/userBloc/user_profile_state.dart';
 import '../../../../auth/data/datasources/user_service.dart';
+import '../../../data/models/user_profile_model.dart';
+import '../../../data/repositores/user_profile_repository.dart';
 
 part 'user_profile_event.dart';
 
@@ -23,9 +23,7 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
     Emitter<UserProfileState> emit,
   ) async {
     emit(state.copyWith(status: Status.loading));
-
     final result = await _repository.getUserProfile();
-
     await result.fold(
       (error) async {
         emit(
@@ -89,7 +87,6 @@ class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
           imagePath: data.image,
         );
         await UserService.savePhoneNumber(data.phone);
-        // Keyin success holatini yuboramiz
         if (!emit.isDone) {
           emit(
             state.copyWith(

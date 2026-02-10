@@ -47,9 +47,8 @@ class CartService {
   }
 
   void updateQuantity(String productId, int newQuantity) {
-    if (newQuantity <= 0) {
-      removeFromCart(productId);
-      return;
+    if (newQuantity < 1) {
+      newQuantity = 1;
     }
 
     final product = _box.get(productId);

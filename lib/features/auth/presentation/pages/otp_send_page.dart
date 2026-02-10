@@ -12,7 +12,7 @@ import 'package:restaurantapp/core/utils/status.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import '../../../../core/widgets/appbar_widgets.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_bloc.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_bloc.dart';
 import '../bloc/authCubit/auth_cubit.dart';
 import '../bloc/authCubit/auth_state.dart';
 

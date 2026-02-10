@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:restaurantapp/core/network/localization_extension.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/constants/app_colors.dart';
+import 'package:restaurantapp/features/cart/presentation/bloc/deliveryBloc/delivery_cubit.dart';
+import 'package:restaurantapp/features/cart/presentation/widgets/auth_required_dialog_widget.dart';
 import 'package:restaurantapp/features/home/data/models/product_item_model.dart';
 import '../../../../core/widgets/drawer_widgets.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_bloc.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_state.dart';
 import '../../../onboarding/presentation/widgets/text_button_app.dart';
 import '../../data/datasources/cart_service.dart';
+import '../bloc/deliveryBloc/delivery_state.dart';
 import '../widgets/cart_appbar_widget.dart';
 import '../widgets/cart_item_widget.dart';
 import '../widgets/empty_cart_widgets.dart';
@@ -54,6 +60,7 @@ class _CartPageState extends State<CartPage>
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat();
+    context.read<UserProfileBloc>().add(GetUserProfile());
   }
 
   @override
@@ -156,8 +163,9 @@ class _CartPageState extends State<CartPage>
                 );
               }
               return RefreshIndicator(
-                backgroundColor:
-                isDark ? AppColors.darkAppBar : AppColors.primary,
+                backgroundColor: isDark
+                    ? AppColors.darkAppBar
+                    : AppColors.primary,
                 color: AppColors.white,
                 onRefresh: () async {
                   setState(() {});
@@ -190,12 +198,12 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildCartList(
-      bool isTablet,
-      bool isDark,
-      bool isLandscape,
-      List<ProductItemModel> displayItems,
-      List<ProductItemModel> allCartItems,
-      ) {
+    bool isTablet,
+    bool isDark,
+    bool isLandscape,
+    List<ProductItemModel> displayItems,
+    List<ProductItemModel> allCartItems,
+  ) {
     if (displayItems.isEmpty && controllerSearch.text.isNotEmpty) {
       return Center(
         child: Column(
@@ -259,7 +267,6 @@ class _CartPageState extends State<CartPage>
           }
 
           final item = displayItems[actualIndex];
-
           return _buildCartItem(
             key: ValueKey('cart_item_${item.id}_$actualIndex'),
             item: item,
@@ -279,9 +286,16 @@ class _CartPageState extends State<CartPage>
     required bool isDark,
     required bool isTablet,
   }) {
+    String? fullImageUrl;
+    if (item.image.isNotEmpty) {
+      fullImageUrl = item.image.startsWith('http')
+          ? item.image
+          : "http://45.138.158.158:3003${item.image}";
+    }
     return CartItemWidget(
       item: item,
       product: item,
+      imageUrl: fullImageUrl,
       itemQuantity: item.quantity,
       itemId: item.id,
       isDark: isDark,
@@ -291,54 +305,59 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildBottomSection(
-      bool isTablet,
-      bool isDark,
-      bool isLandscape,
-      List<ProductItemModel> cartItems,
-      ) {
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: isLandscape
-            ? double.infinity
-            : MediaQuery.of(context).size.height * 0.6,
-      ),
-      padding: EdgeInsets.all(isTablet ? 24.w : 16.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkAppBar : Colors.white,
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -5),
-          ),
-        ],
-        borderRadius: isLandscape
-            ? BorderRadius.horizontal(left: Radius.circular(24.r))
-            : BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(
-            parent: BouncingScrollPhysics(),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildPricingSection(isDark, isTablet, isLandscape, cartItems),
-              SizedBox(height: 16.h),
-              SizedBox(
-                width: double.infinity,
-                child: TextButtonApp(
-                  onPressed: () {
-                    context.push(Routes.checkout);
-                  },
-                  text: context.translate('checkout'),
-                  buttonColor: AppColors.primary,
-                  textColor: Colors.white,
+    bool isTablet,
+    bool isDark,
+    bool isLandscape,
+    List<ProductItemModel> cartItems,
+  ) {
+    return BlocBuilder<UserProfileBloc, UserProfileState>(
+      builder: (context, state) =>  Container(
+        constraints: BoxConstraints(
+          maxHeight: isLandscape
+              ? double.infinity
+              : MediaQuery.of(context).size.height * 0.6,
+        ),
+        padding: EdgeInsets.all(isTablet ? 24.w : 16.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkAppBar : Colors.white,
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, -5),
+            ),
+          ],
+          borderRadius: isLandscape
+              ? BorderRadius.horizontal(left: Radius.circular(24.r))
+              : BorderRadius.vertical(top: Radius.circular(24.r)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(
+              parent: BouncingScrollPhysics(),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildPricingSection(isDark, isTablet, isLandscape, cartItems),
+                SizedBox(height: 16.h),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButtonApp(
+                    onPressed: () {
+                      if (state.user == null) {
+                        return AuthRequiredDialog.show(context, isDark);
+                      }
+                      context.push(Routes.checkout);
+                    },
+                    text: context.translate('checkout'),
+                    buttonColor: AppColors.primary,
+                    textColor: Colors.white,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -346,65 +365,66 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildPricingSection(
-      bool isDark,
-      bool isTablet,
-      bool isLandscape,
-      List<ProductItemModel> cartItems,
-      ) {
+    bool isDark,
+    bool isTablet,
+    bool isLandscape,
+    List<ProductItemModel> cartItems,
+  ) {
     double subtotal = calculateSubtotal(cartItems);
-    double vat = subtotal * 0.05;
+    double vat = subtotal * 0.00;
     double tip = double.tryParse(tipController.text) ?? 0.0;
     double total = subtotal + vat + tip - (isCouponApplied ? 10.0 : 0.0);
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _priceRow(
-          context.translate('cartSubtotal'),
-          'SO\'M ${subtotal.toStringAsFixed(2)}',
-          isDark,
-        ),
-        Divider(
-          color: AppColors.borderColor,
-        ),
-        _priceRow(
-          "${context.translate('vat')} (5%)",
-          'SO\'M ${vat.toStringAsFixed(2)}',
-          isDark,
-        ),
-        if (tip > 0)
+    return BlocBuilder<DeliveryCubit, DeliveryState>(
+      builder: (context, state) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           _priceRow(
-            context.translate('tip'),
-            'SO\'M ${tip.toStringAsFixed(2)}',
+            context.translate('cartSubtotal'),
+            'SO\'M ${subtotal.toStringAsFixed(2)}',
             isDark,
           ),
-        if (isCouponApplied)
-          _priceRow(
-            context.translate('discount'),
-            '-SO\'M 10.00',
-            isDark,
-            color: Colors.green,
+          Divider(
+            color: AppColors.borderColor,
           ),
-        Divider(
-          color: AppColors.borderColor,
-        ),
-        _priceRow(
-          context.translate('total'),
-          'SO\'M ${total.toStringAsFixed(2)}',
-          isDark,
-          isBold: true,
-        ),
-      ],
+          _priceRow(
+            "${context.translate('vat')} (5%)",
+            'SO\'M ${vat.toStringAsFixed(2)}',
+            isDark,
+          ),
+          if (tip > 0)
+            _priceRow(
+              context.translate('tip'),
+              'SO\'M ${tip.toStringAsFixed(2)}',
+              isDark,
+            ),
+          if (isCouponApplied)
+            _priceRow(
+              context.translate('discount'),
+              '-SO\'M 10.00',
+              isDark,
+              color: Colors.green,
+            ),
+          Divider(
+            color: AppColors.borderColor,
+          ),
+          _priceRow(
+            context.translate('total'),
+            'SO\'M ${total.toStringAsFixed(2)}',
+            isDark,
+            isBold: true,
+          ),
+        ],
+      ),
     );
   }
 
   Widget _priceRow(
-      String label,
-      String value,
-      bool isDark, {
-        bool isBold = false,
-        Color? color,
-      }) {
+    String label,
+    String value,
+    bool isDark, {
+    bool isBold = false,
+    Color? color,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(

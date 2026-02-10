@@ -40,7 +40,7 @@ class UserProfileRepository {
             (data) => Result.ok(UserProfileModel.fromJson(data)),
       );
     } catch (e) {
-      return Result.error(Exception('Repository xatosi: $e'));
+      return Result.error(Exception('Repository xatosi'));
     }
   }
 }

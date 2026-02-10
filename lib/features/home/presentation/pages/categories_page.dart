@@ -98,7 +98,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 isTablet: isTablet,
               );
             }
-            if (state.status == Status.error && state.products.isEmpty) {
+            if (state.status == Status.error) {
               return ErrorState(
                 isDark: isDark,
                 onRetry: () {
@@ -301,7 +301,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         });
       }
     } catch (e) {
-      debugPrint('⚠️ Error precaching product images: $e');
+      debugPrint('⚠️ Error precaching product images');
       if (mounted) {
         setState(() {
           _isImagesPreCached = true;

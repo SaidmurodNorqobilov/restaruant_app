@@ -5,21 +5,22 @@ import 'package:restaurantapp/core/constants/app_colors.dart';
 class OrderSummarySection extends StatelessWidget {
   final bool isDark;
   final double subtotal;
-  final double deliveryFee;
-  final double tax;
-  final double total;
+  final double deliveryPrice;
+  final double freeDeliveryThreshold;
 
   const OrderSummarySection({
     super.key,
     required this.isDark,
     required this.subtotal,
-    required this.deliveryFee,
-    required this.tax,
-    required this.total,
+    required this.deliveryPrice,
+    required this.freeDeliveryThreshold,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : deliveryPrice;
+    final double total = subtotal + deliveryFee;
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -27,7 +28,7 @@ class OrderSummarySection extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withAlpha(8),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -67,14 +68,20 @@ class OrderSummarySection extends StatelessWidget {
             amount: deliveryFee,
             isDark: isDark,
             isTotal: false,
+            isFree: deliveryFee == 0 && subtotal >= freeDeliveryThreshold,
           ),
-          SizedBox(height: 8.h),
-          _PriceRow(
-            label: 'Soliq',
-            amount: tax,
-            isDark: isDark,
-            isTotal: false,
-          ),
+          if (deliveryFee == 0 && subtotal < freeDeliveryThreshold)
+            Padding(
+              padding: EdgeInsets.only(top: 4.h),
+              child: Text(
+                'Bepul yetkazib berish uchun yana ${(freeDeliveryThreshold - subtotal).toStringAsFixed(0)} so\'m',
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
           SizedBox(height: 12.h),
           Divider(
             color: isDark
@@ -99,12 +106,14 @@ class _PriceRow extends StatelessWidget {
   final double amount;
   final bool isDark;
   final bool isTotal;
+  final bool isFree;
 
   const _PriceRow({
     required this.label,
     required this.amount,
     required this.isDark,
     required this.isTotal,
+    this.isFree = false,
   });
 
   @override
@@ -123,13 +132,15 @@ class _PriceRow extends StatelessWidget {
           ),
         ),
         Text(
-          '${amount.toStringAsFixed(2)} UZS',
+          isFree ? 'Bepul' : '${amount.toStringAsFixed(0)} so\'m',
           style: TextStyle(
             fontSize: isTotal ? 18.sp : 14.sp,
             fontWeight: isTotal ? FontWeight.w700 : FontWeight.w600,
-            color: isTotal
+            color: isFree
+                ? Colors.green
+                : (isTotal
                 ? AppColors.primary
-                : (isDark ? AppColors.white : AppColors.textColor),
+                : (isDark ? AppColors.white : AppColors.textColor)),
           ),
         ),
       ],

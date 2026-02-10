@@ -14,7 +14,7 @@ class CustomerInfoSection extends StatefulWidget {
   final TextEditingController nameController;
   final TextEditingController phoneController;
   final TextEditingController locationController;
-  final TextEditingController tableNumberController;
+  final TextEditingController manzilController;
 
   const CustomerInfoSection({
     super.key,
@@ -24,7 +24,7 @@ class CustomerInfoSection extends StatefulWidget {
     required this.nameController,
     required this.phoneController,
     required this.locationController,
-    required this.tableNumberController,
+    required this.manzilController,
   });
 
   @override
@@ -105,9 +105,9 @@ class _CustomerInfoSectionState extends State<CustomerInfoSection> {
           if (widget.showTableField) ...[
             SizedBox(height: 16.h),
             TextAndTextField(
-              controller: widget.tableNumberController,
-              text: 'Stol raqami',
-              hintText: 'Stol raqamini kiriting',
+              controller: widget.manzilController,
+              text: 'Manzil',
+              hintText: 'Manzilni kiriting',
             ),
           ],
         ],

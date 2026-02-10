@@ -40,7 +40,6 @@ void main() async {
     ModifiersModelAdapter(),
   );
 
-  // Open Hive Box
   await Hive.openBox<ProductItemModel>('cart_box');
 
   await Hive.openBox<ProductItemModel>('cart_box');

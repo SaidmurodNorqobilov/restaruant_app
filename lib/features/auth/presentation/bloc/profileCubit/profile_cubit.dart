@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurantapp/core/utils/status.dart';
-import '../../../../cart/data/repositories/profile_repositroy.dart';
+import '../../../../account/data/repositores/profile_repositroy.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {

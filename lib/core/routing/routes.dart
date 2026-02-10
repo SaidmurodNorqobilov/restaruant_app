@@ -17,7 +17,7 @@ class Routes {
   static const address = '/address';
   static const payment = '/payment';
   static const success = '/success';
-  static const order = '/order';
+  static const orders = '/order';
   static const orderDetail = '/orderDetail';
   static const splash = '/splash';
   static const otpSms = '/otpSms';
@@ -28,4 +28,5 @@ class Routes {
 
   // bu vaqtincha qachondir reservation qo'shilsa buni uchiraman
   static const temporarilyReservation = '/temporarilyReservation';
+  static const myLocations = '/myLocations';
 }

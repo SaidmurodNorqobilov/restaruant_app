@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:restaurantapp/core/utils/status.dart';
-import 'package:restaurantapp/features/accaunt/data/models/user_profile_model.dart';
 
+import '../../../../account/data/models/user_profile_model.dart';
 part 'profile_state.freezed.dart';
 
 @freezed

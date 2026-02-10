@@ -65,24 +65,33 @@ class PaymentMethodSection extends StatelessWidget {
               ),
               SizedBox(height: 16.h),
               _PaymentOption(
-                title: 'Karta orqali',
-                value: 'card',
-                icon: Icons.credit_card,
+                title: 'Online to\'lov',
+                value: 'online',
+                icon: Icons.account_balance_wallet,
                 isDark: isDark,
-                isSelected: selectedPaymentMethod == 'card',
-                onTap: () => onPaymentMethodChanged('card'),
+                isSelected: selectedPaymentMethod == 'online',
+                onTap: () => onPaymentMethodChanged('online'),
               ),
               if (selectedDeliveryType != 'delivery') ...[
                 SizedBox(height: 12.h),
                 _PaymentOption(
-                  title: 'Online to\'lov',
-                  value: 'online',
-                  icon: Icons.account_balance_wallet,
+                  title: 'Karta orqali',
+                  value: 'card',
+                  icon: Icons.credit_card,
                   isDark: isDark,
-                  isSelected: selectedPaymentMethod == 'online',
-                  onTap: () => onPaymentMethodChanged('online'),
+                  isSelected: selectedPaymentMethod == 'card',
+                  onTap: () => onPaymentMethodChanged('card'),
                 ),
               ],
+              SizedBox(height: 12.h),
+              _PaymentOption(
+                title: "Coin",
+                value: 'coin',
+                icon: Icons.monetization_on,
+                isDark: isDark,
+                isSelected: selectedPaymentMethod == 'coin',
+                onTap: ()=> onPaymentMethodChanged('coin'),
+              ),
             ],
           ),
         ],
@@ -124,8 +133,8 @@ class _PaymentOption extends StatelessWidget {
             color: isSelected
                 ? AppColors.primary
                 : (isDark
-                ? AppColors.borderColor.withAlpha(51)
-                : AppColors.borderColor.withAlpha(77)),
+                      ? AppColors.borderColor.withAlpha(51)
+                      : AppColors.borderColor.withAlpha(77)),
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -143,15 +152,15 @@ class _PaymentOption extends StatelessWidget {
               ),
               child: isSelected
                   ? Center(
-                child: Container(
-                  width: 10.w,
-                  height: 10.w,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.primary,
-                  ),
-                ),
-              )
+                      child: Container(
+                        width: 10.w,
+                        height: 10.w,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    )
                   : null,
             ),
             SizedBox(width: 12.w),

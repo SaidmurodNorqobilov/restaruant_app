@@ -8,8 +8,8 @@ import 'package:restaurantapp/core/constants/app_colors.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/utils/status.dart';
 import '../../../../core/constants/app_icons.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_bloc.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_state.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_bloc.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_state.dart';
 import '../../data/models/category_model.dart';
 import '../../data/models/product_item_model.dart';
 import '../../../cart/data/datasources/cart_service.dart';
@@ -39,7 +39,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   @override
   void initState() {
     super.initState();
-    context.read<UserProfileBloc>().add(GetUserProfile());
+    // context.read<UserProfileBloc>().add(GetUserProfile());
     context.read<ProductBloc>().add(
       GetProductDetailEvent(widget.product.id),
     );
@@ -90,13 +90,54 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       }
     });
   }
+  DateTime? _lastAddToCartTime;
+  bool _isAddingToCart = false;
 
-  void handleAddToCart(BuildContext context, UserProfileState userState) {
-    if (userState.user == null) {
-      LoginDialog.show(context);
+  void handleAddToCart(BuildContext context) {
+    final now = DateTime.now();
+    if (_lastAddToCartTime != null &&
+        now.difference(_lastAddToCartTime!) < const Duration(seconds: 2)) {
       return;
     }
+
+    if (_isAddingToCart) {
+      return;
+    }
+
+    _isAddingToCart = true;
+    _lastAddToCartTime = now;
+
+    // if (userState.user == null) {
+    //   LoginDialog.show(context);
+    //   _isAddingToCart = false;
+    //   return;
+    // }
+
     final cartService = CartService();
+
+    final List<ProductModifierGroupModel> finalModifierGroups = [];
+    selectedModifiers.forEach((groupId, modifiers) {
+      if (modifiers.isNotEmpty) {
+        final originalGroup = context
+            .read<ProductBloc>()
+            .state
+            .selectedProduct!
+            .modifierGroups
+            .firstWhere((g) => g.id == groupId);
+
+        finalModifierGroups.add(
+          ProductModifierGroupModel(
+            id: originalGroup.id,
+            name: originalGroup.name,
+            sortOrder: originalGroup.sortOrder,
+            minSelectedAmount: originalGroup.minSelectedAmount,
+            maxSelectedAmount: originalGroup.maxSelectedAmount,
+            modifiers: modifiers,
+          ),
+        );
+      }
+    });
+
     final productToAdd = ProductItemModel(
       id: widget.product.id,
       name: widget.product.name,
@@ -109,9 +150,10 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       sortOrder: widget.product.sortOrder,
       isActive: widget.product.isActive,
       categoryId: widget.product.categoryId,
-      modifierGroups: [],
+      modifierGroups: finalModifierGroups,
       quantity: quantity,
     );
+
     cartService.addToCart(productToAdd, quantity: quantity);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -138,20 +180,12 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 children: [
                   const Text(
                     'Savatga qo\'shildi',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 2),
                   Text(
                     widget.product.name,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white.withAlpha(230),
-                    ),
+                    style: const TextStyle(fontSize: 12),
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -161,21 +195,18 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         backgroundColor: const Color(0xFF2E7D32),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
         margin: const EdgeInsets.all(16),
-        elevation: 6,
         action: SnackBarAction(
           label: 'Ko\'rish',
           textColor: Colors.white,
-          backgroundColor: Colors.white.withAlpha(51),
           onPressed: () => context.go(Routes.cart),
         ),
       ),
     );
+    Future.delayed(const Duration(seconds: 2), () {
+      _isAddingToCart = false;
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -245,7 +276,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                               24.w,
                               30.h,
                               24.w,
-                              120.h,
+                              200.h,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -426,35 +457,34 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       ),
                     ),
                     child: SafeArea(
-                      child: BlocBuilder<UserProfileBloc, UserProfileState>(
-                        builder: (context, userState) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (widget.product.isActive)
-                              QuantityCounter(
-                                quantity: quantity,
-                                isDark: isDark,
-                                isProductActive: widget.product.isActive,
-                                onIncrement: increment,
-                                onDecrement: decrement,
-                              ),
-                            SizedBox(
-                              height: 16.h,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.product.isActive)
+                            QuantityCounter(
+                              quantity: quantity,
+                              isDark: isDark,
+                              isProductActive: widget.product.isActive,
+                              onIncrement: increment,
+                              onDecrement: decrement,
                             ),
-                            AddToCartButton(
-                              // bu joyda agar product tugagan bolsa uni korinmay
-                              // turishi uchun isActiv deganga qarab product bor yoki yuqlgini korib bilamz
-                              // hozircha test qilish uchun true yozib qoydm
-                              // cart va add cart qilib test qilish uchun
-                              // isProductActive: widget.product.isActive,
-                              isProductActive: true,
-                              status: state.status,
-                              currentPrice: currentPrice,
-                              onPressed: () =>
-                                  handleAddToCart(context, userState),
-                            ),
-                          ],
-                        ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          AddToCartButton(
+                            // bu joyda agar product tugagan bolsa uni korinmay
+                            // turishi uchun isActiv deganga qarab product bor yoki yuqlgini korib bilamz
+                            // hozircha test qilish uchun true yozib qoydm
+                            // cart va add cart qilib test qilish uchun
+                            // isProductActive: widget.product.isActive,
+                            isProductActive: widget.product.isActive,
+                            status: state.status,
+                            currentPrice: currentPrice,
+                            onPressed: () async {
+                              handleAddToCart(context);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),

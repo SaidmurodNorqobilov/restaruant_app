@@ -7,8 +7,8 @@
 // import 'package:restaurantapp/core/utils/app_colors.dart';
 // import 'package:restaurantapp/core/utils/status.dart';
 // import 'package:restaurantapp/data/models/category_model.dart';
-// import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_bloc.dart';
-// import 'package:restaurantapp/features/accaunt/managers/userBloc/user_profile_state.dart';
+// import 'package:restaurantapp/features/account/managers/userBloc/user_profile_bloc.dart';
+// import 'package:restaurantapp/features/account/managers/userBloc/user_profile_state.dart';
 // import 'package:restaurantapp/features/home/managers/productBloc/product_bloc.dart';
 // import 'package:restaurantapp/features/home/managers/productBloc/product_state.dart';
 // import 'package:restaurantapp/features/home/widgets/container_row.dart';

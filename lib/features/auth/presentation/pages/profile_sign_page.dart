@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:restaurantapp/core/constants/app_colors.dart';
 import 'package:restaurantapp/core/utils/status.dart';
 import '../../../../core/routing/routes.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_bloc.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_bloc.dart';
 import '../bloc/profileCubit/profile_cubit.dart';
 import '../bloc/profileCubit/profile_state.dart';
 import '../widgets/custom_drop_down_widget.dart';

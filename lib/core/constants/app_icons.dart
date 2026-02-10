@@ -22,4 +22,7 @@ class AppIcons {
   static const logout = "assets/profileIcons/Logout.svg";
   static const infoSquare = "assets/profileIcons/InfoSquare.svg";
   static const arrowRightGreen = "assets/profileIcons/ArrowRightGreen.svg";
+  static const click = "assets/icons/click.png";
+  static const payme = "assets/icons/Payme_Logo.svg";
+
 }

@@ -12,8 +12,8 @@ import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/constants/app_colors.dart';
 import '../../../../core/utils/status.dart';
 import '../../../../core/widgets/drawer_widgets.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_bloc.dart';
-import '../../../accaunt/presentation/bloc/userBloc/user_profile_state.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_bloc.dart';
+import '../../../account/presentation/bloc/userBloc/user_profile_state.dart';
 import '../../../menu/presentation/widgets/app_bar_home.dart';
 import '../../data/repositories/reservations_repository.dart';
 import '../bloc/reservation_bloc.dart';
@@ -115,7 +115,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
     if (!validCodes.contains(operatorCode)) {
       return 'Noto\'g\'ri operator kodi';
     }
-
     return null;
   }
 
