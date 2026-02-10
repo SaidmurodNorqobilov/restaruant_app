@@ -286,18 +286,6 @@ class _LocationSelectionSheetState extends State<LocationSelectionSheet> {
                       selectedLocation.id,
                       selectedLocation.address,
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "Manzil tanlandi: ${selectedLocation.title}",
-                        ),
-                        backgroundColor: AppColors.primary,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                      ),
-                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: tempSelectedId == null

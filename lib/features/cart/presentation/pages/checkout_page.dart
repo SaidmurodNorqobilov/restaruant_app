@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurantapp/core/constants/app_icons.dart';
 import 'package:restaurantapp/core/routing/routes.dart';
 import 'package:restaurantapp/core/constants/app_colors.dart';
 import 'package:restaurantapp/features/cart/presentation/bloc/deliveryBloc/delivery_cubit.dart';
@@ -126,7 +128,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 isDark: isDark,
                 provider: 'CLICK',
                 title: 'Click',
-                icon: Icons.credit_card,
+                icon: Image.asset(
+                  AppIcons.click,
+                  fit: BoxFit.contain,
+                ),
                 color: Colors.blue,
               ),
               SizedBox(height: 12.h),
@@ -134,8 +139,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 isDark: isDark,
                 provider: 'PAYME',
                 title: 'Payme',
-                icon: Icons.payment,
-                color: Colors.green,
+                icon: SvgPicture.asset(
+                  AppIcons.payme,
+                  fit: BoxFit.contain,
+                ),
+                color: Colors.cyan,
               ),
               SizedBox(height: 24.h),
             ],
@@ -149,7 +157,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     required bool isDark,
     required String provider,
     required String title,
-    required IconData icon,
+    required Widget icon,
     required Color color,
   }) {
     final isSelected = selectedPaymentProvider == provider;
@@ -183,11 +191,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 color: color.withAlpha(51),
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24.sp,
-              ),
+              child: Center(child: icon),
             ),
             SizedBox(width: 16.w),
             Expanded(
@@ -339,7 +343,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       showTopSnackBar(
         Overlay.of(context),
         CustomSnackBar.error(
-          message: "Xatolik yuz berdi: ${e.toString()}",
+          message: "Xatolik yuz berdi",
           backgroundColor: Colors.red,
           borderRadius: BorderRadius.circular(10.r),
         ),
@@ -479,7 +483,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             ),
                           ),
                         ),
-
                       if (selectedDeliveryType == 'eat_in')
                         Container(
                           width: double.infinity,
