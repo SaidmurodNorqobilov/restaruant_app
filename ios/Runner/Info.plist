@@ -47,13 +47,20 @@
     <true/>
 
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+    <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz xaritada ko'rsatiladi.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+    <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak.</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak</string>
+    <string>Yetkazib berish manzilini aniqlash uchun joylashuvingiz kerak.</string>
+
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
 
     <key>io.flutter.embedded_views_preview</key>
     <true/>
+
 </dict>
 </plist>

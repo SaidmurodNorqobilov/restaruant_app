@@ -30,13 +30,14 @@ class ProductItemModelAdapter extends TypeAdapter<ProductItemModel> {
       categoryId: fields[10] as String,
       modifierGroups: (fields[11] as List).cast<ProductModifierGroupModel>(),
       quantity: fields[12] as int,
+      coinPrice: fields[13] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProductItemModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class ProductItemModelAdapter extends TypeAdapter<ProductItemModel> {
       ..writeByte(11)
       ..write(obj.modifierGroups)
       ..writeByte(12)
-      ..write(obj.quantity);
+      ..write(obj.quantity)
+      ..writeByte(13)
+      ..write(obj.coinPrice);
   }
 
   @override

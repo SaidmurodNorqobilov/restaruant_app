@@ -24,6 +24,7 @@ class CartService {
         categoryId: existingProduct.categoryId,
         modifierGroups: existingProduct.modifierGroups,
         quantity: existingProduct.quantity + quantity,
+        coinPrice: existingProduct.coinPrice,
       );
       _box.put(product.id, updatedProduct);
     } else {
@@ -41,6 +42,7 @@ class CartService {
         categoryId: product.categoryId,
         modifierGroups: product.modifierGroups,
         quantity: quantity,
+        coinPrice: product.coinPrice,
       );
       _box.put(product.id, newProduct);
     }
@@ -68,6 +70,7 @@ class CartService {
         categoryId: product.categoryId,
         modifierGroups: product.modifierGroups,
         quantity: newQuantity,
+        coinPrice: product.coinPrice,
       );
       _box.put(productId, updatedProduct);
     }
@@ -101,6 +104,13 @@ class CartService {
 
   double getTotalPrice() {
     return _box.values.fold(0.0, (total, item) => total + (item.price * item.quantity));
+  }
+
+  double getTotalCoins() {
+    return _box.values.fold(0.0, (total, item) {
+      final coinPrice = double.tryParse(item.coinPrice) ?? 0.0;
+      return total + (coinPrice * item.quantity);
+    });
   }
 
   int get cartLength => _box.length;

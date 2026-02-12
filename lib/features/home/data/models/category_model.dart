@@ -39,9 +39,9 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       productItem:
-          (json['products'] as List?)
-              ?.map((x) => ProductModelItem.fromJson(x))
-              .toList() ??
+      (json['products'] as List?)
+          ?.map((x) => ProductModelItem.fromJson(x))
+          .toList() ??
           [],
       total: json['total'] ?? 0,
       page: json['page'] ?? 1,
@@ -63,7 +63,7 @@ class ProductModelItem {
   final int sortOrder;
   final bool isActive;
   final String categoryId;
-  final double coin;
+  final String coinPrice; // Changed from 'coin' to 'coinPrice' and type to String
 
   ProductModelItem({
     required this.id,
@@ -77,7 +77,7 @@ class ProductModelItem {
     required this.sortOrder,
     required this.isActive,
     required this.categoryId,
-    required this.coin,
+    required this.coinPrice,
   });
 
   factory ProductModelItem.fromJson(Map<String, dynamic> json) {
@@ -93,7 +93,12 @@ class ProductModelItem {
       sortOrder: json['sort_order'] ?? 0,
       isActive: json['is_active'] ?? false,
       categoryId: json['category_id']?.toString() ?? '',
-      coin: double.tryParse(json['coin_price']?.toString() ?? '0') ?? 0.0,
+      coinPrice: json['coin_price']?.toString() ?? '0', // Keep as String
     );
+  }
+
+  /// Helper getter to get coin price as double
+  double get coinPriceAsDouble {
+    return double.tryParse(coinPrice) ?? 0.0;
   }
 }

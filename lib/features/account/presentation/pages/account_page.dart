@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -184,14 +186,10 @@ class _AccountPageState extends State<AccountPage> {
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverAppBar(
-                  iconTheme: const IconThemeData(
-                    color: AppColors.white,
-                  ),
-                  expandedHeight: isTablet ? 280.h : 240.h,
+                  iconTheme: const IconThemeData(color: AppColors.white),
+                  expandedHeight: isTablet ? 400.h : 300.h,
                   pinned: true,
-                  backgroundColor: isDark
-                      ? AppColors.darkAppBar
-                      : AppColors.primary,
+                  backgroundColor: Colors.transparent,
                   title: Text(
                     context.translate('profile'),
                     style: TextStyle(
@@ -201,150 +199,281 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                   ),
                   flexibleSpace: FlexibleSpaceBar(
-                    background: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: isDark
-                              ? [AppColors.darkAppBar, AppColors.darkAppBar]
-                              : [
-                                  AppColors.primary,
-                                  AppColors.primary.withAlpha(204),
-                                ],
+                    background: Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: isDark
+                                  ? [
+                                      AppColors.darkAppBar,
+                                      AppColors.darkAppBar.withAlpha(200),
+                                      Colors.purple.shade900.withAlpha(100),
+                                    ]
+                                  : [
+                                      AppColors.primary,
+                                      AppColors.primary.withAlpha(220),
+                                      Colors.blue.shade700,
+                                    ],
+                            ),
+                          ),
                         ),
-                      ),
-                      padding: EdgeInsets.only(
-                        left: isTablet ? 32.w : 24.w,
-                        right: isTablet ? 32.w : 24.w,
-                        top: isTablet ? 100.h : 80.h,
-                        bottom: isTablet ? 28.h : 20.h,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Stack(
-                            children: [
-                              GestureDetector(
-                                onLongPress: user.image != null
-                                    ? () => _rasmniKattalashtirish(user.image)
-                                    : null,
-                                child: Container(
-                                  width: isTablet ? 60.w : 100.w,
-                                  height: isTablet ? 60.w : 100.w,
+                        Positioned(
+                          top: -50,
+                          right: -50,
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.white.withAlpha(13),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: -30,
+                          left: -30,
+                          child: Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.white.withAlpha(10),
+                            ),
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: isTablet ? 32.w : 24.w,
+                              right: isTablet ? 32.w : 24.w,
+                              top: isTablet ? 100.h : 80.h,
+                              bottom: isTablet ? 28.h : 24.h,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: AppColors.white,
-                                      width: isTablet ? 5 : 4,
-                                    ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withAlpha(51),
-                                        blurRadius: 20,
-                                        offset: const Offset(0, 10),
+                                        color: AppColors.primary.withAlpha(128),
+                                        blurRadius: 30,
+                                        spreadRadius: 5,
                                       ),
                                     ],
                                   ),
-                                  child: CircleAvatar(
-                                    radius: isTablet ? 58.r : 48.r,
-                                    backgroundColor: Colors.grey[300],
-                                    backgroundImage:
-                                        (user.image != null &&
-                                            user.image!.isNotEmpty)
-                                        ? NetworkImage(user.image!)
+                                  child: GestureDetector(
+                                    onLongPress: user.image != null
+                                        ? () =>
+                                              _rasmniKattalashtirish(user.image)
                                         : null,
-                                    child:
-                                        (user.image == null ||
-                                            user.image!.isEmpty)
-                                        ? Icon(
-                                            Icons.person,
-                                            size: isTablet ? 38.sp : 48.sp,
-                                            color: Colors.white,
-                                          )
-                                        : null,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: _rasmTanlash,
-                                  child: Container(
-                                    width: isTablet ? 20.w : 36.w,
-                                    height: isTablet ? 20.w : 36.w,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withAlpha(51),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 4),
+                                    child: Container(
+                                      width: isTablet ? 70.w : 110.w,
+                                      height: isTablet ? 70.w : 110.w,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColors.white,
+                                          width: 5,
                                         ),
-                                      ],
-                                    ),
-                                    child: Icon(
-                                      Icons.camera_alt,
-                                      color: AppColors.primary,
-                                      size: isTablet ? 12.sp : 18.sp,
+                                        gradient:
+                                            user.image == null ||
+                                                user.image!.isEmpty
+                                            ? LinearGradient(
+                                                colors: [
+                                                  Colors.blue.shade400,
+                                                  Colors.purple.shade400,
+                                                ],
+                                              )
+                                            : null,
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: isTablet ? 53.r : 53.r,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage:
+                                            (user.image != null &&
+                                                user.image!.isNotEmpty)
+                                            ? NetworkImage(user.image!)
+                                            : null,
+                                        child:
+                                            (user.image == null ||
+                                                user.image!.isEmpty)
+                                            ? Icon(
+                                                Icons.person,
+                                                size: 50.sp,
+                                                color: Colors.white,
+                                              )
+                                            : null,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: isTablet ? 8.h : 6.h,
-                          ),
-                          if (fullName == null || fullName.isEmpty)
-                            Text(
-                              fullName.isNotEmpty ? fullName : 'Foydalanuvchi',
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: isTablet ? 12.sp : 22.sp,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          Text(
-                            fullName.isNotEmpty ? fullName : 'Foydalanuvchi',
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: isTablet ? 12.sp : 22.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.white,
-                            ),
-                          ),
-                          if (phone.isNotEmpty) ...[
-                            SizedBox(height: 2.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.phone_outlined,
-                                  size: isTablet ? 12.sp : 16.sp,
-                                  color: AppColors.white.withAlpha(230),
-                                ),
-                                SizedBox(width: isTablet ? 8.w : 6.w),
-                                Text(
-                                  "+${phone}",
-                                  style: TextStyle(
-                                    fontSize: isTablet ? 9.sp : 15.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.white.withAlpha(230),
+                                SizedBox(height: 16.h),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 10,
+                                      sigmaY: 10,
+                                    ),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w,
+                                        vertical: 16.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.white.withAlpha(26),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: AppColors.white.withAlpha(51),
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            fullName.isNotEmpty
+                                                ? fullName
+                                                : 'Foydalanuvchi',
+                                            maxLines: 1,
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: isTablet
+                                                  ? 14.sp
+                                                  : 20.sp,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.white,
+                                              letterSpacing: 0.5,
+                                            ),
+                                          ),
+                                          if (phone.isNotEmpty) ...[
+                                            SizedBox(height: 12.h),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        padding: EdgeInsets.all(
+                                                          8,
+                                                        ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                              color: AppColors
+                                                                  .white
+                                                                  .withAlpha(
+                                                                    26,
+                                                                  ),
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                        child: Icon(
+                                                          Icons.phone_outlined,
+                                                          size: 16.sp,
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8.w),
+                                                      Flexible(
+                                                        child: Text(
+                                                          "+${phone}",
+                                                          style: TextStyle(
+                                                            fontSize: isTablet
+                                                                ? 12.sp
+                                                                : 14.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: AppColors
+                                                                .white
+                                                                .withAlpha(230),
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  height: 30.h,
+                                                  width: 1,
+                                                  color: AppColors.white
+                                                      .withAlpha(51),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Container(
+                                                        padding: EdgeInsets.all(
+                                                          5,
+                                                        ),
+                                                        decoration: BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                                colors: [
+                                                                  Colors
+                                                                      .amber
+                                                                      .shade400,
+                                                                  Colors
+                                                                      .orange
+                                                                      .shade400,
+                                                                ],
+                                                              ),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.monetization_on,
+                                                          size: isTablet
+                                                              ? 14.sp
+                                                              : 20.sp,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 8.w),
+                                                      Text(
+                                                        "${user.coinBalance}",
+                                                        style: TextStyle(
+                                                          fontSize: isTablet
+                                                              ? 12.sp
+                                                              : 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: Colors
+                                                              .amber
+                                                              .shade300,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -408,7 +537,9 @@ class _AccountPageState extends State<AccountPage> {
                           color: Colors.purple,
                           isTablet: isTablet,
                         ),
-                        SizedBox(height: isTablet ? 16.h : 12.h),
+                        SizedBox(
+                          height: isTablet ? 16.h : 12.h,
+                        ),
                         CustomMenuItem(
                           icon: Icons.description_outlined,
                           title: context.translate('terms'),
@@ -418,7 +549,9 @@ class _AccountPageState extends State<AccountPage> {
                           color: Colors.teal,
                           isTablet: isTablet,
                         ),
-                        SizedBox(height: isTablet ? 16.h : 12.h),
+                        SizedBox(
+                          height: isTablet ? 16.h : 12.h,
+                        ),
                         CustomMenuItem(
                           icon: Icons.qr_code_2,
                           title: "Mening tanglarim",

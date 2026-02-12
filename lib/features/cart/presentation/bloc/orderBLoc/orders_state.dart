@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../../core/utils/status.dart';
-import '../../../data/models/orders_model.dart';
+import '../../../data/models/order_model.dart';
 part 'orders_state.freezed.dart';
 
 @freezed

@@ -3,7 +3,6 @@ import 'package:provider/single_child_widget.dart';
 import 'package:restaurantapp/core/network/client.dart';
 import 'package:restaurantapp/features/cart/data/repositories/order_repository.dart';
 import 'package:restaurantapp/features/cart/presentation/bloc/deliveryBloc/delivery_cubit.dart';
-import 'package:restaurantapp/features/cart/presentation/bloc/orderBLoc/orders_bloc.dart';
 import '../../features/account/data/repositores/location_repository.dart';
 import '../../features/account/data/repositores/user_profile_repository.dart';
 import '../../features/account/presentation/bloc/locationBloc/location_bloc.dart';
@@ -11,6 +10,7 @@ import '../../features/account/presentation/bloc/userBloc/user_profile_bloc.dart
 import '../../features/auth/data/repositories/auth_repository.dart';
 import '../../features/cart/data/repositories/cart_repository.dart';
 import '../../features/cart/data/repositories/delivery_repository.dart';
+import '../../features/cart/presentation/bloc/orderBLoc/orders_bloc.dart';
 import '../../features/home/data/repositories/product_repository.dart';
 import '../../features/account/data/repositores/profile_repositroy.dart';
 import '../../features/auth/presentation/bloc/authCubit/auth_cubit.dart';

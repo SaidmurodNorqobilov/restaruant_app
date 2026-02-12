@@ -13,7 +13,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         super(OrdersState.initial()) {
     on<OrdersLoading>(_onOrdersLoading);
     on<AddOrderEvent>(_onAddOrder);
-    on<CancelOrderEvent>(_onCancelOrder);
+    // on<CancelOrderEvent>(_onCancelOrder);
   }
 
   Future<void> _onOrdersLoading(
@@ -22,21 +22,19 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       ) async {
     emit(state.copyWith(status: Status.loading));
 
-    // If you have a getOrders method in your repository, uncomment this:
-    // final result = await _orderRepository.getOrders();
-    // result.fold(
-    //   (error) => emit(state.copyWith(
-    //     status: Status.error,
-    //     errorMessage: error.toString(),
-    //   )),
-    //   (orders) => emit(state.copyWith(
-    //     status: Status.success,
-    //     orders: orders,
-    //   )),
-    // );
+    final result = await _orderRepository.getOrders();
 
-    // For now, just set success status
-    emit(state.copyWith(status: Status.success));
+    result.fold(
+          (error) => emit(state.copyWith(
+        status: Status.error,
+        errorMessage: error.toString(),
+      )),
+          (orders) => emit(state.copyWith(
+        status: Status.success,
+        orders: orders,
+        errorMessage: null,
+      )),
+    );
   }
 
   Future<void> _onAddOrder(
@@ -73,8 +71,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
             errorMessage: null,
           ));
 
-          // Optionally reload orders after successful submission
-          // add(OrdersLoading());
+          add(OrdersLoading());
         },
       );
     } catch (e) {
@@ -85,26 +82,34 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
-  Future<void> _onCancelOrder(
-      CancelOrderEvent event,
-      Emitter<OrdersState> emit,
-      ) async {
-    emit(state.copyWith(status: Status.loading));
-
-    // If you have a cancelOrder method in your repository, uncomment this:
-    // final result = await _orderRepository.cancelOrder(event.orderId);
-    // result.fold(
-    //   (error) => emit(state.copyWith(
-    //     status: Status.error,
-    //     errorMessage: error.toString(),
-    //   )),
-    //   (data) {
-    //     emit(state.copyWith(status: Status.success));
-    //     add(OrdersLoading());
-    //   },
-    // );
-
-    // For now, just set success status
-    emit(state.copyWith(status: Status.success));
-  }
+  // Future<void> _onCancelOrder(
+  //     CancelOrderEvent event,
+  //     Emitter<OrdersState> emit,
+  //     ) async {
+  //   emit(state.copyWith(status: Status.loading));
+  //
+  //   try {
+  //     // Agar repository'da cancelOrder methodi bo'lsa:
+  //     final result = await _orderRepository.cancelOrder(event.orderId);
+  //
+  //     result.fold(
+  //           (error) => emit(state.copyWith(
+  //         status: Status.error,
+  //         errorMessage: error.toString(),
+  //       )),
+  //           (data) {
+  //         emit(state.copyWith(
+  //           status: Status.success,
+  //           errorMessage: null,
+  //         ));
+  //         add(OrdersLoading());
+  //       },
+  //     );
+  //   } catch (e) {
+  //     emit(state.copyWith(
+  //       status: Status.error,
+  //       errorMessage: 'Buyurtmani bekor qilishda xatolik: ${e.toString()}',
+  //     ));
+  //   }
+  // }
 }

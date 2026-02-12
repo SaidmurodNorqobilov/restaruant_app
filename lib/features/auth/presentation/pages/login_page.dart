@@ -38,7 +38,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme
+        .of(context)
+        .brightness == Brightness.dark;
 
     return Scaffold(
       body: SafeArea(
@@ -53,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
 
                 if (state.errorMessage != null) {
                   String msg = state.errorMessage!.toLowerCase();
-                  if (msg.contains('connection') || msg.contains('socket') || msg.contains('offline')) {
+                  if (msg.contains('connection') || msg.contains('socket') ||
+                      msg.contains('offline')) {
                     errorText = "Internet ulanishini tekshiring 🌐";
                   } else if (msg.contains('timeout')) {
                     errorText = "So'rov vaqti tugadi ⏱️";
@@ -63,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                     errorText = state.errorMessage!;
                   }
                 }
-
                 showTopSnackBar(
                   Overlay.of(context),
                   CustomSnackBar.error(
@@ -88,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         color: isDark ? AppColors.white : AppColors.textColor,
                       ),
                     ),
-                    SizedBox(height: 16.h),
+                    SizedBox(height: 16.h,),
                     Text(
                       "Telefon raqamingizni kiriting",
                       style: TextStyle(
@@ -149,7 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       validator: (value) {
                         if (value == null ||
-                            value.replaceAll(RegExp(r'\s+'), '').length != 9) {
+                            value
+                                .replaceAll(RegExp(r'\s+'), '')
+                                .length != 9) {
                           return "Raqam 9 xonali bo'lishi kerak";
                         }
                         return null;
@@ -157,7 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     SizedBox(height: 30.h),
                     state.status == Status.loading
-                        ? const CircularProgressIndicator(color: AppColors.primary)
+                        ? const CircularProgressIndicator(
+                        color: AppColors.primary)
                         : TextButtonApp(
                       height: 58,
                       width: 403,

@@ -38,7 +38,7 @@ class AppBarWidgets extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: TextStyle(
           fontWeight: FontWeight.w700,
-          fontSize: 24.sp,
+          fontSize: isTablet ? 24 : 24.sp,
           color: AppColors.white,
         ),
       ),

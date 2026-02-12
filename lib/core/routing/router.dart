@@ -11,7 +11,7 @@ import '../../features/cart/presentation/pages/address_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/cart/presentation/pages/checkout_page.dart';
 import '../../features/cart/presentation/pages/order_detail_page.dart';
-import '../../features/cart/presentation/pages/order_page.dart';
+import '../../features/cart/presentation/pages/orders_page.dart';
 import '../../features/cart/presentation/pages/payment_details_page.dart';
 import '../../features/home/data/models/category_model.dart';
 import '../../features/auth/presentation/pages/login_page.dart';

@@ -97,6 +97,10 @@ class _CartPageState extends State<CartPage>
     return cartService.getTotalPrice();
   }
 
+  double calculateTotalCoins(List<ProductItemModel> cartItems) {
+    return cartService.getTotalCoins();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -198,12 +202,12 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildCartList(
-    bool isTablet,
-    bool isDark,
-    bool isLandscape,
-    List<ProductItemModel> displayItems,
-    List<ProductItemModel> allCartItems,
-  ) {
+      bool isTablet,
+      bool isDark,
+      bool isLandscape,
+      List<ProductItemModel> displayItems,
+      List<ProductItemModel> allCartItems,
+      ) {
     if (displayItems.isEmpty && controllerSearch.text.isNotEmpty) {
       return Center(
         child: Column(
@@ -305,11 +309,11 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildBottomSection(
-    bool isTablet,
-    bool isDark,
-    bool isLandscape,
-    List<ProductItemModel> cartItems,
-  ) {
+      bool isTablet,
+      bool isDark,
+      bool isLandscape,
+      List<ProductItemModel> cartItems,
+      ) {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
       builder: (context, state) =>  Container(
         constraints: BoxConstraints(
@@ -365,15 +369,17 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _buildPricingSection(
-    bool isDark,
-    bool isTablet,
-    bool isLandscape,
-    List<ProductItemModel> cartItems,
-  ) {
+      bool isDark,
+      bool isTablet,
+      bool isLandscape,
+      List<ProductItemModel> cartItems,
+      ) {
     double subtotal = calculateSubtotal(cartItems);
+    double totalCoins = calculateTotalCoins(cartItems);
     double vat = subtotal * 0.00;
     double tip = double.tryParse(tipController.text) ?? 0.0;
     double total = subtotal + vat + tip - (isCouponApplied ? 10.0 : 0.0);
+
     return BlocBuilder<DeliveryCubit, DeliveryState>(
       builder: (context, state) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -383,6 +389,17 @@ class _CartPageState extends State<CartPage>
             'SO\'M ${subtotal.toStringAsFixed(2)}',
             isDark,
           ),
+          if (totalCoins > 0) ...[
+            Divider(
+              color: AppColors.borderColor,
+            ),
+            _priceRow(
+              'Jami coin',
+              '${totalCoins.toStringAsFixed(0)} coin',
+              isDark,
+              isCoin: true,
+            ),
+          ],
           Divider(
             color: AppColors.borderColor,
           ),
@@ -419,32 +436,49 @@ class _CartPageState extends State<CartPage>
   }
 
   Widget _priceRow(
-    String label,
-    String value,
-    bool isDark, {
-    bool isBold = false,
-    Color? color,
-  }) {
+      String label,
+      String value,
+      bool isDark, {
+        bool isBold = false,
+        bool isCoin = false,
+        Color? color,
+      }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 4.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: isDark ? Colors.white70 : Colors.black87,
-              ),
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              children: [
+                if (isCoin) ...[
+                  Icon(
+                    Icons.monetization_on,
+                    size: 16.sp,
+                    color: Colors.amber,
+                  ),
+                  SizedBox(width: 4.w),
+                ],
+                Flexible(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                      color: isDark ? Colors.white70 : Colors.black87,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
           Text(
             value,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: color ?? (isDark ? Colors.white : Colors.black),
+              color: isCoin
+                  ? Colors.amber
+                  : (color ?? (isDark ? Colors.white : Colors.black)),
             ),
           ),
         ],

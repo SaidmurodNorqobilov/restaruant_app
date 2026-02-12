@@ -68,9 +68,9 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   }
 
   void toggleModifier(
-    ProductModifierGroupModel group,
-    ModifiersModel modifier,
-  ) {
+      ProductModifierGroupModel group,
+      ModifiersModel modifier,
+      ) {
     if (!widget.product.isActive) return;
 
     setState(() {
@@ -152,6 +152,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       categoryId: widget.product.categoryId,
       modifierGroups: finalModifierGroups,
       quantity: quantity,
+      coinPrice: widget.product.coinPrice, // Now both are String type
     );
 
     cartService.addToCart(productToAdd, quantity: quantity);
@@ -372,7 +373,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                                     widget.product.description!.isNotEmpty)
                                   Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       ProductSectionHeader(
                                         title: "Tavsif",
@@ -420,7 +421,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                                 if (detail != null &&
                                     detail.modifierGroups.isNotEmpty)
                                   ...detail.modifierGroups.map(
-                                    (group) => ModifierGroupWidget(
+                                        (group) => ModifierGroupWidget(
                                       group: group,
                                       isDark: isDark,
                                       isProductActive: widget.product.isActive,

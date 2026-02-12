@@ -31,6 +31,9 @@ class ProductItemModel {
   @HiveField(12)
   final int quantity;
 
+  @HiveField(13)
+  final String coinPrice;
+
   ProductItemModel({
     required this.id,
     required this.name,
@@ -45,6 +48,7 @@ class ProductItemModel {
     required this.categoryId,
     required this.modifierGroups,
     this.quantity = 1,
+    required this.coinPrice,
   });
 
   factory ProductItemModel.fromJson(Map<String, dynamic> json) {
@@ -65,6 +69,7 @@ class ProductItemModel {
           .toList() ??
           [],
       quantity: json['quantity'] ?? 1,
+      coinPrice: json['coin_price']?.toString() ?? '',
     );
   }
 
@@ -82,6 +87,7 @@ class ProductItemModel {
     String? categoryId,
     List<ProductModifierGroupModel>? modifierGroups,
     int? quantity,
+    String? coinPrice,
   }) {
     return ProductItemModel(
       id: id ?? this.id,
@@ -97,6 +103,7 @@ class ProductItemModel {
       categoryId: categoryId ?? this.categoryId,
       modifierGroups: modifierGroups ?? this.modifierGroups,
       quantity: quantity ?? this.quantity,
+      coinPrice: coinPrice ?? this.coinPrice,
     );
   }
 
@@ -111,6 +118,11 @@ class ProductItemModel {
   }
 
   double get productTotalPrice => price * quantity;
+
+  double get totalCoinPrice {
+    final coinValue = double.tryParse(coinPrice) ?? 0.0;
+    return coinValue * quantity;
+  }
 }
 
 @HiveType(typeId: 1)
