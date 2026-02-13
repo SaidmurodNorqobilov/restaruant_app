@@ -32,7 +32,7 @@ class CheckoutPage extends StatefulWidget {
   State<CheckoutPage> createState() => _CheckoutPageState();
 }
 
-class _CheckoutPageState extends State<CheckoutPage> {
+class _CheckoutPageState extends State<CheckoutPage> with WidgetsBindingObserver {
   String selectedDeliveryType = 'delivery';
   String selectedPaymentMethod = '';
   String? selectedPaymentProvider;
@@ -42,6 +42,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   final _formKey = GlobalKey<FormState>();
   late Map<String, double> orderTotals;
   bool isSubmitting = false;
+  String? _pendingTransactionId;
 
   double get subtotal => orderTotals['product_total'] ?? 0.0;
 
@@ -60,6 +61,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     final orderService = OrderService();
     orderTotals = orderService.calculateOrderTotals();
 
@@ -67,6 +70,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
       _loadSavedLocation();
     });
     context.read<MyLocationBloc>().add(MyLocationLoadingEvent());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed && _pendingTransactionId != null) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          PaymentHandler.showPaymentStatusCheckModalStatic(
+            context,
+            _pendingTransactionId!,
+                () {
+              setState(() {
+                _pendingTransactionId = null;
+              });
+            },
+          );
+        }
+      });
+    }
   }
 
   Future<void> _loadSavedLocation() async {
@@ -118,7 +148,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(
+                height: 20.h,
+              ),
               Text(
                 "To'lov tizimini tanlang",
                 style: TextStyle(
@@ -197,7 +229,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               child: Center(child: icon),
             ),
-            SizedBox(width: 16.w),
+            SizedBox(
+              width: 16.w,
+            ),
             Expanded(
               child: Text(
                 title,
@@ -248,6 +282,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
+  String _getPaymentProvider() {
+    if (selectedPaymentMethod == 'online' && selectedPaymentProvider != null) {
+      return selectedPaymentProvider!;
+    }
+    return '';
+  }
+
   Future<void> _submitOrder() async {
     if (selectedPaymentMethod.isEmpty) {
       showTopSnackBar(
@@ -268,7 +309,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
           double.tryParse(userState.user?.coinBalance ?? "0") ?? 0.0;
       final cartService = CartService();
       final totalCoinsNeeded = cartService.getTotalCoins();
-
       if (userCoinBalance < totalCoinsNeeded) {
         showTopSnackBar(
           Overlay.of(context),
@@ -283,7 +323,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
         return;
       }
     }
-
     if (selectedDeliveryType == 'delivery' && selectedLocationId == null) {
       showTopSnackBar(
         Overlay.of(context),
@@ -310,7 +349,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       final orderService = OrderService();
       final orderData = orderService.prepareOrderData(
         orderType: _getOrderType(),
-        paymentProvider: selectedPaymentProvider ?? 'CLICK',
+        paymentProvider: _getPaymentProvider(),
         paymentMethod: _getPaymentMethod(),
         address: selectedDeliveryType == 'delivery'
             ? (selectedLocationAddress ?? '')
@@ -323,7 +362,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
       final result = await repository.addOrders(
         orderType: _getOrderType(),
-        paymentProvider: selectedPaymentProvider ?? 'CLICK',
+        paymentProvider: _getPaymentProvider(),
         paymentMethod: _getPaymentMethod(),
         address: selectedDeliveryType == 'delivery'
             ? (selectedLocationAddress ?? '')
@@ -350,11 +389,46 @@ class _CheckoutPageState extends State<CheckoutPage> {
           );
         },
             (data) async {
-          if (selectedPaymentMethod == 'online' && data['url'] != null) {
-            await PaymentHandler.handleClickPayment(
-              context: context,
-              paymentUrl: data['url'],
-            );
+          if (selectedPaymentMethod == 'online' &&
+              data['url'] != null &&
+              data['url'].toString().isNotEmpty) {
+            String? transactionId;
+            if (data['transactions'] != null &&
+                data['transactions'].isNotEmpty) {
+              transactionId = data['transactions'][0]['id'];
+            } else if (data['url'].toString().contains('transaction_param=')) {
+              final uri = Uri.parse(data['url']);
+              transactionId = uri.queryParameters['transaction_param'];
+            }
+            if (transactionId != null) {
+              setState(() {
+                _pendingTransactionId = transactionId;
+              });
+
+              await PaymentHandler.handleClickPayment(
+                context: context,
+                paymentUrl: data['url'],
+                transactionId: transactionId,
+                onCancel: () {
+                  if (mounted) {
+                    setState(() {
+                      _pendingTransactionId = null;
+                    });
+                    context.push(Routes.orders);
+                  }
+                },
+              );
+            } else {
+              showTopSnackBar(
+                Overlay.of(context),
+                CustomSnackBar.error(
+                  message: "Transaction ID topilmadi",
+                  backgroundColor: Colors.red,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                displayDuration: const Duration(seconds: 2),
+              );
+            }
           } else {
             showTopSnackBar(
               Overlay.of(context),
@@ -365,7 +439,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
               ),
               displayDuration: const Duration(seconds: 2),
             );
-
             Future.delayed(const Duration(milliseconds: 500), () {
               if (mounted) {
                 context.push(Routes.orders);
@@ -396,14 +469,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBarWidgets(title: "Checkout"),
       body: BlocBuilder<MyLocationBloc, MyLocationState>(
@@ -652,6 +719,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                             builder: (context, state) => OrderSummarySection(
                               isDark: isDark,
                               subtotal: subtotal,
+                              selectedDeliveryType: selectedDeliveryType,
                               freeDeliveryThreshold: state.deliveries.isNotEmpty
                                   ? double.tryParse(
                                 state
@@ -834,7 +902,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       ),
                     ),
                   ),
-
                   if (isSubmitting)
                     Container(
                       color: Colors.black.withAlpha(128),

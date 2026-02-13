@@ -43,7 +43,7 @@ class AuthInterceptor extends Interceptor {
 
         if (refreshToken != null && refreshToken.isNotEmpty) {
           final refreshDio = Dio(
-            BaseOptions(baseUrl: "http://45.138.158.158:3003"),
+            BaseOptions(baseUrl: "https://api.cashout.uz"),
           );
 
           final response = await refreshDio.post(

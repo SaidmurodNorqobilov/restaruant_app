@@ -32,8 +32,8 @@ class OrderRepository {
     );
 
     return result.fold(
-          (error) => Result.error(error),
-          (data) => Result.ok(data),
+      (error) => Result.error(error),
+      (data) => Result.ok(data),
     );
   }
 
@@ -43,20 +43,17 @@ class OrderRepository {
         '/orders/find/my-orders',
       );
       return result.fold(
-            (error) => Result.error(error),
-            (data) {
+        (error) => Result.error(error),
+        (data) {
           final ordersJson = data['orders'] as List<dynamic>?;
-
           if (ordersJson == null) {
             return Result.error(
               Exception('Orders data not found in response'),
             );
           }
-
           final orders = ordersJson
               .map((json) => OrderModel.fromJson(json as Map<String, dynamic>))
               .toList();
-
           return Result.ok(orders);
         },
       );
@@ -66,13 +63,32 @@ class OrderRepository {
   }
 
   Future<Result<void>> cancelOrder(String orderId) async {
-    final result = await _client.delete<Map<String, dynamic>>(
-      '/orders/cancel/$orderId',
+    final result = await _client.post<Map<String, dynamic>>(
+      '/orders/cancelled/$orderId',
     );
 
     return result.fold(
-          (error) => Result.error(error),
-          (_) => Result.ok(null),
+      (error) => Result.error(error),
+      (_) => Result.ok(null),
     );
   }
+
+  // Future<Result<Map<String, dynamic>>> retryPayment({
+  //   required String orderId,
+  //   required String paymentProvider,
+  //   required String paymentMethod,
+  // }) async {
+  //   final Map<String, dynamic> paymentData = {
+  //     "payment_provider": paymentProvider,
+  //     "payment_method": paymentMethod,
+  //   };
+  //   final result = await _client.post<Map<String, dynamic>>(
+  //     '/orders/$orderId/retry-payment',
+  //     data: paymentData,
+  //   );
+  //   return result.fold(
+  //         (error) => Result.error(error),
+  //         (data) => Result.ok(data),
+  //   );
+  // }
 }

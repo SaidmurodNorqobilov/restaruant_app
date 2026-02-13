@@ -3,6 +3,7 @@ import 'package:restaurantapp/features/cart/presentation/bloc/orderBLoc/orders_s
 
 import '../../../../../core/utils/status.dart';
 import '../../../data/repositories/order_repository.dart';
+
 part 'orders_event.dart';
 
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
@@ -13,7 +14,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         super(OrdersState.initial()) {
     on<OrdersLoading>(_onOrdersLoading);
     on<AddOrderEvent>(_onAddOrder);
-    // on<CancelOrderEvent>(_onCancelOrder);
+    on<CancelOrderEvent>(_onCancelOrder);
+    // on<RetryPaymentEvent>(_onRetryPayment);
   }
 
   Future<void> _onOrdersLoading(
@@ -82,33 +84,63 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
-  // Future<void> _onCancelOrder(
-  //     CancelOrderEvent event,
+  Future<void> _onCancelOrder(
+      CancelOrderEvent event,
+      Emitter<OrdersState> emit,
+      ) async {
+    emit(state.copyWith(status: Status.loading));
+
+    try {
+      final result = await _orderRepository.cancelOrder(event.orderId);
+
+      result.fold(
+            (error) => emit(state.copyWith(
+          status: Status.error,
+          errorMessage: error.toString(),
+        )),
+            (data) {
+          emit(state.copyWith(
+            status: Status.success,
+            errorMessage: null,
+          ));
+          add(OrdersLoading());
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: Status.error,
+        errorMessage: 'Buyurtmani bekor qilishda xatolik:',
+      ));
+    }
+  }
+
+  // Future<void> _onRetryPayment(
+  //     RetryPaymentEvent event,
   //     Emitter<OrdersState> emit,
   //     ) async {
   //   emit(state.copyWith(status: Status.loading));
   //
   //   try {
-  //     // Agar repository'da cancelOrder methodi bo'lsa:
-  //     final result = await _orderRepository.cancelOrder(event.orderId);
+  //     final result = await _orderRepository.retryPayment(
+  //       orderId: event.orderId,
+  //       paymentProvider: event.paymentProvider,
+  //       paymentMethod: event.paymentMethod,
+  //     );
   //
   //     result.fold(
   //           (error) => emit(state.copyWith(
   //         status: Status.error,
   //         errorMessage: error.toString(),
   //       )),
-  //           (data) {
-  //         emit(state.copyWith(
-  //           status: Status.success,
-  //           errorMessage: null,
-  //         ));
-  //         add(OrdersLoading());
-  //       },
+  //           (data) => emit(state.copyWith(
+  //         status: Status.success,
+  //         errorMessage: null,
+  //       )),
   //     );
   //   } catch (e) {
   //     emit(state.copyWith(
   //       status: Status.error,
-  //       errorMessage: 'Buyurtmani bekor qilishda xatolik: ${e.toString()}',
+  //       errorMessage: 'To\'lovni amalga oshirishda xatolik: ${e.toString()}',
   //     ));
   //   }
   // }

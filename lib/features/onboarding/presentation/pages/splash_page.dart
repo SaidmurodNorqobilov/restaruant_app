@@ -48,6 +48,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     _logoScaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
       CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
     );
+
     _logoOpacityAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _logoController,

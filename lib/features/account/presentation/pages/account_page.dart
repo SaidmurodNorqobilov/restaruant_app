@@ -34,16 +34,16 @@ class _AccountPageState extends State<AccountPage> {
     context.read<UserProfileBloc>().add(GetUserProfile());
   }
 
-  Future<void> _rasmTanlash() async {
-    final picker = ImagePicker();
-    final tanlangan = await picker.pickImage(source: ImageSource.gallery);
-    if (tanlangan != null) {
-      await UserService.updateProfileImage(tanlangan.path);
-      if (mounted) {
-        context.read<UserProfileBloc>().add(GetUserProfile());
-      }
-    }
-  }
+  // Future<void> _rasmTanlash() async {
+  //   final picker = ImagePicker();
+  //   final tanlangan = await picker.pickImage(source: ImageSource.gallery);
+  //   if (tanlangan != null) {
+  //     await UserService.updateProfileImage(tanlangan.path);
+  //     if (mounted) {
+  //       context.read<UserProfileBloc>().add(GetUserProfile());
+  //     }
+  //   }
+  // }
 
   void _rasmniKattalashtirish(String? networkImage) {
     if (networkImage == null) return;

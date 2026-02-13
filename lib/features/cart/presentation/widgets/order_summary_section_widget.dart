@@ -7,6 +7,7 @@ class OrderSummarySection extends StatelessWidget {
   final double subtotal;
   final double deliveryPrice;
   final double freeDeliveryThreshold;
+  final String selectedDeliveryType;
 
   const OrderSummarySection({
     super.key,
@@ -14,11 +15,14 @@ class OrderSummarySection extends StatelessWidget {
     required this.subtotal,
     required this.deliveryPrice,
     required this.freeDeliveryThreshold,
+    required this.selectedDeliveryType,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double deliveryFee = subtotal >= freeDeliveryThreshold ? 0 : deliveryPrice;
+    final double deliveryFee = selectedDeliveryType == 'delivery'
+        ? (subtotal >= freeDeliveryThreshold ? 0 : deliveryPrice)
+        : 0;
     final double total = subtotal + deliveryFee;
 
     return Container(
@@ -63,14 +67,17 @@ class OrderSummarySection extends StatelessWidget {
             isTotal: false,
           ),
           SizedBox(height: 8.h),
-          _PriceRow(
-            label: 'Yetkazish',
-            amount: deliveryFee,
-            isDark: isDark,
-            isTotal: false,
-            isFree: deliveryFee == 0 && subtotal >= freeDeliveryThreshold,
-          ),
-          if (deliveryFee == 0 && subtotal < freeDeliveryThreshold)
+          if (selectedDeliveryType == 'delivery')
+            _PriceRow(
+              label: 'Yetkazish',
+              amount: deliveryFee,
+              isDark: isDark,
+              isTotal: false,
+              isFree: deliveryFee == 0 && subtotal >= freeDeliveryThreshold,
+            ),
+          if (selectedDeliveryType == 'delivery' &&
+              deliveryFee > 0 &&
+              subtotal < freeDeliveryThreshold)
             Padding(
               padding: EdgeInsets.only(top: 4.h),
               child: Text(

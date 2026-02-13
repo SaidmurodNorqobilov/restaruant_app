@@ -1,9 +1,10 @@
+import 'dart:io' as IO;
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:restaurantapp/core/routing/router.dart';
 import 'package:restaurantapp/core/constants/app_theme.dart';
@@ -15,8 +16,42 @@ import 'core/localization/themeBloc/theme_bloc.dart';
 import 'core/localization/themeBloc/theme_state.dart';
 import 'features/home/data/models/product_item_model.dart';
 import 'features/onboarding/presentation/pages/no_internet_screen.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 void main() async {
+  // final wsUrl = Uri.parse('https://api.cashout.uz');
+  // void connectToServer() {
+  //   IO.Socket socket = IO.io('https://api.cashout.uz',
+  //       IO.OptionBuilder()
+  //           .setTransports(['websocket']) // Faqat websocket orqali
+  //           .setQuery({'user_id': 123})    // User ID yuborish
+  //           .enableAutoConnect()           // Avtomatik ulanish
+  //           .build()
+  //   );
+  //
+  //   // Ulanish muvaffaqiyatli bo'lsa
+  //   socket.onConnect((_) {
+  //     print('Serverga ulandik!');
+  //     socket.emit('msg', 'Salom server!'); // Xabar yuborish
+  //   });
+  //
+  //   // Serverdan maxsus 'reply' eventi orqali xabar kelganda
+  //   socket.on('reply', (data) => print('Kelgan ma\'lumot: $data'));
+  //
+  //   // Aloqa uzilganda
+  //   socket.onDisconnect((_) => print('Aloqa uzildi'));
+  // }
+
+// Flutter (Dart) kodi
+  IO.Socket socket = IO.io('https://api.cashout.uz', <String, dynamic>{
+    'transports': ['websocket'],
+    'query': {'user_id': 123}, // Siz handleConnection-da kutayotgan user_id
+  });
+
+
+
   // await YandexMapkit.initialize(apiKey: 'YANDEX_API_KEY');
   WidgetsFlutterBinding.ensureInitialized();
   // await YandexMapkit.initialize(
@@ -28,8 +63,8 @@ void main() async {
       DeviceOrientation.portraitDown,
     ],
   );
-  await Hive.initFlutter();
 
+  await Hive.initFlutter();
   Hive.registerAdapter(
     ProductItemModelAdapter(),
   );
@@ -41,7 +76,6 @@ void main() async {
   );
 
   await Hive.openBox<ProductItemModel>('cart_box');
-
   await Hive.openBox<ProductItemModel>('cart_box');
   runApp(
     MultiRepositoryProvider(
